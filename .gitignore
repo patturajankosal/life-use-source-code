@@ -1,0 +1,166 @@
+# ==============================================================================
+# LifeUse — Comprehensive Production GitIgnore
+# Multi-Tier Stack: Java Spring Boot + PostgreSQL + Flutter (Android/iOS/Web/Win)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Java & Maven Build Artifacts
+# ------------------------------------------------------------------------------
+target/
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+
+# Preserve Maven Wrapper Jar if present
+!.mvn/wrapper/maven-wrapper.jar
+
+# ------------------------------------------------------------------------------
+# 2. Flutter & Dart Artifacts
+# ------------------------------------------------------------------------------
+.dart_tool/
+**/.dart_tool/
+build/
+**/build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+**/doc/api/
+**/coverage/
+.widget_preview/
+
+# Flutter Symbolication & Obfuscation
+app.*.symbols
+app.*.map.json
+
+# ------------------------------------------------------------------------------
+# 3. Android Platform (Flutter)
+# ------------------------------------------------------------------------------
+**/android/.gradle/
+**/android/local.properties
+**/android/**/build/
+**/android/app/debug/
+**/android/app/profile/
+**/android/app/release/
+**/android/captures/
+**/android/.cxx/
+*.apk
+*.ap_
+*.aab
+*.dex
+
+# ------------------------------------------------------------------------------
+# 4. iOS / macOS Platform (Flutter)
+# ------------------------------------------------------------------------------
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/flutter_assets/
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/DerivedData/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcuserstate
+project.xcworkspace/
+xcuserdata/
+
+# ------------------------------------------------------------------------------
+# 5. Windows / Linux Platform (Flutter)
+# ------------------------------------------------------------------------------
+**/windows/flutter/ephemeral/
+**/linux/flutter/ephemeral/
+
+# ------------------------------------------------------------------------------
+# 6. IDEs & Editors
+# ------------------------------------------------------------------------------
+# IntelliJ IDEA
+.idea/
+**/.idea/
+*.iml
+**/*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse & STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+# Visual Studio Code
+.vscode/
+**/.vscode/
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+
+# ------------------------------------------------------------------------------
+# 7. Environment Variables, Secrets & Keystores
+# ------------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.local
+application-local.properties
+application-local.yml
+application-dev.local.yml
+
+# Keystores & Signing Certificates (NEVER commit to public repositories)
+*.keystore
+*.jks
+*.p12
+*.pem
+*.key
+key.properties
+**/android/key.properties
+
+# ------------------------------------------------------------------------------
+# 8. Operating System Ephemeral Files
+# ------------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ------------------------------------------------------------------------------
+# 9. Logs & Diagnostics
+# ------------------------------------------------------------------------------
+*.log
+logs/
+**/logs/
+*.log.*
+
+# ------------------------------------------------------------------------------
+# 10. Database Local Dumps & Temp Backups
+# ------------------------------------------------------------------------------
+*.sql.bak
+*.dump
+*.db.bak
