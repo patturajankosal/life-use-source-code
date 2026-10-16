@@ -9,7 +9,9 @@ import '../../../core/widgets/lifeuse_wordmark.dart';
 import '../../navigation/main_navigation_shell.dart';
 import '../../state/auth_provider.dart';
 import '../../state/money_provider.dart';
+import '../../state/module_provider.dart';
 import '../money/dialogs/add_transaction_dialog.dart';
+import '../modules/module_manager_screen.dart';
 import 'models/dashboard_module_item.dart';
 import 'widgets/module_card.dart';
 
@@ -151,8 +153,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _onModuleTap(BuildContext context, DashboardModuleItem module) {
-    if (module.isActive) {
+    if (module.id == 'money_manager') {
       MainNavigationShell.openMoneyManager(context);
+    } else if (module.routeBuilder != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: module.routeBuilder!),
+      );
     } else {
       _showRoadmapModal(context, module);
     }
@@ -535,15 +542,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final auth = context.watch<AuthProvider>();
     final theme = context.watch<ThemeProvider>();
     final money = context.watch<MoneyProvider>();
+    final moduleProvider = context.watch<ModuleProvider>();
     final user = auth.currentUser;
 
     final isDark = theme.isDark;
     final textPrimary = AppColors.textPrimaryOf(context);
 
-    // Get all 10 life management modules
-    final modules = DashboardModuleItem.getRegistry(
-      moneyPreviewBuilder: (ctx) => _buildMoneyManagerPreview(ctx),
-    );
+    // Get enabled life management modules dynamically from ModuleProvider
+    final modules = moduleProvider.enabledModules.map((m) {
+      if (m.id == 'money_manager') {
+        return m.copyWith(
+          previewBuilder: (ctx) => _buildMoneyManagerPreview(ctx),
+        );
+      }
+      return m;
+    }).toList();
 
     return Scaffold(
       backgroundColor: AppColors.backgroundOf(context),
@@ -649,31 +662,59 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        InkWell(
-                          onTap: () => MainNavigationShell.switchTab(context, 1),
-                          borderRadius: BorderRadius.circular(8),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'Explore All',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 12.5,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.primary,
-                                  ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            InkWell(
+                              onTap: () => ModuleManagerScreen.showModal(context),
+                              borderRadius: BorderRadius.circular(8),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.tune_rounded, size: 14, color: AppColors.primary),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Manage',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12.5,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(width: 4),
-                                const Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  size: 11,
-                                  color: AppColors.primary,
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 8),
+                            InkWell(
+                              onTap: () => MainNavigationShell.switchTab(context, 1),
+                              borderRadius: BorderRadius.circular(8),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Explore All',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12.5,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    const Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      size: 11,
+                                      color: AppColors.primary,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

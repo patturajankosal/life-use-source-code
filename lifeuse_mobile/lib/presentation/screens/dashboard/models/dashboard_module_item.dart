@@ -17,7 +17,9 @@ class DashboardModuleItem {
   final Color accentColor;
   final ModuleStatus status;
   final List<String> highlights;
-  final String category; // Finance, Productivity, Lifestyle, Personal Admin
+  final String category;
+  final bool isEnabled;
+  final bool isPinned;
   final Widget Function(BuildContext)? routeBuilder;
   final Widget Function(BuildContext)? previewBuilder;
 
@@ -31,9 +33,35 @@ class DashboardModuleItem {
     required this.status,
     required this.highlights,
     this.category = 'General',
+    this.isEnabled = true,
+    this.isPinned = false,
     this.routeBuilder,
     this.previewBuilder,
   });
+
+  DashboardModuleItem copyWith({
+    bool? isEnabled,
+    bool? isPinned,
+    ModuleStatus? status,
+    Widget Function(BuildContext)? routeBuilder,
+    Widget Function(BuildContext)? previewBuilder,
+  }) {
+    return DashboardModuleItem(
+      id: id,
+      title: title,
+      subtitle: subtitle,
+      description: description,
+      icon: icon,
+      accentColor: accentColor,
+      status: status ?? this.status,
+      highlights: highlights,
+      category: category,
+      isEnabled: isEnabled ?? this.isEnabled,
+      isPinned: isPinned ?? this.isPinned,
+      routeBuilder: routeBuilder ?? this.routeBuilder,
+      previewBuilder: previewBuilder ?? this.previewBuilder,
+    );
+  }
 
   bool get isActive => status == ModuleStatus.active;
   bool get isBeta => status == ModuleStatus.beta;

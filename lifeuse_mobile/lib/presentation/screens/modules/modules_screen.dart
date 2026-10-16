@@ -5,6 +5,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 import '../../navigation/main_navigation_shell.dart';
 import '../../state/money_provider.dart';
+import '../../state/module_provider.dart';
+import 'module_manager_screen.dart';
 import '../dashboard/models/dashboard_module_item.dart';
 import '../dashboard/widgets/module_card.dart';
 
@@ -108,8 +110,13 @@ class _ModulesScreenState extends State<ModulesScreen> {
   }
 
   void _onModuleTap(BuildContext context, DashboardModuleItem module) {
-    if (module.isActive) {
+    if (module.id == 'money_manager') {
       MainNavigationShell.openMoneyManager(context);
+    } else if (module.routeBuilder != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: module.routeBuilder!),
+      );
     } else {
       _showModuleRoadmapModal(context, module);
     }
@@ -269,9 +276,16 @@ class _ModulesScreenState extends State<ModulesScreen> {
     final surfaceColor = AppColors.surfaceOf(context);
     final borderColor = AppColors.borderOf(context);
 
-    final allModules = DashboardModuleItem.getRegistry(
-      moneyPreviewBuilder: (ctx) => _buildMoneyManagerPreview(ctx),
-    );
+    final moduleProvider = context.watch<ModuleProvider>();
+
+    final allModules = moduleProvider.allModules.map((m) {
+      if (m.id == 'money_manager') {
+        return m.copyWith(
+          previewBuilder: (ctx) => _buildMoneyManagerPreview(ctx),
+        );
+      }
+      return m;
+    }).toList();
 
     final filteredModules = allModules.where((m) {
       if (_selectedStatusFilter == 'ACTIVE' && !m.isActive) return false;
@@ -291,12 +305,20 @@ class _ModulesScreenState extends State<ModulesScreen> {
             color: textPrimary,
           ),
         ),
-        actions: const [
-          Padding(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.tune_rounded),
+            tooltip: 'Module Manager',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ModuleManagerScreen()),
+            ),
+          ),
+          const Padding(
             padding: EdgeInsets.only(right: 16),
             child: Center(
               child: LifeUseBadge(
-                text: '1 LIVE • 9 ROADMAP',
+                text: '10 MODULES',
                 variant: LifeUseBadgeVariant.active,
               ),
             ),

@@ -10,6 +10,8 @@ import 'package:lifeuse_mobile/data/services/money_service.dart';
 import 'package:lifeuse_mobile/presentation/state/auth_provider.dart';
 import 'package:lifeuse_mobile/presentation/state/money_provider.dart';
 
+import 'package:lifeuse_mobile/presentation/state/module_provider.dart';
+
 void main() {
   testWidgets('LifeUse app smoke test - opens directly to Dashboard', (WidgetTester tester) async {
     final apiClient = ApiClient();
@@ -17,6 +19,7 @@ void main() {
     final authProvider = AuthProvider(authService);
     final moneyService = MoneyService(apiClient);
     final moneyProvider = MoneyProvider(moneyService);
+    final moduleProvider = ModuleProvider();
     final themeProvider = ThemeProvider();
 
     await tester.pumpWidget(
@@ -27,6 +30,7 @@ void main() {
           Provider<MoneyService>.value(value: moneyService),
           ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
           ChangeNotifierProvider<MoneyProvider>.value(value: moneyProvider),
+          ChangeNotifierProvider<ModuleProvider>.value(value: moduleProvider),
           ChangeNotifierProvider<ThemeProvider>.value(value: themeProvider),
         ],
         child: const LifeUseApp(),
@@ -39,6 +43,34 @@ void main() {
     expect(find.text('Life Management Modules'), findsOneWidget);
     expect(find.text('Daily Overview'), findsOneWidget);
     expect(find.text('Guest Explorer'), findsOneWidget);
+    expect(find.text('Manage'), findsOneWidget);
+  });
+
+  test('ModuleProvider manages 10 dynamic modules, pinning, and toggle', () {
+    final provider = ModuleProvider();
+    expect(provider.allModules.length, equals(10));
+    expect(provider.enabledCount, equals(10));
+
+    // Toggle home_management off
+    provider.toggleModule('home_management');
+    expect(provider.enabledCount, equals(9));
+    expect(provider.enabledModules.any((m) => m.id == 'home_management'), isFalse);
+
+    // Toggle back on
+    provider.toggleModule('home_management');
+    expect(provider.enabledCount, equals(10));
+    expect(provider.enabledModules.any((m) => m.id == 'home_management'), isTrue);
+
+    // Toggle pin on health_wellness
+    expect(provider.pinnedCount, equals(1)); // money_manager is pinned by default
+    provider.togglePin('health_wellness');
+    expect(provider.pinnedCount, equals(2));
+    expect(provider.enabledModules.first.id, isIn(['money_manager', 'health_wellness']));
+
+    // Reset to default
+    provider.resetToDefault();
+    expect(provider.enabledCount, equals(10));
+    expect(provider.pinnedCount, equals(1));
   });
 
   test('ApiResponse parses double timestamp without TypeError', () {
