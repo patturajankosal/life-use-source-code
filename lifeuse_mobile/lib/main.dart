@@ -8,7 +8,6 @@ import 'data/services/money_service.dart';
 import 'presentation/navigation/main_navigation_shell.dart';
 import 'presentation/state/auth_provider.dart';
 import 'presentation/state/money_provider.dart';
-import 'presentation/state/module_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +17,6 @@ void main() async {
   final authProvider = AuthProvider(authService);
   final moneyService = MoneyService(apiClient);
   final moneyProvider = MoneyProvider(moneyService);
-  final moduleProvider = ModuleProvider();
   final themeProvider = ThemeProvider();
 
   // Restore stored session if exists
@@ -32,7 +30,6 @@ void main() async {
         Provider<MoneyService>.value(value: moneyService),
         ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
         ChangeNotifierProvider<MoneyProvider>.value(value: moneyProvider),
-        ChangeNotifierProvider<ModuleProvider>.value(value: moduleProvider),
         ChangeNotifierProvider<ThemeProvider>.value(value: themeProvider),
       ],
       child: const LifeUseApp(),

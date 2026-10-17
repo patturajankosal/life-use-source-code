@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/lifeuse_badge.dart';
 import '../models/dashboard_module_item.dart';
 
-/// Highly customizable and reusable card for dashboard feature modules.
-/// Displays module branding, status badge, feature tags, live preview, and tap interaction.
+/// Clean, responsive mobile card for hardcoded dashboard modules.
 class ModuleCard extends StatelessWidget {
-  final DashboardModuleItem module;
+  final HardcodedModuleItem module;
   final VoidCallback onTap;
 
   const ModuleCard({
@@ -18,185 +16,102 @@ class ModuleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final surfaceColor = AppColors.surfaceOf(context);
     final borderColor = AppColors.borderOf(context);
     final textPrimary = AppColors.textPrimaryOf(context);
     final textSecondary = AppColors.textSecondaryOf(context);
-
-    LifeUseBadgeVariant badgeVariant;
-    switch (module.status) {
-      case ModuleStatus.active:
-        badgeVariant = LifeUseBadgeVariant.active;
-        break;
-      case ModuleStatus.beta:
-        badgeVariant = LifeUseBadgeVariant.pending;
-        break;
-      case ModuleStatus.comingSoon:
-        badgeVariant = LifeUseBadgeVariant.defaultVariant;
-        break;
-    }
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       decoration: BoxDecoration(
         color: surfaceColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: module.isActive
-              ? module.accentColor.withValues(alpha: 0.3)
-              : borderColor,
-          width: module.isActive ? 1.5 : 1,
-        ),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: borderColor, width: 1),
         boxShadow: [
           BoxShadow(
-            color: module.isActive
-                ? module.accentColor.withValues(alpha: isDark ? 0.12 : 0.06)
-                : Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-            blurRadius: 18,
-            offset: const Offset(0, 6),
+            color: Colors.black.withValues(alpha: isDark ? 0.18 : 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
+          borderRadius: BorderRadius.circular(18),
           onTap: onTap,
-          borderRadius: BorderRadius.circular(20),
-          splashColor: module.accentColor.withValues(alpha: 0.1),
-          highlightColor: module.accentColor.withValues(alpha: 0.05),
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(14),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Top row: Module Icon + Title + Status Badge
+                // Top row: Module Icon and Status Badge
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Icon container with ambient accent color
                     Container(
-                      width: 48,
-                      height: 48,
+                      width: 42,
+                      height: 42,
                       decoration: BoxDecoration(
-                        color: module.accentColor.withValues(alpha: isDark ? 0.15 : 0.1),
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                          color: module.accentColor.withValues(alpha: 0.3),
-                          width: 1.2,
-                        ),
+                        color: module.accentColor.withValues(alpha: isDark ? 0.16 : 0.10),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
                         module.icon,
-                        size: 24,
                         color: module.accentColor,
+                        size: 22,
                       ),
                     ),
-                    const SizedBox(width: 14),
-
-                    // Title & Subtitle
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  module.title,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w700,
-                                    color: textPrimary,
-                                    letterSpacing: -0.2,
-                                  ),
-                                ),
-                              ),
-                              LifeUseBadge(
-                                text: module.statusLabel,
-                                variant: badgeVariant,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            module.subtitle,
-                            style: GoogleFonts.inter(
-                              fontSize: 12.5,
-                              fontWeight: FontWeight.w500,
-                              color: module.accentColor,
-                            ),
-                          ),
-                        ],
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: module.accentColor.withValues(alpha: isDark ? 0.14 : 0.08),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: module.accentColor.withValues(alpha: 0.25),
+                          width: 0.8,
+                        ),
+                      ),
+                      child: Text(
+                        module.badgeText,
+                        style: GoogleFonts.inter(
+                          fontSize: 9.5,
+                          fontWeight: FontWeight.w700,
+                          color: module.accentColor,
+                          letterSpacing: 0.3,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
 
-                // Description
-                Text(
-                  module.description,
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    height: 1.45,
-                    color: textSecondary,
-                  ),
-                ),
+                const SizedBox(height: 10),
 
-                // Optional live stats preview builder (e.g. today's spending limit)
-                if (module.previewBuilder != null) ...[
-                  const SizedBox(height: 14),
-                  module.previewBuilder!(context),
-                ],
-
-                const SizedBox(height: 14),
-
-                // Highlights pills & action arrow
-                Row(
+                // Title and Subtitle
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Wrap(
-                        spacing: 6,
-                        runSpacing: 6,
-                        children: module.highlights.map((tag) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: isDark
-                                  ? Colors.white.withValues(alpha: 0.05)
-                                  : Colors.black.withValues(alpha: 0.03),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: borderColor.withValues(alpha: 0.6),
-                              ),
-                            ),
-                            child: Text(
-                              tag,
-                              style: GoogleFonts.inter(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                                color: textSecondary,
-                              ),
-                            ),
-                          );
-                        }).toList(),
+                    Text(
+                      module.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.inter(
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.w700,
+                        color: textPrimary,
+                        letterSpacing: -0.2,
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Container(
-                      width: 34,
-                      height: 34,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: module.isActive
-                            ? module.accentColor.withValues(alpha: 0.12)
-                            : borderColor.withValues(alpha: 0.3),
-                      ),
-                      child: Icon(
-                        Icons.arrow_forward_rounded,
-                        size: 18,
-                        color: module.isActive ? module.accentColor : textSecondary,
+                    const SizedBox(height: 3),
+                    Text(
+                      module.subtitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.inter(
+                        fontSize: 11.5,
+                        color: textSecondary,
+                        height: 1.25,
                       ),
                     ),
                   ],

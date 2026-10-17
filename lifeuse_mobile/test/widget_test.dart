@@ -7,19 +7,17 @@ import 'package:lifeuse_mobile/data/models/login_response.dart';
 import 'package:lifeuse_mobile/data/services/api_client.dart';
 import 'package:lifeuse_mobile/data/services/auth_service.dart';
 import 'package:lifeuse_mobile/data/services/money_service.dart';
+import 'package:lifeuse_mobile/presentation/screens/dashboard/models/dashboard_module_item.dart';
 import 'package:lifeuse_mobile/presentation/state/auth_provider.dart';
 import 'package:lifeuse_mobile/presentation/state/money_provider.dart';
 
-import 'package:lifeuse_mobile/presentation/state/module_provider.dart';
-
 void main() {
-  testWidgets('LifeUse app smoke test - opens directly to Dashboard', (WidgetTester tester) async {
+  testWidgets('LifeUse app smoke test - opens directly to hardcoded Dashboard', (WidgetTester tester) async {
     final apiClient = ApiClient();
     final authService = AuthService(apiClient);
     final authProvider = AuthProvider(authService);
     final moneyService = MoneyService(apiClient);
     final moneyProvider = MoneyProvider(moneyService);
-    final moduleProvider = ModuleProvider();
     final themeProvider = ThemeProvider();
 
     await tester.pumpWidget(
@@ -30,7 +28,6 @@ void main() {
           Provider<MoneyService>.value(value: moneyService),
           ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
           ChangeNotifierProvider<MoneyProvider>.value(value: moneyProvider),
-          ChangeNotifierProvider<ModuleProvider>.value(value: moduleProvider),
           ChangeNotifierProvider<ThemeProvider>.value(value: themeProvider),
         ],
         child: const LifeUseApp(),
@@ -39,38 +36,29 @@ void main() {
 
     await tester.pump();
 
-    // Verify application starts directly on Dashboard without gating
-    expect(find.text('Life Management Modules'), findsOneWidget);
-    expect(find.text('Daily Overview'), findsOneWidget);
-    expect(find.text('Guest Explorer'), findsOneWidget);
-    expect(find.text('Manage'), findsOneWidget);
+    // Verify application starts directly on Dashboard with hardcoded modules
+    expect(find.text('Life Modules'), findsOneWidget);
+    expect(find.text('Money Manager'), findsWidgets);
+    expect(find.text('Home Management'), findsOneWidget);
   });
 
-  test('ModuleProvider manages 10 dynamic modules, pinning, and toggle', () {
-    final provider = ModuleProvider();
-    expect(provider.allModules.length, equals(10));
-    expect(provider.enabledCount, equals(10));
+  test('HardcodedModuleItem contains all 10 standard life modules', () {
+    final modules = HardcodedModuleItem.hardcodedModules;
+    expect(modules.length, equals(10));
 
-    // Toggle home_management off
-    provider.toggleModule('home_management');
-    expect(provider.enabledCount, equals(9));
-    expect(provider.enabledModules.any((m) => m.id == 'home_management'), isFalse);
-
-    // Toggle back on
-    provider.toggleModule('home_management');
-    expect(provider.enabledCount, equals(10));
-    expect(provider.enabledModules.any((m) => m.id == 'home_management'), isTrue);
-
-    // Toggle pin on health_wellness
-    expect(provider.pinnedCount, equals(1)); // money_manager is pinned by default
-    provider.togglePin('health_wellness');
-    expect(provider.pinnedCount, equals(2));
-    expect(provider.enabledModules.first.id, isIn(['money_manager', 'health_wellness']));
-
-    // Reset to default
-    provider.resetToDefault();
-    expect(provider.enabledCount, equals(10));
-    expect(provider.pinnedCount, equals(1));
+    final ids = modules.map((m) => m.id).toList();
+    expect(ids, containsAll([
+      'money_manager',
+      'home_management',
+      'daily_tasks',
+      'health_wellness',
+      'bills_payments',
+      'notifications',
+      'tickets_travel',
+      'exams_learning',
+      'documents_vault',
+      'personal_planning',
+    ]));
   });
 
   test('ApiResponse parses double timestamp without TypeError', () {
@@ -87,7 +75,7 @@ void main() {
         'email': 'test@lifeuse.com',
         'role': 'ROLE_USER',
       },
-      'timestamp': 1791800077.4560094, // The exact double timestamp from Spring Boot
+      'timestamp': 1791800077.4560094,
     };
 
     final response = ApiResponse.fromJson(

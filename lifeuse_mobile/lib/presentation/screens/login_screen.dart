@@ -12,7 +12,7 @@ import '../../core/widgets/corner_ambient_glow.dart';
 import '../../core/widgets/feedback_banner.dart';
 import '../../core/widgets/lifeuse_animated_icons.dart';
 import '../../core/widgets/lifeuse_wordmark.dart';
-import '../navigation/main_navigation_shell.dart';
+import 'home_screen.dart';
 import '../state/auth_provider.dart';
 import 'register_screen.dart';
 
@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (success && mounted) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const MainNavigationShell()),
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
     }
   }

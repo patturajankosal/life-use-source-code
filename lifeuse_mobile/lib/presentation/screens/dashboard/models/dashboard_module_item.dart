@@ -1,4 +1,14 @@
 import 'package:flutter/material.dart';
+import '../../activity/activity_screen.dart';
+import '../../modules/bills_payments_screen.dart';
+import '../../modules/documents_vault_screen.dart';
+import '../../modules/exams_learning_screen.dart';
+import '../../modules/health_wellness_screen.dart';
+import '../../modules/home_management_screen.dart';
+import '../../modules/personal_planning_screen.dart';
+import '../../modules/tickets_travel_screen.dart';
+import '../../money/money_manager_screen.dart';
+import '../../notifications/notifications_screen.dart';
 
 enum ModuleStatus {
   active,
@@ -6,65 +16,37 @@ enum ModuleStatus {
   comingSoon,
 }
 
-/// Descriptor configuration for a dashboard feature module.
-/// Enables adding or reordering modules cleanly without modifying dashboard layout code.
-class DashboardModuleItem {
+/// Clean, hardcoded module definition for normal mobile application dashboard.
+class HardcodedModuleItem {
   final String id;
   final String title;
   final String subtitle;
   final String description;
   final IconData icon;
   final Color accentColor;
+  final String category;
+  final String badgeText;
   final ModuleStatus status;
   final List<String> highlights;
-  final String category;
-  final bool isEnabled;
-  final bool isPinned;
-  final Widget Function(BuildContext)? routeBuilder;
-  final Widget Function(BuildContext)? previewBuilder;
+  final Widget Function(BuildContext) screenBuilder;
 
-  const DashboardModuleItem({
+  const HardcodedModuleItem({
     required this.id,
     required this.title,
     required this.subtitle,
-    required this.description,
+    this.description = '',
     required this.icon,
     required this.accentColor,
-    required this.status,
-    required this.highlights,
     this.category = 'General',
-    this.isEnabled = true,
-    this.isPinned = false,
-    this.routeBuilder,
-    this.previewBuilder,
+    this.badgeText = 'Active',
+    this.status = ModuleStatus.active,
+    this.highlights = const [],
+    this.screenBuilder = _defaultScreenBuilder,
   });
 
-  DashboardModuleItem copyWith({
-    bool? isEnabled,
-    bool? isPinned,
-    ModuleStatus? status,
-    Widget Function(BuildContext)? routeBuilder,
-    Widget Function(BuildContext)? previewBuilder,
-  }) {
-    return DashboardModuleItem(
-      id: id,
-      title: title,
-      subtitle: subtitle,
-      description: description,
-      icon: icon,
-      accentColor: accentColor,
-      status: status ?? this.status,
-      highlights: highlights,
-      category: category,
-      isEnabled: isEnabled ?? this.isEnabled,
-      isPinned: isPinned ?? this.isPinned,
-      routeBuilder: routeBuilder ?? this.routeBuilder,
-      previewBuilder: previewBuilder ?? this.previewBuilder,
-    );
-  }
+  static Widget _defaultScreenBuilder(BuildContext context) => const Scaffold();
 
   bool get isActive => status == ModuleStatus.active;
-  bool get isBeta => status == ModuleStatus.beta;
   bool get isComingSoon => status == ModuleStatus.comingSoon;
 
   String get statusLabel {
@@ -78,191 +60,138 @@ class DashboardModuleItem {
     }
   }
 
-  /// Official registry of all 10 Life Management Modules in LifeUse
-  static List<DashboardModuleItem> getRegistry({
-    Widget Function(BuildContext)? moneyPreviewBuilder,
-  }) {
-    return [
-      // 1. Money Manager (Live Connected Micro-App)
-      DashboardModuleItem(
-        id: 'money_manager',
-        title: 'Money Manager',
-        subtitle: 'Intelligent Cash Flow & Budgets',
-        description:
-            'Real-time spending limit, live transactions, multi-horizon budget plans, and recurring schedules.',
-        icon: Icons.account_balance_wallet_rounded,
-        accentColor: const Color(0xFF2563EB), // LifeUse primary blue
-        status: ModuleStatus.active,
-        category: 'Finance',
-        highlights: const [
-          'Daily Limit',
-          'Budget Pressure',
-          'Live API',
-          'Recurring'
-        ],
-        previewBuilder: moneyPreviewBuilder,
-      ),
-
-      // 2. Home Management
-      const DashboardModuleItem(
-        id: 'home_management',
-        title: 'Home Management',
-        subtitle: 'Smart Home, Inventory & Repairs',
-        description:
-            'Track household inventory, smart appliance warranties, scheduled repairs, and ambient home automations.',
-        icon: Icons.home_work_rounded,
-        accentColor: Color(0xFF0284C7),
-        status: ModuleStatus.comingSoon,
-        category: 'Lifestyle',
-        highlights: ['Smart Devices', 'Inventory', 'Maintenance', 'Repairs'],
-      ),
-
-      // 3. Daily Tasks
-      const DashboardModuleItem(
-        id: 'daily_tasks',
-        title: 'Daily Tasks',
-        subtitle: 'Routines, Habits & Priorities',
-        description:
-            'Smart productivity planner with daily recurring checklists, habit streaks, and milestone rewards.',
-        icon: Icons.check_circle_outline_rounded,
-        accentColor: Color(0xFF10B981),
-        status: ModuleStatus.comingSoon,
-        category: 'Productivity',
-        highlights: [
-          'Daily Checklist',
-          'Habit Streaks',
-          'Pomodoro',
-          'Milestones'
-        ],
-      ),
-
-      // 4. Health & Wellness
-      const DashboardModuleItem(
-        id: 'health_wellness',
-        title: 'Health & Wellness',
-        subtitle: 'Vitals, Workouts & Hydration',
-        description:
-            'Monitor daily water intake, active calorie burn, workout exercise logs, and restful sleep patterns.',
-        icon: Icons.favorite_rounded,
-        accentColor: Color(0xFFF43F5E),
-        status: ModuleStatus.comingSoon,
-        category: 'Lifestyle',
-        highlights: ['Water Intake', 'Workout Logs', 'Sleep Tracker', 'Vitals'],
-      ),
-
-      // 5. Bills & Payments
-      const DashboardModuleItem(
-        id: 'bills_payments',
-        title: 'Bills & Payments',
-        subtitle: 'Subscriptions & Due Invoices',
-        description:
-            'Automated bill tracking, due date notifications, subscription cost audits, and payment receipts.',
-        icon: Icons.receipt_long_rounded,
-        accentColor: Color(0xFFF59E0B),
-        status: ModuleStatus.comingSoon,
-        category: 'Finance',
-        highlights: [
-          'Utility Bills',
-          'Subscriptions',
-          'Due Reminders',
-          'Auto-Pay'
-        ],
-      ),
-
-      // 6. Reminders & Notifications
-      const DashboardModuleItem(
-        id: 'reminders_notifications',
-        title: 'Reminders & Notifications',
-        subtitle: 'Time & Geofenced Alerts',
-        description:
-            'Context-aware notifications, follow-up alarms, birthdays, and calendar synchronized alerts.',
-        icon: Icons.notifications_active_rounded,
-        accentColor: Color(0xFF8B5CF6),
-        status: ModuleStatus.comingSoon,
-        category: 'Productivity',
-        highlights: [
-          'Smart Alarms',
-          'Recurring Alerts',
-          'Location Ping',
-          'Follow-ups'
-        ],
-      ),
-
-      // 7. Tickets & Travel
-      const DashboardModuleItem(
-        id: 'tickets_travel',
-        title: 'Tickets & Travel',
-        subtitle: 'Trips, Itineraries & Passes',
-        description:
-            'Centralized travel wallet for flight tickets, train reservations, hotel check-ins, and packing lists.',
-        icon: Icons.flight_takeoff_rounded,
-        accentColor: Color(0xFF06B6D4),
-        status: ModuleStatus.comingSoon,
-        category: 'Lifestyle',
-        highlights: [
-          'Flight Tickets',
-          'Itinerary Plan',
-          'Boarding Passes',
-          'Packing'
-        ],
-      ),
-
-      // 8. Exams & Learning
-      const DashboardModuleItem(
-        id: 'exams_learning',
-        title: 'Exams & Learning',
-        subtitle: 'Study Plans & Certification',
-        description:
-            'Structured study timetables, spaced repetition flashcards, revision trackers, and exam countdowns.',
-        icon: Icons.school_rounded,
-        accentColor: Color(0xFFEC4899),
-        status: ModuleStatus.comingSoon,
-        category: 'Productivity',
-        highlights: [
-          'Exam Countdown',
-          'Flashcards',
-          'Study Timer',
-          'Syllabus'
-        ],
-      ),
-
-      // 9. Documents
-      const DashboardModuleItem(
-        id: 'documents_vault',
-        title: 'Documents',
-        subtitle: 'Encrypted Document Vault',
-        description:
-            'Ultra-secure encrypted vault for national IDs, insurance policies, medical records, and warranties.',
-        icon: Icons.folder_shared_rounded,
-        accentColor: Color(0xFF6366F1),
-        status: ModuleStatus.comingSoon,
-        category: 'Personal Admin',
-        highlights: [
-          'AES-256 Vault',
-          'Insurance Cards',
-          'Govt IDs',
-          'Warranties'
-        ],
-      ),
-
-      // 10. Personal Planning
-      const DashboardModuleItem(
-        id: 'personal_planning',
-        title: 'Personal Planning',
-        subtitle: 'Life Goals & Milestones',
-        description:
-            'Quarterly vision boards, annual life milestones, bucket list ambitions, and self-review journals.',
-        icon: Icons.explore_rounded,
-        accentColor: Color(0xFF14B8A6),
-        status: ModuleStatus.comingSoon,
-        category: 'Personal Admin',
-        highlights: [
-          'Yearly Vision',
-          'Bucket List',
-          'Milestones',
-          'Self Review'
-        ],
-      ),
-    ];
-  }
+  /// The 10 hardcoded Life Management modules of LifeUse
+  static List<HardcodedModuleItem> get hardcodedModules => [
+        HardcodedModuleItem(
+          id: 'money_manager',
+          title: 'Money Manager',
+          subtitle: 'Budgets, income & expenses',
+          description: 'Manage personal finances, budgets, transactions, and cash flow.',
+          icon: Icons.account_balance_wallet_rounded,
+          accentColor: const Color(0xFF10B981), // Emerald
+          category: 'Finance',
+          badgeText: 'Live API',
+          status: ModuleStatus.active,
+          highlights: const ['Daily Limit', 'Budget Plan', 'Live API'],
+          screenBuilder: (_) => const MoneyManagerScreen(),
+        ),
+        HardcodedModuleItem(
+          id: 'home_management',
+          title: 'Home Management',
+          subtitle: 'Appliances, inventory & utilities',
+          description: 'Control smart devices, track home supplies, and equipment warranties.',
+          icon: Icons.home_work_rounded,
+          accentColor: const Color(0xFFF59E0B), // Amber
+          category: 'Lifestyle',
+          badgeText: 'Active',
+          status: ModuleStatus.active,
+          highlights: const ['Smart Home', 'Inventory', 'Warranties'],
+          screenBuilder: (_) => const HomeManagementScreen(),
+        ),
+        HardcodedModuleItem(
+          id: 'daily_tasks',
+          title: 'Daily Tasks',
+          subtitle: 'To-dos, routines & checklists',
+          description: 'Organize tasks, recurring habits, and daily priorities.',
+          icon: Icons.check_circle_outline_rounded,
+          accentColor: const Color(0xFF0EA5E9), // Sky Blue
+          category: 'Productivity',
+          badgeText: 'Active',
+          status: ModuleStatus.active,
+          highlights: const ['To-dos', 'Routines', 'Priority'],
+          screenBuilder: (_) => const ActivityScreen(),
+        ),
+        HardcodedModuleItem(
+          id: 'health_wellness',
+          title: 'Health & Wellness',
+          subtitle: 'Vitals, water intake & workouts',
+          description: 'Track daily water intake, vitals, workouts, and sleep.',
+          icon: Icons.favorite_rounded,
+          accentColor: const Color(0xFFEC4899), // Pink
+          category: 'Lifestyle',
+          badgeText: 'Active',
+          status: ModuleStatus.active,
+          highlights: const ['Water Intake', 'Workouts', 'Vitals'],
+          screenBuilder: (_) => const HealthWellnessScreen(),
+        ),
+        HardcodedModuleItem(
+          id: 'bills_payments',
+          title: 'Bills & Payments',
+          subtitle: 'Upcoming dues & subscriptions',
+          description: 'Monitor recurring bills, due dates, and auto-pay services.',
+          icon: Icons.receipt_long_rounded,
+          accentColor: const Color(0xFFF97316), // Orange
+          category: 'Finance',
+          badgeText: 'Active',
+          status: ModuleStatus.active,
+          highlights: const ['Due Dates', 'Subscriptions', 'Auto-pay'],
+          screenBuilder: (_) => const BillsPaymentsScreen(),
+        ),
+        HardcodedModuleItem(
+          id: 'notifications',
+          title: 'Reminders & Alerts',
+          subtitle: 'Timely alerts & deadlines',
+          description: 'Stay on top of critical reminders, notifications, and alarms.',
+          icon: Icons.notifications_active_rounded,
+          accentColor: const Color(0xFF8B5CF6), // Purple
+          category: 'Productivity',
+          badgeText: 'Active',
+          status: ModuleStatus.active,
+          highlights: const ['Alerts', 'Deadlines', 'Schedules'],
+          screenBuilder: (_) => const NotificationsScreen(),
+        ),
+        HardcodedModuleItem(
+          id: 'tickets_travel',
+          title: 'Tickets & Travel',
+          subtitle: 'Passes, itineraries & packing',
+          icon: Icons.flight_takeoff_rounded,
+          accentColor: const Color(0xFF06B6D4), // Cyan
+          category: 'Lifestyle',
+          badgeText: 'Active',
+          status: ModuleStatus.active,
+          highlights: const ['Flights', 'Hotels', 'Packing List'],
+          screenBuilder: (_) => const TicketsTravelScreen(),
+        ),
+        HardcodedModuleItem(
+          id: 'exams_learning',
+          title: 'Exams & Learning',
+          subtitle: 'Courses, tests & flashcards',
+          icon: Icons.school_rounded,
+          accentColor: const Color(0xFF6366F1), // Indigo
+          category: 'Education',
+          badgeText: 'Active',
+          status: ModuleStatus.active,
+          highlights: const ['Courses', 'Exams', 'Flashcards'],
+          screenBuilder: (_) => const ExamsLearningScreen(),
+        ),
+        HardcodedModuleItem(
+          id: 'documents_vault',
+          title: 'Documents Vault',
+          subtitle: 'Encrypted IDs & policies',
+          description: 'Secure hardware-encrypted document storage for important IDs and certificates.',
+          icon: Icons.folder_shared_rounded,
+          accentColor: const Color(0xFF14B8A6), // Teal
+          category: 'Security',
+          badgeText: 'Encrypted',
+          status: ModuleStatus.active,
+          highlights: const ['AES-256', 'IDs', 'Insurance'],
+          screenBuilder: (_) => const DocumentsVaultScreen(),
+        ),
+        HardcodedModuleItem(
+          id: 'personal_planning',
+          title: 'Personal Planning',
+          subtitle: 'Milestones, vision & goals',
+          description: 'Life roadmap, yearly milestones, and personal bucket list.',
+          icon: Icons.flag_rounded,
+          accentColor: const Color(0xFFEAB308), // Yellow Gold
+          category: 'Planning',
+          badgeText: 'Active',
+          status: ModuleStatus.active,
+          highlights: const ['Milestones', 'Vision Board', 'Goals'],
+          screenBuilder: (_) => const PersonalPlanningScreen(),
+        ),
+      ];
 }
+
+// Backward-compatibility alias
+typedef DashboardModuleItem = HardcodedModuleItem;
