@@ -1,11 +1,12 @@
-# LifeUse – Master Foundation
+# LifeUse – Development
 
-**Purpose:** Original Project Foundation
+**Purpose:** Active Development
 
-This branch maintains the initial project structure, core setup, and historical foundation of LifeUse.
+This branch is used for ongoing development and integration of LifeUse features.
 
-- Preserves original project code.
-- Maintains the initial architecture.
-- No active feature development.
+- New feature implementations.
+- Bug fixes and improvements.
+- API and database integration.
+- Feature branches are merged through Pull Requests.
 
-**Status:** Protected / Archived
+**Status:** Active Development
