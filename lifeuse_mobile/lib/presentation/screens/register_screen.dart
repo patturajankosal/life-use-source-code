@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/theme_provider.dart';
@@ -12,6 +13,7 @@ import '../../core/widgets/feedback_banner.dart';
 import '../../core/widgets/lifeuse_animated_icons.dart';
 import '../../core/widgets/lifeuse_wordmark.dart';
 import '../../data/models/register_request.dart';
+import '../navigation/main_navigation_shell.dart';
 import '../state/auth_provider.dart';
 
 /// Production-ready, card-based Register Screen for LifeUse.
@@ -28,7 +30,8 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  // Priority Fields: Email, Phone, Username
+  // Form Fields
+  final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _usernameController = TextEditingController();
@@ -42,6 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
+    _fullNameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
     _usernameController.dispose();
@@ -56,14 +60,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     FocusScope.of(context).unfocus();
     final auth = context.read<AuthProvider>();
 
+    final fullName = _fullNameController.text.trim();
+    final nameParts = fullName.split(' ');
+    final firstName = nameParts.isNotEmpty ? nameParts.first : '';
+    final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+
     final request = RegisterRequest(
       username: _usernameController.text.trim(),
       email: _emailController.text.trim().toLowerCase(),
       phoneNumber: _phoneController.text.trim(),
       password: _passwordController.text,
       confirmPassword: _confirmPasswordController.text,
-      firstName: '',
-      lastName: '',
+      firstName: firstName,
+      lastName: lastName,
     );
 
     final response = await auth.register(request);
@@ -74,7 +83,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         'Account created successfully for @${response.username}! Please sign in.',
         isError: false,
       );
-      Navigator.of(context).pop();
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const MainNavigationShell()),
+        );
+      }
     }
   }
 
@@ -101,57 +116,102 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Positioned(
             top: 16,
             left: 16,
-            child: SafeArea(
-              child: IconButton(
-                icon: Icon(AppIcons.arrowBack, size: 20, color: textPrimary),
-                tooltip: 'Back to Sign In',
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 16,
             right: 16,
             child: SafeArea(
-              child: Tooltip(
-                message: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
-                child: InkWell(
-                  onTap: () => theme.toggleTheme(),
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: surfaceColor,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: borderColor),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
-                          blurRadius: 8,
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          isDark ? AppIcons.lightMode : AppIcons.darkMode,
-                          size: 16,
-                          color: isDark ? AppColors.amberGold : AppColors.primary,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          isDark ? 'Light' : 'Dark',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: textSecondary,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Back Button
+                  InkWell(
+                    onTap: () {
+                      if (Navigator.of(context).canPop()) {
+                        Navigator.of(context).pop();
+                      } else {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (_) => const MainNavigationShell(),
                           ),
-                        ),
-                      ],
+                        );
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: surfaceColor,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: borderColor),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+                            blurRadius: 8,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            LucideIcons.arrowLeft,
+                            size: 16,
+                            color: textPrimary,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Back',
+                            style: GoogleFonts.inter(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: textPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
+
+                  // Theme Toggle
+                  Tooltip(
+                    message: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+                    child: InkWell(
+                      onTap: () => theme.toggleTheme(),
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: surfaceColor,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: borderColor),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+                              blurRadius: 8,
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              isDark ? AppIcons.lightMode : AppIcons.darkMode,
+                              size: 16,
+                              color: isDark ? AppColors.amberGold : AppColors.primary,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              isDark ? 'Light' : 'Dark',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -160,214 +220,230 @@ class _RegisterScreenState extends State<RegisterScreen> {
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 48),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 440),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        padding: const EdgeInsets.fromLTRB(28, 34, 28, 12),
-                    decoration: BoxDecoration(
-                      color: surfaceColor,
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(
-                        color: borderColor,
-                        width: 1.2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: isDark ? 0.45 : 0.08),
-                          blurRadius: 36,
-                          offset: const Offset(0, 10),
+                        padding: const EdgeInsets.fromLTRB(28, 36, 28, 16),
+                        decoration: BoxDecoration(
+                          color: surfaceColor,
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: borderColor,
+                            width: 1.2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: isDark ? 0.45 : 0.08),
+                              blurRadius: 36,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // --- 1. LifeUse Animated App Icon ---
-                          Center(
-                            child: _buildAnimatedIcon(),
-                          ),
-                          const SizedBox(height: 14),
-
-                          // --- Official Brand Wordmark (Unique Custom Stencil Typography) ---
-                          Center(
-                            child: LifeUseWordmark(
-                              height: 22,
-                              isDark: isDark,
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          // --- Subtitle ---
-                          Center(
-                            child: Text(
-                              'Create your account to unlock smart and seamless access',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.inter(
-                                fontSize: 12.5,
-                                fontWeight: FontWeight.w400,
-                                color: textSecondary,
-                                height: 1.35,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 22),
-
-                          // --- Alerts ---
-                          if (auth.errorMessage != null)
-                            FeedbackBanner(
-                              message: auth.errorMessage!,
-                              isError: true,
-                              onDismiss: () => auth.clearMessages(),
-                            ),
-
-                          // --- Priority Field 1: Email Address ---
-                          AppTextField(
-                            label: 'Email address',
-                            hint: 'Enter your email address',
-                            controller: _emailController,
-                            prefixIcon: AppIcons.email,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: Validators.validateEmail,
-                            textInputAction: TextInputAction.next,
-                          ),
-                          const SizedBox(height: 16),
-
-                          // --- Priority Field 2: Phone Number (Matches User Image Spec) ---
-                          AppTextField(
-                            label: 'Phone number',
-                            hint: 'Enter your phone number',
-                            controller: _phoneController,
-                            prefixIcon: AppIcons.phone,
-                            keyboardType: TextInputType.phone,
-                            validator: Validators.validatePhoneNumber,
-                            textInputAction: TextInputAction.next,
-                          ),
-                          const SizedBox(height: 16),
-
-                          // --- Priority Field 3: Username ---
-                          AppTextField(
-                            label: 'Username',
-                            hint: 'Enter unique username',
-                            controller: _usernameController,
-                            prefixIcon: AppIcons.username,
-                            validator: Validators.validateUsername,
-                            textInputAction: TextInputAction.next,
-                          ),
-                          const SizedBox(height: 16),
-
-                          // --- Field 4: Password with Touch-to-Peek ---
-                          AppTextField(
-                            label: 'Password',
-                            hint: 'Create a secure password',
-                            controller: _passwordController,
-                            prefixIcon: AppIcons.password,
-                            isPassword: true,
-                            validator: Validators.validatePassword,
-                            textInputAction: TextInputAction.next,
-                          ),
-                          const SizedBox(height: 16),
-
-                          // --- Field 5: Confirm Password with Touch-to-Peek ---
-                          AppTextField(
-                            label: 'Confirm password',
-                            hint: 'Re-enter your password',
-                            controller: _confirmPasswordController,
-                            prefixIcon: AppIcons.password,
-                            isPassword: true,
-                            validator: (val) => Validators.validateConfirmPassword(
-                              val,
-                              _passwordController.text,
-                            ),
-                            textInputAction: TextInputAction.done,
-                            onFieldSubmitted: (_) => _submitRegister(),
-                          ),
-                          const SizedBox(height: 26),
-
-                          // --- Submit Button ---
-                          AppButton(
-                            title: 'Create Account',
-                            onPressed: _submitRegister,
-                            isLoading: auth.isLoading,
-                          ),
-                          const SizedBox(height: 20),
-
-                          // --- Switch to Sign In ---
-                          Wrap(
-                            alignment: WrapAlignment.center,
-                            crossAxisAlignment: WrapCrossAlignment.center,
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                'Already have an account? ',
-                                style: GoogleFonts.inter(
-                                  color: textSecondary,
-                                  fontSize: 13.5,
-                                  fontWeight: FontWeight.w400,
+                              // --- Animated 3D LifeUse Icon ---
+                              Center(
+                                child: _buildAnimatedIcon(),
+                              ),
+                              const SizedBox(height: 14),
+
+                              // --- Official Brand Wordmark ---
+                              Center(
+                                child: LifeUseWordmark(
+                                  height: 22,
+                                  isDark: isDark,
                                 ),
                               ),
-                              GestureDetector(
-                                onTap: () => Navigator.of(context).pop(),
+                              const SizedBox(height: 14),
+
+                              // --- Subtitle ---
+                              Center(
                                 child: Text(
-                                  'Sign in',
+                                  'Create your account to unlock personalized life tracking',
+                                  textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
-                                    color: AppColors.primary,
-                                    fontSize: 13.5,
-                                    fontWeight: FontWeight.w700,
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w400,
+                                    color: textSecondary,
+                                    height: 1.35,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 22),
+
+                              // --- Alerts ---
+                              if (auth.errorMessage != null)
+                                FeedbackBanner(
+                                  message: auth.errorMessage!,
+                                  isError: true,
+                                  onDismiss: () => auth.clearMessages(),
+                                ),
+
+                              // --- Field 1: Full Name ---
+                              AppTextField(
+                                label: 'Full name',
+                                hint: 'e.g. Patturajan R',
+                                controller: _fullNameController,
+                                prefixIcon: Icons.badge_outlined,
+                                textInputAction: TextInputAction.next,
+                              ),
+                              const SizedBox(height: 16),
+
+                              // --- Field 2: Email Address ---
+                              AppTextField(
+                                label: 'Email address',
+                                hint: 'Enter your email address',
+                                controller: _emailController,
+                                prefixIcon: AppIcons.email,
+                                keyboardType: TextInputType.emailAddress,
+                                validator: Validators.validateEmail,
+                                textInputAction: TextInputAction.next,
+                              ),
+                              const SizedBox(height: 16),
+
+                              // --- Field 3: Phone Number ---
+                              AppTextField(
+                                label: 'Phone number',
+                                hint: 'Enter your phone number',
+                                controller: _phoneController,
+                                prefixIcon: AppIcons.phone,
+                                keyboardType: TextInputType.phone,
+                                validator: Validators.validatePhoneNumber,
+                                textInputAction: TextInputAction.next,
+                              ),
+                              const SizedBox(height: 16),
+
+                              // --- Field 4: Username ---
+                              AppTextField(
+                                label: 'Username',
+                                hint: 'Choose a unique username',
+                                controller: _usernameController,
+                                prefixIcon: AppIcons.username,
+                                validator: Validators.validateUsername,
+                                textInputAction: TextInputAction.next,
+                              ),
+                              const SizedBox(height: 16),
+
+                              // --- Field 5: Password with Touch-to-Peek ---
+                              AppTextField(
+                                label: 'Password',
+                                hint: 'Create a secure password',
+                                controller: _passwordController,
+                                prefixIcon: AppIcons.password,
+                                isPassword: true,
+                                validator: Validators.validatePassword,
+                                textInputAction: TextInputAction.next,
+                              ),
+                              const SizedBox(height: 16),
+
+                              // --- Field 6: Confirm Password with Touch-to-Peek ---
+                              AppTextField(
+                                label: 'Confirm password',
+                                hint: 'Re-enter your password',
+                                controller: _confirmPasswordController,
+                                prefixIcon: AppIcons.password,
+                                isPassword: true,
+                                validator: (val) => Validators.validateConfirmPassword(
+                                  val,
+                                  _passwordController.text,
+                                ),
+                                textInputAction: TextInputAction.done,
+                                onFieldSubmitted: (_) => _submitRegister(),
+                              ),
+                              const SizedBox(height: 24),
+
+                              // --- Submit Button ---
+                              AppButton(
+                                title: 'Create Account',
+                                onPressed: _submitRegister,
+                                isLoading: auth.isLoading,
+                              ),
+                              const SizedBox(height: 18),
+
+                              // --- Switch to Sign In ---
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: [
+                                  Text(
+                                    'Already have an account? ',
+                                    style: GoogleFonts.inter(
+                                      color: textSecondary,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => Navigator.of(context).pop(),
+                                    child: Text(
+                                      'Sign in',
+                                      style: GoogleFonts.inter(
+                                        color: AppColors.primary,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 18),
+
+                              // --- Footer Branding ---
+                              Center(
+                                child: Text(
+                                  '© 2026 LIFEUSE. All rights reserved.',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.6,
+                                    color: isDark
+                                        ? const Color(0xFF94A3B8)
+                                        : const Color(0xFF64748B),
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 20),
-
-                          // --- Footer Branding (Inside Card, Bottom Aligned & High Contrast) ---
-                          Center(
-                            child: Text(
-                              '© 2026 LIFEUSE. All rights reserved.',
-                              style: GoogleFonts.inter(
-                                fontSize: 11.5,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 0.6,
-                                color: isDark
-                                    ? const Color(0xFF94A3B8)
-                                    : const Color(0xFF475569),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
-    ],
-  ),
-);
+    );
   }
 
   Widget _buildAnimatedIcon() {
     switch (_iconAnimMode) {
       case 0:
         return LifeUse3DIcon(
-          size: 82,
-          mode: LifeUseIconAnimMode.hyperVortex, // Mode 0: Swirling Cosmic Spiral Flow with Flowing Star Sparks
+          size: 78,
+          mode: LifeUseIconAnimMode.hyperVortex,
           onTap: () => setState(() => _iconAnimMode = 1),
         );
       case 1:
+        return LifeUse3DIcon(
+          size: 78,
+          mode: LifeUseIconAnimMode.orbital3D,
+          onTap: () => setState(() => _iconAnimMode = 2),
+        );
+      case 2:
       default:
         return LifeUse3DIcon(
-          size: 82,
-          mode: LifeUseIconAnimMode.orbital3D, // Mode 1: 3D Keplerian Celestial Orbit with Radiant Comet Star Tails
+          size: 78,
+          mode: LifeUseIconAnimMode.quantumPulse,
           onTap: () => setState(() => _iconAnimMode = 0),
         );
     }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
@@ -40,7 +42,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
       activity: 'Morning Jogging & Cardio',
       duration: '35 mins',
       calories: 320,
-      icon: Icons.directions_run_rounded,
+      icon: LucideIcons.activity,
       isCompleted: true,
     ),
     _WorkoutLog(
@@ -48,7 +50,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
       activity: 'Core Strength & Pushups',
       duration: '20 mins',
       calories: 180,
-      icon: Icons.fitness_center_rounded,
+      icon: LucideIcons.dumbbell,
       isCompleted: true,
     ),
     _WorkoutLog(
@@ -56,7 +58,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
       activity: 'Evening Yoga & Stretch',
       duration: '25 mins',
       calories: 120,
-      icon: Icons.self_improvement_rounded,
+      icon: LucideIcons.heartPulse,
       isCompleted: false,
     ),
   ];
@@ -132,7 +134,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                       activity: nameCtrl.text.trim(),
                       duration: durCtrl.text.trim().isEmpty ? '20 mins' : durCtrl.text.trim(),
                       calories: int.tryParse(calCtrl.text) ?? 150,
-                      icon: Icons.sports_gymnastics_rounded,
+                      icon: LucideIcons.activity,
                       isCompleted: true,
                     ),
                   );
@@ -166,11 +168,11 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
       appBar: AppBar(
         title: Text(
           'Health & Wellness',
-          style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700),
+          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_rounded),
+            icon: const Icon(LucideIcons.plus, size: 20),
             tooltip: 'Log Workout',
             onPressed: _showAddWorkoutDialog,
           ),
@@ -214,7 +216,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                                     color: Colors.blue.withValues(alpha: 0.12),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  child: const Icon(Icons.water_drop_rounded, color: Colors.blue, size: 22),
+                                  child: const Icon(LucideIcons.droplets, color: Colors.blue, size: 22),
                                 ),
                                 const SizedBox(width: 12),
                                 Column(
@@ -428,7 +430,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                 ],
               ),
             ),
-          ),
+          ).animate().fadeIn(duration: 250.ms),
         ),
       ),
     );

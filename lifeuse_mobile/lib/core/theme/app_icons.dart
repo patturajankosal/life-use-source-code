@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// Centralized Global Iconography registry for LifeUse.
 /// File: lib/core/theme/app_icons.dart
 ///
-/// Contains all icons mapped directly from the Figma Design System
-/// including Auth, Navigation, Platform Sidebar, and Dashboard Metrics.
+/// Contains all icons mapped directly from the Premium Minimal Design System
+/// using modern Lucide outline iconography.
 class AppIcons {
   AppIcons._();
 
@@ -17,52 +18,52 @@ class AppIcons {
   // ---------------------------------------------------------------------------
   // 2. AUTHENTICATION & FORM ICONS
   // ---------------------------------------------------------------------------
-  static const IconData email = Icons.mail_outline_rounded;
-  static const IconData phone = Icons.phone_iphone_rounded;
-  static const IconData username = Icons.alternate_email_rounded;
-  static const IconData userProfile = Icons.person_outline_rounded;
-  static const IconData password = Icons.lock_outline_rounded;
-  static const IconData passwordVisible = Icons.visibility_outlined;
-  static const IconData passwordHidden = Icons.visibility_off_outlined;
+  static const IconData email = LucideIcons.mail;
+  static const IconData phone = LucideIcons.phone;
+  static const IconData username = LucideIcons.atSign;
+  static const IconData userProfile = LucideIcons.user;
+  static const IconData password = LucideIcons.lock;
+  static const IconData passwordVisible = LucideIcons.eye;
+  static const IconData passwordHidden = LucideIcons.eyeOff;
 
   // ---------------------------------------------------------------------------
   // 3. FIGMA PLATFORM & SIDEBAR NAVIGATION (Directly from Figma UI specs)
   // ---------------------------------------------------------------------------
-  static const IconData dashboard = Icons.grid_view_rounded;
-  static const IconData staff = Icons.people_outline_rounded;
-  static const IconData targetTracking = Icons.track_changes_rounded;
-  static const IconData orgChart = Icons.account_tree_outlined;
-  static const IconData attendance = Icons.calendar_today_outlined;
-  static const IconData attendanceApproval = Icons.event_available_outlined;
-  static const IconData travelAllowance = Icons.directions_car_outlined;
-  static const IconData leaves = Icons.date_range_outlined;
-  static const IconData permission = Icons.schedule_outlined;
-  static const IconData workFromHome = Icons.home_outlined;
-  static const IconData hiring = Icons.person_search_outlined;
-  static const IconData salarySlip = Icons.receipt_long_outlined;
-  static const IconData fineAndDeduction = Icons.bookmark_border_rounded;
-  static const IconData incentives = Icons.card_giftcard_outlined;
-  static const IconData backToWorkspace = Icons.chevron_left_rounded;
+  static const IconData dashboard = LucideIcons.layoutDashboard;
+  static const IconData staff = LucideIcons.userCheck;
+  static const IconData targetTracking = LucideIcons.compass;
+  static const IconData orgChart = LucideIcons.layoutGrid;
+  static const IconData attendance = LucideIcons.checkSquare;
+  static const IconData attendanceApproval = LucideIcons.checkCircle2;
+  static const IconData travelAllowance = LucideIcons.plane;
+  static const IconData leaves = LucideIcons.clock;
+  static const IconData permission = LucideIcons.shieldCheck;
+  static const IconData workFromHome = LucideIcons.home;
+  static const IconData hiring = LucideIcons.user;
+  static const IconData salarySlip = LucideIcons.receipt;
+  static const IconData fineAndDeduction = LucideIcons.wallet;
+  static const IconData incentives = LucideIcons.award;
+  static const IconData backToWorkspace = LucideIcons.arrowLeft;
 
   // ---------------------------------------------------------------------------
   // 4. NAVIGATION, THEME & SYSTEM ACTIONS
   // ---------------------------------------------------------------------------
-  static const IconData arrowBack = Icons.arrow_back_ios_new_rounded;
-  static const IconData arrowForward = Icons.arrow_forward_rounded;
-  static const IconData chevronDown = Icons.keyboard_arrow_down_rounded;
-  static const IconData logout = Icons.logout_rounded;
-  static const IconData settings = Icons.settings_outlined;
-  static const IconData darkMode = Icons.dark_mode_rounded;
-  static const IconData lightMode = Icons.light_mode_rounded;
+  static const IconData arrowBack = LucideIcons.arrowLeft;
+  static const IconData arrowForward = LucideIcons.arrowRight;
+  static const IconData chevronDown = LucideIcons.chevronDown;
+  static const IconData logout = LucideIcons.logOut;
+  static const IconData settings = LucideIcons.settings;
+  static const IconData darkMode = LucideIcons.moon;
+  static const IconData lightMode = LucideIcons.sun;
 
   // ---------------------------------------------------------------------------
   // 5. STATUS, TRENDS & FEEDBACK
   // ---------------------------------------------------------------------------
-  static const IconData checkCircle = Icons.check_circle_rounded;
-  static const IconData check = Icons.check_rounded;
-  static const IconData errorCircle = Icons.error_outline_rounded;
-  static const IconData warningAlert = Icons.warning_amber_rounded;
-  static const IconData pending = Icons.pending_outlined;
-  static const IconData badge = Icons.badge_outlined;
-  static const IconData trendUp = Icons.trending_up_rounded;
+  static const IconData checkCircle = LucideIcons.checkCircle2;
+  static const IconData check = LucideIcons.check;
+  static const IconData errorCircle = LucideIcons.alertCircle;
+  static const IconData warningAlert = LucideIcons.alertTriangle;
+  static const IconData pending = LucideIcons.clock;
+  static const IconData badge = LucideIcons.shieldCheck;
+  static const IconData trendUp = LucideIcons.trendingUp;
 }

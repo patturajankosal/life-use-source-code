@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
@@ -143,11 +145,11 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
       appBar: AppBar(
         title: Text(
           'Personal Planning',
-          style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700),
+          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_rounded),
+            icon: const Icon(LucideIcons.plus, size: 20),
             tooltip: 'Add Goal',
             onPressed: _showAddGoalDialog,
           ),
@@ -185,7 +187,7 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                             color: accentColor.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(14),
                           ),
-                          child: const Icon(Icons.explore_rounded, color: accentColor, size: 26),
+                          child: const Icon(LucideIcons.compass, color: accentColor, size: 24),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -349,7 +351,7 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                 ],
               ),
             ),
-          ),
+          ).animate().fadeIn(duration: 250.ms),
         ),
       ),
     );

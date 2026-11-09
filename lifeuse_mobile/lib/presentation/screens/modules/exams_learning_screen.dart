@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
@@ -101,7 +103,7 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
       appBar: AppBar(
         title: Text(
           'Exams & Learning',
-          style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700),
+          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
         ),
       ),
       body: SafeArea(
@@ -136,7 +138,7 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                           children: [
                             Row(
                               children: [
-                                const Icon(Icons.style_rounded, color: accentColor, size: 20),
+                                const Icon(LucideIcons.bookOpen, color: accentColor, size: 18),
                                 const SizedBox(width: 8),
                                 Text(
                                   'Daily Revision Flashcard',
@@ -208,7 +210,7 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             TextButton.icon(
-                              icon: const Icon(Icons.flip_rounded, size: 16),
+                              icon: const Icon(LucideIcons.refreshCw, size: 14),
                               label: Text(card.isFlipped ? 'Show Question' : 'Reveal Answer'),
                               onPressed: () {
                                 setState(() => card.isFlipped = !card.isFlipped);
@@ -219,7 +221,7 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                                 backgroundColor: accentColor,
                                 foregroundColor: Colors.white,
                               ),
-                              icon: const Icon(Icons.arrow_forward_rounded, size: 16),
+                              icon: const Icon(LucideIcons.arrowRight, size: 14),
                               label: const Text('Next Card'),
                               onPressed: () {
                                 setState(() {
@@ -329,7 +331,7 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                 ],
               ),
             ),
-          ),
+          ).animate().fadeIn(duration: 250.ms),
         ),
       ),
     );

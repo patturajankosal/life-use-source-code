@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
@@ -51,7 +53,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
       provider: 'TNEB Power Distribution',
       amount: 1840.00,
       dueDate: 'Due Oct 19 (in 3 days)',
-      icon: Icons.bolt_rounded,
+      icon: LucideIcons.zap,
       isPaid: false,
       isAutoPay: false,
     ),
@@ -61,7 +63,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
       provider: 'Airtel Broadband',
       amount: 1179.00,
       dueDate: 'Due Oct 22 (in 6 days)',
-      icon: Icons.wifi_rounded,
+      icon: LucideIcons.wifi,
       isPaid: false,
       isAutoPay: true,
     ),
@@ -71,7 +73,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
       provider: 'City Gas Networks',
       amount: 480.00,
       dueDate: 'Paid Oct 12',
-      icon: Icons.local_fire_department_rounded,
+      icon: LucideIcons.flame,
       isPaid: true,
       isAutoPay: false,
     ),
@@ -81,7 +83,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
       provider: 'Jio 5G Family Plan',
       amount: 699.00,
       dueDate: 'Paid Oct 10',
-      icon: Icons.phone_android_rounded,
+      icon: LucideIcons.smartphone,
       isPaid: true,
       isAutoPay: true,
     ),
@@ -164,7 +166,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                       provider: provCtrl.text.trim().isEmpty ? 'Direct Provider' : provCtrl.text.trim(),
                       amount: double.tryParse(amountCtrl.text) ?? 500.0,
                       dueDate: dateCtrl.text.trim().isEmpty ? 'Due this month' : dateCtrl.text.trim(),
-                      icon: Icons.receipt_long_rounded,
+                      icon: LucideIcons.receipt,
                       isPaid: false,
                     ),
                   );
@@ -201,11 +203,11 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
       appBar: AppBar(
         title: Text(
           'Bills & Payments',
-          style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700),
+          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_rounded),
+            icon: const Icon(LucideIcons.plus, size: 20),
             tooltip: 'Add Bill',
             onPressed: _showAddBillDialog,
           ),
@@ -243,7 +245,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                             color: accentColor.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(14),
                           ),
-                          child: const Icon(Icons.receipt_long_rounded, color: accentColor, size: 26),
+                          child: const Icon(LucideIcons.receipt, color: accentColor, size: 24),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -405,7 +407,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                 ],
               ),
             ),
-          ),
+          ).animate().fadeIn(duration: 250.ms),
         ),
       ),
     );

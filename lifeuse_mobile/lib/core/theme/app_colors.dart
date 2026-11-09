@@ -23,17 +23,17 @@ class AppColors {
   static const Color darkBase800 = Color(0xFFCCCCCC);
 
   // ===========================================================================
-  // 2. PRIMARY VIOLET & PURPLE TOKENS
+  // 2. PRIMARY EMERALD (PREMIUM MINIMAL) & BRAND VIOLET TOKENS
   // ===========================================================================
-  static const Color primary = Color(0xFFA855F7); // LifeUse Vibrant Purple
-  static const Color primaryDark = Color(0xFF8B5CF6);
-  static const Color primaryDeep = Color(0xFF7C3AED);
-  static const Color primaryViolet = Color(0xFFAE61F9);
+  static const Color primary = Color(0xFF10B981); // Approved Premium Minimal Accent: Emerald #10B981
+  static const Color primaryDark = Color(0xFF059669);
+  static const Color primaryDeep = Color(0xFF047857);
+  static const Color primaryViolet = Color(0xFFA855F7); // LifeUse Brand Violet
   static const Color purple400 = Color(0xFFC084FC);
   static const Color purple425 = Color(0xFFB978FA);
-  static const Color primaryLight = purple400;
-  static const Color primaryGlow = Color(0x4DA855F7);
-  static const Color primarySubtle = Color(0x1AA855F7);
+  static const Color primaryLight = Color(0xFF34D399);
+  static const Color primaryGlow = Color(0x4D10B981);
+  static const Color primarySubtle = Color(0x1A10B981);
 
   // ===========================================================================
   // 3. LIFEUSE INK SCALE
@@ -142,14 +142,14 @@ class AppColors {
   ];
 
   // ===========================================================================
-  // 9. THEME CONTAINER COLOR PALETTES
+  // 9. THEME CONTAINER COLOR PALETTES (Google-Inspired Modern Minimal Direction)
   // ===========================================================================
-  static const Color darkBackground = Color(0xFF08090E);
-  static const Color darkSurface = Color(0xFF121520);
-  static const Color darkSurfaceElevated = Color(0xFF191E2C);
-  static const Color darkBorder = Color(0xFF23283A);
-  static const Color darkBorderActive = Color(0xFF383F58);
-  static const Color darkTextPrimary = Color(0xFFFFFFFF);
+  static const Color darkBackground = Color(0xFF0B0F19); // Obsidian Deep Canvas
+  static const Color darkSurface = Color(0xFF111827);    // Deep modern slate
+  static const Color darkSurfaceElevated = Color(0xFF1E293B); // Elevated slate
+  static const Color darkBorder = Color(0xFF1F293D);     // Subtle 1px outline
+  static const Color darkBorderActive = Color(0xFF374151);
+  static const Color darkTextPrimary = Color(0xFFF8FAFC);
   static const Color darkTextSecondary = Color(0xFF94A3B8);
   static const Color darkTextTertiary = Color(0xFF64748B);
 
@@ -161,6 +161,18 @@ class AppColors {
   static const Color lightTextPrimary = Color(0xFF0F172A);
   static const Color lightTextSecondary = Color(0xFF64748B);
   static const Color lightTextTertiary = Color(0xFF94A3B8);
+
+  // M3 Tonal Containers & Accents
+  static const Color primaryContainer = Color(0x1F10B981); // 12% primary tint
+  static const Color secondaryIndigo = Color(0xFF6366F1);  // Google analytics & secondary
+  static const Color secondaryIndigoContainer = Color(0x1F6366F1);
+  static const Color tertiaryAmber = Color(0xFFF59E0B);    // Deadlines & budget warnings
+  static const Color tertiaryAmberContainer = Color(0x1FF59E0B);
+
+  // Financial Semantics (Tabular & Graph)
+  static const Color financialPositive = Color(0xFF10B981); // Inflow & Income
+  static const Color financialNegative = Color(0xFFF43F5E); // Outflow & Expenses (Rose 500)
+  static const Color financialWarning = Color(0xFFF59E0B);  // Budget caution
 
   // Role Badges
   static const Color roleSuperAdmin = Color(0xFFA855F7);
@@ -193,6 +205,11 @@ class AppColors {
           ? darkSurface
           : lightSurface;
 
+  static Color surfaceElevatedOf(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? darkSurfaceElevated
+          : lightSurfaceElevated;
+
   static Color borderOf(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
           ? darkBorder
@@ -212,6 +229,11 @@ class AppColors {
       Theme.of(context).brightness == Brightness.dark
           ? darkTextTertiary
           : lightTextTertiary;
+
+  static Color primaryContainerOf(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? const Color(0x2610B981) // 15% opacity on dark
+          : const Color(0x1A10B981); // 10% opacity on light
 
   /// Input label color: #4D4D4D in Light, #E6E6E6 in Dark (Matches user uploaded image)
   static Color inputLabelOf(BuildContext context) =>

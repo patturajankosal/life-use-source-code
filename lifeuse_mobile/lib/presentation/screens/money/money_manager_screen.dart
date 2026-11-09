@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../core/widgets/app_button.dart';
+import '../../../core/widgets/auth_guard_dialog.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 import '../../../core/widgets/lifeuse_stat_card.dart';
 import '../../../core/widgets/sweet_alert.dart';
 import '../../../data/models/money/planned_expense_models.dart';
 import '../../../data/models/money/recurring_schedule_models.dart';
 import '../../../data/models/money/transaction_models.dart';
+import '../../state/auth_provider.dart';
 import '../../state/money_provider.dart';
 import 'dialogs/add_planned_expense_dialog.dart';
 import 'dialogs/add_recurring_schedule_dialog.dart';
@@ -52,7 +57,10 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MoneyProvider>().loadDashboardData();
+      final auth = context.read<AuthProvider>();
+      if (auth.isAuthenticated) {
+        context.read<MoneyProvider>().loadDashboardData();
+      }
     });
   }
 
@@ -73,7 +81,7 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
       appBar: AppBar(
         title: Text(
           'Money Manager',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 18,
             fontWeight: FontWeight.w700,
             color: textPrimary,
@@ -81,14 +89,33 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded, size: 20),
+            icon: const Icon(LucideIcons.refreshCw, size: 18),
             tooltip: 'Refresh Financial Data',
-            onPressed: () => money.loadDashboardData(silent: true),
+            onPressed: () {
+              final auth = context.read<AuthProvider>();
+              if (auth.isAuthenticated) {
+                money.loadDashboardData(silent: true);
+              } else {
+                AuthGuardDialog.protect(
+                  context,
+                  title: 'Sign In to Sync Finances',
+                  message: 'Sign in to access your live bank accounts, monthly limits, and budgets.',
+                  onAuthenticated: () => money.loadDashboardData(silent: true),
+                );
+              }
+            },
           ),
           IconButton(
-            icon: const Icon(Icons.add_rounded, size: 22),
+            icon: const Icon(LucideIcons.plus, size: 20),
             tooltip: 'Record Transaction',
-            onPressed: () => AddTransactionDialog.show(context),
+            onPressed: () {
+              AuthGuardDialog.protect(
+                context,
+                title: 'Sign In to Record Transactions',
+                message: 'Keep your transactions, accounts, and budgets synced securely to your LifeUse account.',
+                onAuthenticated: () => AddTransactionDialog.show(context),
+              );
+            },
           ),
         ],
         bottom: TabBar(
@@ -97,8 +124,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
           unselectedLabelColor: textSecondary,
           indicatorColor: AppColors.primary,
           indicatorWeight: 3,
-          labelStyle: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w700),
-          unselectedLabelStyle: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500),
+          labelStyle: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w700),
+          unselectedLabelStyle: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w500),
           tabs: const [
             Tab(text: 'Overview'),
             Tab(text: 'Transactions'),
@@ -117,10 +144,10 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                 _buildBudgetsTab(context, money),
                 _buildPlanningTab(context, money),
               ],
-            ),
+            ).animate().fadeIn(duration: 250.ms),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppColors.primary,
-        icon: const Icon(Icons.add_rounded, color: Colors.white),
+        icon: const Icon(LucideIcons.plus, color: Colors.white, size: 18),
         label: Text(
           'Add',
           style: GoogleFonts.inter(fontWeight: FontWeight.w700, color: Colors.white),
@@ -131,28 +158,36 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
   }
 
   void _handleFabAction(BuildContext context) {
-    switch (_tabController.index) {
-      case 0:
-      case 1:
-        AddTransactionDialog.show(context);
-        break;
-      case 2:
-        CreateBudgetPlanDialog.show(context);
-        break;
-      case 3:
-        if (_planningSubTabIndex == 0) {
-          AddPlannedExpenseDialog.show(context);
-        } else {
-          AddRecurringScheduleDialog.show(context);
+    AuthGuardDialog.protect(
+      context,
+      title: 'Sign In to Money Manager',
+      message: 'Sign in or create an account to record transactions, create budget plans, and sync recurring bills.',
+      onAuthenticated: () {
+        switch (_tabController.index) {
+          case 0:
+          case 1:
+            AddTransactionDialog.show(context);
+            break;
+          case 2:
+            CreateBudgetPlanDialog.show(context);
+            break;
+          case 3:
+            if (_planningSubTabIndex == 0) {
+              AddPlannedExpenseDialog.show(context);
+            } else {
+              AddRecurringScheduleDialog.show(context);
+            }
+            break;
         }
-        break;
-    }
+      },
+    );
   }
 
   // ===========================================================================
   // TAB 1: OVERVIEW
   // ===========================================================================
   Widget _buildOverviewTab(BuildContext context, MoneyProvider money) {
+    final auth = context.watch<AuthProvider>();
     final daily = money.dailyLimit;
     final pressure = money.budgetPressure;
     final summary = money.summary;
@@ -170,6 +205,90 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Guest Mode Notice Banner
+            if (!auth.isAuthenticated)
+              Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: isDark ? 0.16 : 0.08),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: AppColors.primary.withValues(alpha: 0.25),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.18),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        LucideIcons.cloud,
+                        size: 20,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Guest Preview Mode',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w700,
+                              color: textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Sign in to synchronize bank accounts, budgets, and transactions.',
+                            style: GoogleFonts.inter(
+                              fontSize: 11.5,
+                              color: textSecondary,
+                              height: 1.35,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () {
+                        AuthGuardDialog.protect(
+                          context,
+                          title: 'Sign In to Money Manager',
+                          message: 'Sign in to access your live bank accounts, monthly limits, and budgets.',
+                          onAuthenticated: () => money.loadDashboardData(),
+                        );
+                      },
+                      child: Text(
+                        'Sign In',
+                        style: GoogleFonts.inter(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
             // 1. Daily Spending Limit Card
             if (daily != null) ...[
               Container(
@@ -210,7 +329,7 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: const Icon(
-                                Icons.speed_rounded,
+                                LucideIcons.gauge,
                                 size: 20,
                                 color: AppColors.primary,
                               ),
@@ -218,7 +337,7 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                             const SizedBox(width: 10),
                             Text(
                               'Intelligent Daily Limit',
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
                                 color: textPrimary,
@@ -308,7 +427,7 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.warning_amber_rounded, size: 16, color: AppColors.warning),
+                            const Icon(LucideIcons.alertTriangle, size: 16, color: AppColors.warning),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -348,7 +467,7 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                         Row(
                           children: [
                             Icon(
-                              Icons.analytics_rounded,
+                              LucideIcons.barChart3,
                               size: 20,
                               color: _getPressureColor(pressure.pressureLevel),
                             ),
@@ -470,7 +589,7 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
 
             if (money.transactions.isEmpty)
               _buildEmptyPlaceholder(
-                icon: Icons.receipt_long_rounded,
+                icon: LucideIcons.receipt,
                 title: 'No Transactions Yet',
                 description: 'Tap the "+ Add" button to record your first income or expense.',
                 actionLabel: 'Record Transaction',
@@ -547,7 +666,7 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
             onRefresh: () => money.refreshTransactions(),
             child: money.transactions.isEmpty
                 ? _buildEmptyPlaceholder(
-                    icon: Icons.receipt_long_rounded,
+                    icon: LucideIcons.receipt,
                     title: 'No Transactions Found',
                     description: 'No transactions match your current filter settings.',
                     actionLabel: 'Record New Transaction',
@@ -617,7 +736,7 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: const Icon(
-                              Icons.pie_chart_outline_rounded,
+                              LucideIcons.pieChart,
                               size: 20,
                               color: AppColors.primary,
                             ),
@@ -712,7 +831,7 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
             const SizedBox(height: 24),
           ] else ...[
             _buildEmptyPlaceholder(
-              icon: Icons.pie_chart_outline_rounded,
+              icon: LucideIcons.pieChart,
               title: 'No Active Budget Plan',
               description: 'Create a budget plan to set spending targets and monitor category limits.',
               actionLabel: 'Create Budget Plan',
@@ -724,7 +843,7 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
           // Action Button to Create New Plan
           AppButton(
             title: 'Create New Budget Plan',
-            icon: Icons.add_chart_rounded,
+            icon: LucideIcons.plusCircle,
             isOutlined: true,
             onPressed: () => CreateBudgetPlanDialog.show(context),
           ),
@@ -810,7 +929,7 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
   Widget _buildPlannedExpensesList(BuildContext context, MoneyProvider money) {
     if (money.plannedExpenses.isEmpty) {
       return _buildEmptyPlaceholder(
-        icon: Icons.event_note_rounded,
+        icon: LucideIcons.calendar,
         title: 'No Planned Expenses',
         description: 'Schedule future expenses or special-day spending to protect daily limits.',
         actionLabel: 'Schedule Expense',
@@ -902,13 +1021,13 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.delete_outline_rounded, size: 18, color: AppColors.error),
+                  icon: const Icon(LucideIcons.trash2, size: 18, color: AppColors.error),
                   tooltip: 'Delete Planned Expense',
                   onPressed: () => _confirmDeletePlannedExpense(context, pe, money),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton.icon(
-                  icon: const Icon(Icons.check_circle_rounded, size: 16, color: Colors.white),
+                  icon: const Icon(LucideIcons.checkCheck, size: 16, color: Colors.white),
                   label: Text(
                     'Execute Now',
                     style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white),
@@ -998,7 +1117,7 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
   Widget _buildRecurringSchedulesList(BuildContext context, MoneyProvider money) {
     if (money.recurringSchedules.isEmpty) {
       return _buildEmptyPlaceholder(
-        icon: Icons.repeat_rounded,
+        icon: LucideIcons.repeat,
         title: 'No Recurring Schedules',
         description: 'Set up recurring bills, subscriptions, or salaries for automated tracking.',
         actionLabel: 'Add Schedule',
@@ -1085,7 +1204,7 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                 style: GoogleFonts.inter(fontSize: 11.5, color: textSecondary),
               ),
               IconButton(
-                icon: const Icon(Icons.delete_outline_rounded, size: 18, color: AppColors.error),
+                icon: const Icon(LucideIcons.trash2, size: 18, color: AppColors.error),
                 tooltip: 'Delete Schedule',
                 onPressed: () => _confirmDeleteRecurringSchedule(context, rs, money),
               ),
@@ -1142,7 +1261,6 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
     final textSecondary = AppColors.textSecondaryOf(context);
     final surfaceColor = AppColors.surfaceOf(context);
     final borderColor = AppColors.borderOf(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final isIncome = tx.isIncome;
     final isRefund = tx.isRefund;
@@ -1159,21 +1277,15 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
       ),
       child: Row(
         children: [
-          // Category Icon Container
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: isDark ? 0.15 : 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              isIncome
-                  ? Icons.arrow_downward_rounded
-                  : (isRefund ? Icons.replay_rounded : Icons.arrow_upward_rounded),
-              size: 20,
-              color: color,
-            ),
+          // Directional Flow Category Icon Container
+          LifeUseDashboardIcon(
+            icon: isIncome
+                ? LucideIcons.arrowDownLeft
+                : (isRefund ? LucideIcons.rotateCcw : LucideIcons.arrowUpRight),
+            accentColor: color,
+            size: 20,
+            containerSize: 42,
+            radius: 12,
           ),
           const SizedBox(width: 14),
 
@@ -1236,7 +1348,7 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.delete_outline_rounded, size: 16),
+                icon: const Icon(LucideIcons.trash2, size: 16),
                 color: textSecondary,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),

@@ -91,6 +91,28 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  /// Request password reset
+  Future<bool> forgotPassword(String email) async {
+    _setLoading(true);
+    _clearErrors();
+    try {
+      await _authService.forgotPassword(email);
+      _successMessage = 'Password reset instructions sent to $email';
+      notifyListeners();
+      return true;
+    } on ApiException catch (e) {
+      _errorMessage = _mapErrorCodeToMessage(e.errorCode, e.message);
+      notifyListeners();
+      return false;
+    } catch (_) {
+      _errorMessage = 'Failed to request password reset. Please try again.';
+      notifyListeners();
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   /// Logout
   Future<void> logout() async {
     _setLoading(true);

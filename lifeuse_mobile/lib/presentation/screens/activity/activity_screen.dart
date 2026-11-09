@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
@@ -141,7 +143,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.close_rounded),
+                            icon: const Icon(LucideIcons.x, size: 20),
                             onPressed: () => Navigator.pop(dialogCtx),
                           ),
                         ],
@@ -321,7 +323,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
       appBar: AppBar(
         title: Text(
           'Daily Activity',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 18,
             fontWeight: FontWeight.w700,
             color: textPrimary,
@@ -344,7 +346,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
-        icon: const Icon(Icons.add_task_rounded, size: 20),
+        icon: const Icon(LucideIcons.plus, size: 18),
         label: Text(
           'Add Task',
           style: GoogleFonts.inter(fontSize: 13.5, fontWeight: FontWeight.w700),
@@ -384,7 +386,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                           children: [
                             Text(
                               'Today\'s Goal Progress',
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
                                 color: textPrimary,
@@ -453,8 +455,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       child: Column(
                         children: [
                           Icon(
-                            Icons.check_circle_outline_rounded,
-                            size: 48,
+                            LucideIcons.checkCircle2,
+                            size: 44,
                             color: AppColors.success.withValues(alpha: 0.6),
                           ),
                           const SizedBox(height: 12),
@@ -527,8 +529,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                     ),
                                     child: task.isCompleted
                                         ? const Icon(
-                                            Icons.check_rounded,
-                                            size: 16,
+                                            LucideIcons.check,
+                                            size: 15,
                                             color: Colors.white,
                                           )
                                         : null,
@@ -615,7 +617,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 ],
               ),
             ),
-          ),
+          ).animate().fadeIn(duration: 250.ms),
         ),
       ),
     );

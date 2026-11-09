@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../activity/activity_screen.dart';
 import '../../modules/bills_payments_screen.dart';
 import '../../modules/documents_vault_screen.dart';
@@ -22,7 +23,8 @@ class HardcodedModuleItem {
   final String title;
   final String subtitle;
   final String description;
-  final IconData icon;
+  final IconData icon; // Dashboard Hero Icon (Layered Duotone)
+  final IconData? navIcon; // Compact Navigation Icon (Minimal Outline)
   final Color accentColor;
   final String category;
   final String badgeText;
@@ -36,6 +38,7 @@ class HardcodedModuleItem {
     required this.subtitle,
     this.description = '',
     required this.icon,
+    this.navIcon,
     required this.accentColor,
     this.category = 'General',
     this.badgeText = 'Active',
@@ -43,6 +46,8 @@ class HardcodedModuleItem {
     this.highlights = const [],
     this.screenBuilder = _defaultScreenBuilder,
   });
+
+  IconData get effectiveNavIcon => navIcon ?? icon;
 
   static Widget _defaultScreenBuilder(BuildContext context) => const Scaffold();
 
@@ -67,7 +72,8 @@ class HardcodedModuleItem {
           title: 'Money Manager',
           subtitle: 'Budgets, income & expenses',
           description: 'Manage personal finances, budgets, transactions, and cash flow.',
-          icon: Icons.account_balance_wallet_rounded,
+          icon: LucideIcons.wallet,
+          navIcon: LucideIcons.wallet,
           accentColor: const Color(0xFF10B981), // Emerald
           category: 'Finance',
           badgeText: 'Live API',
@@ -80,7 +86,8 @@ class HardcodedModuleItem {
           title: 'Home Management',
           subtitle: 'Appliances, inventory & utilities',
           description: 'Control smart devices, track home supplies, and equipment warranties.',
-          icon: Icons.home_work_rounded,
+          icon: LucideIcons.home,
+          navIcon: LucideIcons.home,
           accentColor: const Color(0xFFF59E0B), // Amber
           category: 'Lifestyle',
           badgeText: 'Active',
@@ -93,7 +100,8 @@ class HardcodedModuleItem {
           title: 'Daily Tasks',
           subtitle: 'To-dos, routines & checklists',
           description: 'Organize tasks, recurring habits, and daily priorities.',
-          icon: Icons.check_circle_outline_rounded,
+          icon: LucideIcons.checkSquare,
+          navIcon: LucideIcons.checkSquare,
           accentColor: const Color(0xFF0EA5E9), // Sky Blue
           category: 'Productivity',
           badgeText: 'Active',
@@ -106,7 +114,8 @@ class HardcodedModuleItem {
           title: 'Health & Wellness',
           subtitle: 'Vitals, water intake & workouts',
           description: 'Track daily water intake, vitals, workouts, and sleep.',
-          icon: Icons.favorite_rounded,
+          icon: LucideIcons.heartPulse,
+          navIcon: LucideIcons.activity,
           accentColor: const Color(0xFFEC4899), // Pink
           category: 'Lifestyle',
           badgeText: 'Active',
@@ -119,7 +128,8 @@ class HardcodedModuleItem {
           title: 'Bills & Payments',
           subtitle: 'Upcoming dues & subscriptions',
           description: 'Monitor recurring bills, due dates, and auto-pay services.',
-          icon: Icons.receipt_long_rounded,
+          icon: LucideIcons.receipt,
+          navIcon: LucideIcons.receipt,
           accentColor: const Color(0xFFF97316), // Orange
           category: 'Finance',
           badgeText: 'Active',
@@ -132,7 +142,8 @@ class HardcodedModuleItem {
           title: 'Reminders & Alerts',
           subtitle: 'Timely alerts & deadlines',
           description: 'Stay on top of critical reminders, notifications, and alarms.',
-          icon: Icons.notifications_active_rounded,
+          icon: LucideIcons.bellRing,
+          navIcon: LucideIcons.bell,
           accentColor: const Color(0xFF8B5CF6), // Purple
           category: 'Productivity',
           badgeText: 'Active',
@@ -144,7 +155,8 @@ class HardcodedModuleItem {
           id: 'tickets_travel',
           title: 'Tickets & Travel',
           subtitle: 'Passes, itineraries & packing',
-          icon: Icons.flight_takeoff_rounded,
+          icon: LucideIcons.plane,
+          navIcon: LucideIcons.plane,
           accentColor: const Color(0xFF06B6D4), // Cyan
           category: 'Lifestyle',
           badgeText: 'Active',
@@ -156,7 +168,8 @@ class HardcodedModuleItem {
           id: 'exams_learning',
           title: 'Exams & Learning',
           subtitle: 'Courses, tests & flashcards',
-          icon: Icons.school_rounded,
+          icon: LucideIcons.graduationCap,
+          navIcon: LucideIcons.bookOpen,
           accentColor: const Color(0xFF6366F1), // Indigo
           category: 'Education',
           badgeText: 'Active',
@@ -169,7 +182,8 @@ class HardcodedModuleItem {
           title: 'Documents Vault',
           subtitle: 'Encrypted IDs & policies',
           description: 'Secure hardware-encrypted document storage for important IDs and certificates.',
-          icon: Icons.folder_shared_rounded,
+          icon: LucideIcons.shieldCheck,
+          navIcon: LucideIcons.shield,
           accentColor: const Color(0xFF14B8A6), // Teal
           category: 'Security',
           badgeText: 'Encrypted',
@@ -182,7 +196,8 @@ class HardcodedModuleItem {
           title: 'Personal Planning',
           subtitle: 'Milestones, vision & goals',
           description: 'Life roadmap, yearly milestones, and personal bucket list.',
-          icon: Icons.flag_rounded,
+          icon: LucideIcons.compass,
+          navIcon: LucideIcons.target,
           accentColor: const Color(0xFFEAB308), // Yellow Gold
           category: 'Planning',
           badgeText: 'Active',

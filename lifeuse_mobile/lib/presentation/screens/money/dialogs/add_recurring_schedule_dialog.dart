@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
@@ -175,7 +176,7 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close_rounded, size: 20),
+                    icon: const Icon(LucideIcons.x, size: 20),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -197,7 +198,7 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                 label: 'Title',
                 hint: 'e.g., Netflix subscription, Home rent, Gym membership',
                 controller: _titleController,
-                prefixIcon: Icons.repeat_rounded,
+                prefixIcon: LucideIcons.repeat,
                 validator: (val) => val == null || val.trim().isEmpty ? 'Enter title' : null,
               ),
               const SizedBox(height: 16),
@@ -346,7 +347,7 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
               AppButton(
                 title: 'Save Schedule',
                 isLoading: _isSubmitting,
-                icon: Icons.check_circle_outline_rounded,
+                icon: LucideIcons.checkCircle2,
                 onPressed: _submit,
               ),
             ],

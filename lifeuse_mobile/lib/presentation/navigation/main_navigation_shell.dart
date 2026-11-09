@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/widgets/lifeuse_floating_navigation.dart';
 import '../screens/activity/activity_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/modules/modules_screen.dart';
 import '../screens/money/money_manager_screen.dart';
 import '../screens/notifications/notifications_screen.dart';
 import '../screens/profile/profile_screen.dart';
+import '../state/notification_provider.dart';
 
 /// Enterprise application shell providing persistent bottom navigation across 5 core views:
 /// - Home (Dashboard)
@@ -16,6 +19,7 @@ import '../screens/profile/profile_screen.dart';
 /// - Profile (Account details, security & auth)
 ///
 /// Implements IndexedStack for zero-latency tab switching and preserves state.
+/// Supports smooth Android back-button interception (returns to Dashboard before app exit).
 class MainNavigationShell extends StatefulWidget {
   final int initialIndex;
 
@@ -68,146 +72,51 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
 
   @override
   Widget build(BuildContext context) {
-    final surfaceColor = AppColors.surfaceOf(context);
-    final borderColor = AppColors.borderOf(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final hasUnreadAlerts = context.watch<NotificationProvider>().hasUnread;
 
-    return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: surfaceColor,
-          border: Border(
-            top: BorderSide(color: borderColor, width: 1),
+    return PopScope(
+      canPop: _currentIndex == 0,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && _currentIndex != 0) {
+          setState(() => _currentIndex = 0);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundOf(context),
+        extendBody: true,
+        body: SizedBox.expand(
+          child: IndexedStack(
+            index: _currentIndex,
+            sizing: StackFit.expand,
+            children: _screens,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.05),
-              blurRadius: 16,
-              offset: const Offset(0, -4),
+        ),
+        bottomNavigationBar: LifeUseFloatingNavigation(
+          currentIndex: _currentIndex,
+          onItemSelected: setTab,
+          items: [
+            const LifeUseNavigationItemData(
+              label: 'Home',
+              icon: LucideIcons.home,
+            ),
+            const LifeUseNavigationItemData(
+              label: 'Modules',
+              icon: LucideIcons.layoutGrid,
+            ),
+            const LifeUseNavigationItemData(
+              label: 'Activity',
+              icon: LucideIcons.activity,
+            ),
+            LifeUseNavigationItemData(
+              label: 'Alerts',
+              icon: LucideIcons.bell,
+              showDot: hasUnreadAlerts,
+            ),
+            const LifeUseNavigationItemData(
+              label: 'Profile',
+              icon: LucideIcons.user,
             ),
           ],
-        ),
-        child: SafeArea(
-          top: false,
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 700),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildNavItem(
-                      index: 0,
-                      label: 'Home',
-                      activeIcon: Icons.dashboard_rounded,
-                      inactiveIcon: Icons.dashboard_outlined,
-                    ),
-                    _buildNavItem(
-                      index: 1,
-                      label: 'Modules',
-                      activeIcon: Icons.grid_view_rounded,
-                      inactiveIcon: Icons.grid_view_outlined,
-                    ),
-                    _buildNavItem(
-                      index: 2,
-                      label: 'Activity',
-                      activeIcon: Icons.check_circle_rounded,
-                      inactiveIcon: Icons.check_circle_outline_rounded,
-                    ),
-                    _buildNavItem(
-                      index: 3,
-                      label: 'Alerts',
-                      activeIcon: Icons.notifications_rounded,
-                      inactiveIcon: Icons.notifications_none_rounded,
-                      showDot: true,
-                    ),
-                    _buildNavItem(
-                      index: 4,
-                      label: 'Profile',
-                      activeIcon: Icons.person_rounded,
-                      inactiveIcon: Icons.person_outline_rounded,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem({
-    required int index,
-    required String label,
-    required IconData activeIcon,
-    required IconData inactiveIcon,
-    bool showDot = false,
-  }) {
-    final isSelected = _currentIndex == index;
-    final color = isSelected ? AppColors.primary : AppColors.textTertiaryOf(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Expanded(
-      child: InkWell(
-        onTap: () => setTab(index),
-        borderRadius: BorderRadius.circular(12),
-        splashColor: AppColors.primary.withValues(alpha: 0.1),
-        highlightColor: AppColors.primary.withValues(alpha: 0.05),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
-          padding: const EdgeInsets.symmetric(vertical: 6),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? AppColors.primary.withValues(alpha: isDark ? 0.12 : 0.08)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Icon(
-                    isSelected ? activeIcon : inactiveIcon,
-                    size: 21,
-                    color: color,
-                  ),
-                  if (showDot && !isSelected)
-                    Positioned(
-                      top: 0,
-                      right: -3,
-                      child: Container(
-                        width: 7,
-                        height: 7,
-                        decoration: const BoxDecoration(
-                          color: AppColors.error,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 3),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.inter(
-                  fontSize: 10.5,
-                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                  color: color,
-                  letterSpacing: -0.1,
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

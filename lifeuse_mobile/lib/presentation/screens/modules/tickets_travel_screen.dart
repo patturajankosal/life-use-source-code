@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
@@ -56,7 +58,7 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
       to: 'BLR (Bengaluru)',
       date: 'Nov 02 • 07:15 AM',
       bookingRef: '6E-482 (PNR: XY89KC)',
-      icon: Icons.flight_takeoff_rounded,
+      icon: LucideIcons.plane,
     ),
     _TravelTicket(
       id: 't_2',
@@ -66,7 +68,7 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
       to: 'Check-out: Nov 04',
       date: '2 Nights • Whitefield',
       bookingRef: 'Marriott Courtyard (Conf: #90812)',
-      icon: Icons.hotel_rounded,
+      icon: LucideIcons.hotel,
     ),
     _TravelTicket(
       id: 't_3',
@@ -76,7 +78,7 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
       to: 'Madurai Jn',
       date: 'Nov 11 • 10:30 PM',
       bookingRef: 'Tejas Express (PNR: 42189021)',
-      icon: Icons.train_rounded,
+      icon: LucideIcons.train,
     ),
   ];
 
@@ -144,8 +146,15 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
       appBar: AppBar(
         title: Text(
           'Tickets & Travel',
-          style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700),
+          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(LucideIcons.plus, size: 20),
+            tooltip: 'Add Packing Item',
+            onPressed: _showAddPackingItemDialog,
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -179,7 +188,7 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                             color: accentColor.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(14),
                           ),
-                          child: const Icon(Icons.flight_takeoff_rounded, color: accentColor, size: 26),
+                          child: const Icon(LucideIcons.plane, color: accentColor, size: 24),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -355,7 +364,7 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                 ],
               ),
             ),
-          ),
+          ).animate().fadeIn(duration: 250.ms),
         ),
       ),
     );

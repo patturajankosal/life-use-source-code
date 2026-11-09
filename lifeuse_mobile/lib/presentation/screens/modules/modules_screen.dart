@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../dashboard/models/dashboard_module_item.dart';
 import '../dashboard/widgets/module_card.dart';
 
 /// Clean modules catalog screen displaying all 10 hardcoded Life Management modules.
+/// Uses Premium Minimal tokens, Lucide filter badges, and smooth micro-interactions.
 class ModulesScreen extends StatefulWidget {
   const ModulesScreen({super.key});
 
@@ -25,6 +28,25 @@ class _ModulesScreenState extends State<ModulesScreen> {
     'Planning',
   ];
 
+  IconData _categoryIcon(String category) {
+    switch (category) {
+      case 'Finance':
+        return LucideIcons.wallet;
+      case 'Productivity':
+        return LucideIcons.checkSquare;
+      case 'Lifestyle':
+        return LucideIcons.heartPulse;
+      case 'Education':
+        return LucideIcons.graduationCap;
+      case 'Security':
+        return LucideIcons.shieldCheck;
+      case 'Planning':
+        return LucideIcons.compass;
+      default:
+        return LucideIcons.layoutGrid;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final textPrimary = AppColors.textPrimaryOf(context);
@@ -43,7 +65,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
       appBar: AppBar(
         title: Text(
           'Life Management Suite',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 18,
             fontWeight: FontWeight.w700,
             color: textPrimary,
@@ -85,7 +107,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                 children: [
                   Text(
                     'Explore All Modules',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -111,14 +133,17 @@ class _ModulesScreenState extends State<ModulesScreen> {
                         return Padding(
                           padding: const EdgeInsets.only(right: 8),
                           child: FilterChip(
+                            avatar: Icon(
+                              _categoryIcon(cat),
+                              size: 14,
+                              color: isSelected ? Colors.white : textSecondary,
+                            ),
                             selected: isSelected,
                             label: Text(cat),
                             labelStyle: GoogleFonts.inter(
                               fontSize: 12,
                               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                              color: isSelected
-                                  ? Colors.white
-                                  : textSecondary,
+                              color: isSelected ? Colors.white : textSecondary,
                             ),
                             selectedColor: AppColors.primary,
                             backgroundColor: AppColors.surfaceOf(context),
@@ -173,10 +198,11 @@ class _ModulesScreenState extends State<ModulesScreen> {
                     },
                   ),
 
-                  const SizedBox(height: 24),
+                  // Extra bottom padding for floating navigation bar clearance
+                  const SizedBox(height: 100),
                 ],
               ),
-            ),
+            ).animate().fadeIn(duration: 250.ms),
           ),
         ),
       ),

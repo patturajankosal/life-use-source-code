@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
@@ -38,7 +40,7 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
       category: 'Government ID',
       docNumber: 'Z894••••',
       expiryDate: 'Valid till Aug 2032',
-      icon: Icons.badge_rounded,
+      icon: LucideIcons.fileText,
     ),
     _SecureDocItem(
       id: 'doc_2',
@@ -46,7 +48,7 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
       category: 'Insurance',
       docNumber: 'POL-9041289',
       expiryDate: 'Renewal Due Oct 2027',
-      icon: Icons.health_and_safety_rounded,
+      icon: LucideIcons.shieldCheck,
     ),
     _SecureDocItem(
       id: 'doc_3',
@@ -54,7 +56,7 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
       category: 'Automotive',
       docNumber: 'TN-07-••••',
       expiryDate: 'Lifetime Fitness Valid',
-      icon: Icons.directions_car_rounded,
+      icon: LucideIcons.car,
     ),
     _SecureDocItem(
       id: 'doc_4',
@@ -62,7 +64,7 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
       category: 'Government ID',
       docNumber: 'DL-901428',
       expiryDate: 'Valid till 2039',
-      icon: Icons.credit_card_rounded,
+      icon: LucideIcons.creditCard,
     ),
   ];
 
@@ -145,11 +147,11 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
       appBar: AppBar(
         title: Text(
           'Documents Vault',
-          style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700),
+          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_rounded),
+            icon: const Icon(LucideIcons.plus, size: 20),
             tooltip: 'Add Document',
             onPressed: _showAddDocumentDialog,
           ),
@@ -187,7 +189,7 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                             color: accentColor.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(14),
                           ),
-                          child: const Icon(Icons.shield_rounded, color: accentColor, size: 26),
+                          child: const Icon(LucideIcons.lock, color: accentColor, size: 24),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -278,7 +280,7 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                               ),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.remove_red_eye_outlined, size: 20),
+                              icon: const Icon(LucideIcons.eye, size: 18),
                               tooltip: 'View Secure Details',
                               onPressed: () {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -298,7 +300,7 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                 ],
               ),
             ),
-          ),
+          ).animate().fadeIn(duration: 250.ms),
         ),
       ),
     );

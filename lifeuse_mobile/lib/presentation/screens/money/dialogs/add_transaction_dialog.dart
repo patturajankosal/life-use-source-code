@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
@@ -175,7 +176,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close_rounded, size: 20),
+                    icon: const Icon(LucideIcons.x, size: 20),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -306,7 +307,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.calendar_today_rounded, size: 18, color: textSecondary),
+                            Icon(LucideIcons.calendar, size: 18, color: textSecondary),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -350,7 +351,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 label: 'Notes (optional)',
                 hint: 'e.g., Grocery shopping at Supermart',
                 controller: _notesController,
-                prefixIcon: Icons.notes_rounded,
+                prefixIcon: LucideIcons.fileText,
               ),
               const SizedBox(height: 24),
 
@@ -358,7 +359,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
               AppButton(
                 title: 'Save Transaction',
                 isLoading: _isSubmitting,
-                icon: Icons.check_circle_outline_rounded,
+                icon: LucideIcons.checkCircle2,
                 onPressed: _submit,
               ),
             ],

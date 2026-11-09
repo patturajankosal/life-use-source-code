@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
@@ -75,28 +77,28 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
       id: 'dev_1',
       name: 'Living Room AC',
       room: 'Living Room',
-      icon: Icons.ac_unit_rounded,
+      icon: LucideIcons.wind,
       isOn: true,
     ),
     _SmartDeviceItem(
       id: 'dev_2',
       name: 'Smart Door Lock',
       room: 'Main Entrance',
-      icon: Icons.lock_rounded,
+      icon: LucideIcons.lock,
       isOn: true,
     ),
     _SmartDeviceItem(
       id: 'dev_3',
       name: 'Balcony Warm Lights',
       room: 'Balcony',
-      icon: Icons.lightbulb_rounded,
+      icon: LucideIcons.lightbulb,
       isOn: false,
     ),
     _SmartDeviceItem(
       id: 'dev_4',
       name: 'Kitchen Water Purifier',
       room: 'Kitchen',
-      icon: Icons.water_drop_rounded,
+      icon: LucideIcons.droplets,
       isOn: true,
     ),
   ];
@@ -257,11 +259,11 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
       appBar: AppBar(
         title: Text(
           'Home Management',
-          style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700),
+          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_rounded),
+            icon: const Icon(LucideIcons.plus, size: 20),
             tooltip: 'Add Appliance / Device',
             onPressed: _showAddDeviceDialog,
           ),
@@ -291,7 +293,7 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                 _buildInventoryTab(context, surfaceColor, borderColor, textPrimary, textSecondary, isDark),
                 _buildWarrantiesTab(context, surfaceColor, borderColor, textPrimary, textSecondary, accentColor),
               ],
-            ),
+            ).animate().fadeIn(duration: 250.ms),
           ),
         ),
       ),

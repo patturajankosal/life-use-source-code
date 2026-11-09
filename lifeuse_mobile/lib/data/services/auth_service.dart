@@ -68,6 +68,14 @@ class AuthService {
     return response.data!;
   }
 
+  /// Request password reset via POST /api/lifeUse/auth/password/forgot
+  Future<void> forgotPassword(String email) async {
+    await _apiClient.post(
+      url: ApiConfig.forgotPassword,
+      body: {'email': email.trim().toLowerCase()},
+    );
+  }
+
   /// Fetch currently authenticated user via GET /api/lifeUse/user/me
   Future<UserModel> getCurrentUser() async {
     final response = await _apiClient.get<UserModel>(
@@ -119,10 +127,24 @@ class AuthService {
     await prefs.setString(_keyUser, jsonEncode(user.toJson()));
   }
 
-  /// Clear session and logout
+  /// Clear session and logout (including server-side refresh token revocation)
   Future<void> logout() async {
-    _apiClient.setAccessToken(null);
     final prefs = await SharedPreferences.getInstance();
+    final refreshToken = prefs.getString(_keyRefreshToken);
+
+    // Call server-side revoke token if refresh token exists
+    if (refreshToken != null && refreshToken.isNotEmpty) {
+      try {
+        await _apiClient.post(
+          url: ApiConfig.logout,
+          body: {'refreshToken': refreshToken},
+        );
+      } catch (_) {
+        // Continue clearing local state even if network fails
+      }
+    }
+
+    _apiClient.setAccessToken(null);
     await prefs.remove(_keyAccessToken);
     await prefs.remove(_keyRefreshToken);
     await prefs.remove(_keyUser);

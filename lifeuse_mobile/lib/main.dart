@@ -8,6 +8,7 @@ import 'data/services/money_service.dart';
 import 'presentation/navigation/main_navigation_shell.dart';
 import 'presentation/state/auth_provider.dart';
 import 'presentation/state/money_provider.dart';
+import 'presentation/state/notification_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,9 +19,10 @@ void main() async {
   final moneyService = MoneyService(apiClient);
   final moneyProvider = MoneyProvider(moneyService);
   final themeProvider = ThemeProvider();
+  final notificationProvider = NotificationProvider();
 
-  // Restore stored session if exists
-  await authProvider.checkSession();
+  // Silently check and restore stored session without blocking the Dashboard UI
+  authProvider.checkSession();
 
   runApp(
     MultiProvider(
@@ -31,6 +33,7 @@ void main() async {
         ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
         ChangeNotifierProvider<MoneyProvider>.value(value: moneyProvider),
         ChangeNotifierProvider<ThemeProvider>.value(value: themeProvider),
+        ChangeNotifierProvider<NotificationProvider>.value(value: notificationProvider),
       ],
       child: const LifeUseApp(),
     ),

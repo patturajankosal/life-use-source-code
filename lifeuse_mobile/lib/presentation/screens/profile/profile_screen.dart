@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/config/api_config.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/theme_provider.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 import '../../../core/widgets/lifeuse_stat_card.dart';
+import '../../navigation/main_navigation_shell.dart';
 import '../../state/auth_provider.dart';
 import '../login_screen.dart';
 import '../register_screen.dart';
@@ -29,13 +32,13 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         leading: Navigator.canPop(context)
             ? IconButton(
-                icon: const Icon(Icons.arrow_back_rounded),
+                icon: const Icon(LucideIcons.arrowLeft, size: 20),
                 onPressed: () => Navigator.pop(context),
               )
             : null,
         title: Text(
           user != null ? 'Account Profile' : 'Guest Account',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 18,
             fontWeight: FontWeight.w700,
             color: textPrimary,
@@ -44,7 +47,7 @@ class ProfileScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(
-              isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+              isDark ? LucideIcons.sun : LucideIcons.moon,
               size: 20,
               color: isDark ? AppColors.amberGold : AppColors.primary,
             ),
@@ -53,7 +56,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           if (user != null)
             IconButton(
-              icon: const Icon(Icons.logout_rounded, size: 20),
+              icon: const Icon(LucideIcons.logOut, size: 20),
               tooltip: 'Sign Out',
               onPressed: () => _confirmLogout(context),
             ),
@@ -70,7 +73,7 @@ class ProfileScreen extends StatelessWidget {
                   : _buildGuestContent(context, theme),
             ),
           ),
-        ),
+        ).animate().fadeIn(duration: 250.ms),
       ),
     );
   }
@@ -131,7 +134,7 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 user.fullName,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: textPrimary,
@@ -203,14 +206,14 @@ class ProfileScreen extends StatelessWidget {
             children: [
               _buildDetailRow(
                 context: context,
-                icon: Icons.badge_outlined,
+                icon: LucideIcons.userCheck,
                 label: 'User ID',
                 value: '#${user.id}',
               ),
               Divider(height: 1, color: borderColor),
               _buildDetailRow(
                 context: context,
-                icon: Icons.email_outlined,
+                icon: LucideIcons.mail,
                 label: 'Email address',
                 value: user.email,
                 trailing: _buildVerificationBadge(user.emailVerified),
@@ -218,7 +221,7 @@ class ProfileScreen extends StatelessWidget {
               Divider(height: 1, color: borderColor),
               _buildDetailRow(
                 context: context,
-                icon: Icons.phone_outlined,
+                icon: LucideIcons.phone,
                 label: 'Phone number',
                 value: user.phoneNumber,
                 trailing: _buildVerificationBadge(user.phoneVerified),
@@ -236,10 +239,11 @@ class ProfileScreen extends StatelessWidget {
         AppButton(
           title: 'Sign Out',
           isOutlined: true,
-          icon: Icons.logout_rounded,
+          icon: LucideIcons.logOut,
           onPressed: () => _confirmLogout(context),
         ),
-        const SizedBox(height: 20),
+        // Extra clearance for floating navigation capsule
+        const SizedBox(height: 100),
       ],
     );
   }
@@ -284,8 +288,8 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 child: const Icon(
-                  Icons.person_outline_rounded,
-                  size: 36,
+                  LucideIcons.user,
+                  size: 34,
                   color: AppColors.primary,
                 ),
               ),
@@ -319,7 +323,7 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  icon: const Icon(Icons.login_rounded, size: 18),
+                  icon: const Icon(LucideIcons.logIn, size: 18),
                   label: Text(
                     'Sign In to LifeUse',
                     style: GoogleFonts.inter(
@@ -347,7 +351,7 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  icon: const Icon(Icons.person_add_outlined, size: 18),
+                  icon: const Icon(LucideIcons.userPlus, size: 18),
                   label: Text(
                     'Create New Account',
                     style: GoogleFonts.inter(
@@ -398,21 +402,21 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 12),
               _buildFeatureRow(
                 context,
-                Icons.account_balance_wallet_rounded,
+                LucideIcons.wallet,
                 'Money Manager Sync',
                 'Live PostgreSQL backend integration for expense budgets',
               ),
               const SizedBox(height: 10),
               _buildFeatureRow(
                 context,
-                Icons.security_rounded,
+                LucideIcons.shieldCheck,
                 'Zero-Knowledge Security',
                 'Encrypted JWT sessions and BCrypt credential hashing',
               ),
               const SizedBox(height: 10),
               _buildFeatureRow(
                 context,
-                Icons.devices_rounded,
+                LucideIcons.laptop,
                 'Cross-Device Synchronization',
                 'Pick up where you left off on web, tablet, or phone',
               ),
@@ -423,7 +427,8 @@ class ProfileScreen extends StatelessWidget {
 
         // 3. Backend status
         _buildBackendConnectionCard(context),
-        const SizedBox(height: 30),
+        // Extra clearance for floating navigation capsule
+        const SizedBox(height: 100),
       ],
     );
   }
@@ -608,6 +613,9 @@ class ProfileScreen extends StatelessWidget {
             onPressed: () async {
               Navigator.pop(ctx);
               await context.read<AuthProvider>().logout();
+              if (context.mounted) {
+                MainNavigationShell.switchTab(context, 0);
+              }
             },
             child: Text(
               'Sign Out',

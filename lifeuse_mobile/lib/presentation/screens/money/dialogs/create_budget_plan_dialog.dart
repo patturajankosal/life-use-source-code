@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
@@ -183,7 +184,7 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close_rounded, size: 20),
+                    icon: const Icon(LucideIcons.x, size: 20),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -197,7 +198,7 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                 decoration: InputDecoration(
                   labelText: 'Plan Period Horizon',
                   labelStyle: GoogleFonts.inter(color: textSecondary),
-                  prefixIcon: Icon(Icons.date_range_rounded, color: textSecondary, size: 20),
+                  prefixIcon: Icon(LucideIcons.calendar, color: textSecondary, size: 18),
                   filled: true,
                   fillColor: isDark
                       ? Colors.white.withValues(alpha: 0.04)
@@ -330,7 +331,7 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                 decoration: InputDecoration(
                   labelText: 'Carry Forward Rule',
                   labelStyle: GoogleFonts.inter(color: textSecondary),
-                  prefixIcon: Icon(Icons.sync_alt_rounded, color: textSecondary, size: 20),
+                  prefixIcon: Icon(LucideIcons.repeat, color: textSecondary, size: 18),
                   filled: true,
                   fillColor: isDark
                       ? Colors.white.withValues(alpha: 0.04)
@@ -359,7 +360,7 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                 label: 'Notes (optional)',
                 hint: 'e.g., Monthly allowance plan',
                 controller: _notesController,
-                prefixIcon: Icons.notes_rounded,
+                prefixIcon: LucideIcons.fileText,
               ),
               const SizedBox(height: 24),
 
@@ -367,7 +368,7 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
               AppButton(
                 title: 'Create Budget Plan',
                 isLoading: _isSubmitting,
-                icon: Icons.check_circle_outline_rounded,
+                icon: LucideIcons.checkCircle2,
                 onPressed: _submit,
               ),
             ],

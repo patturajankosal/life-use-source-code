@@ -1,29 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
+import '../../state/notification_provider.dart';
 
-class NotificationItem {
-  final String id;
-  final String title;
-  final String message;
-  final String time;
-  final String type; // reminder, finance, system
-  final IconData icon;
-  final Color color;
-  bool isRead;
-
-  NotificationItem({
-    required this.id,
-    required this.title,
-    required this.message,
-    required this.time,
-    required this.type,
-    required this.icon,
-    required this.color,
-    this.isRead = false,
-  });
-}
+typedef NotificationItem = NotificationModel;
 
 /// Responsive Notifications & Reminders Center for LifeUse.
 /// Displays actionable reminders, financial milestones, and system updates.
@@ -37,67 +21,12 @@ class NotificationsScreen extends StatefulWidget {
 class _NotificationsScreenState extends State<NotificationsScreen> {
   String _selectedFilter = 'ALL'; // ALL, REMINDERS, FINANCE, SYSTEM
 
-  final List<NotificationItem> _notifications = [
-    NotificationItem(
-      id: 'notif_1',
-      title: 'Electricity Utility Due in 3 Days',
-      message:
-          'State Power Corp bill of ₹1,840.00 is due on Oct 19. Ensure timely payment to avoid late fees.',
-      time: '15m ago',
-      type: 'reminder',
-      icon: Icons.bolt_rounded,
-      color: const Color(0xFFF59E0B),
-      isRead: false,
-    ),
-    NotificationItem(
-      id: 'notif_2',
-      title: 'Money Manager: Spending Safe',
-      message:
-          'Your remaining daily allowance today is well within budget targets. Great job pacing your outflow!',
-      time: '2h ago',
-      type: 'finance',
-      icon: Icons.account_balance_wallet_rounded,
-      color: AppColors.primary,
-      isRead: false,
-    ),
-    NotificationItem(
-      id: 'notif_3',
-      title: 'Doctor Appointment Reminder',
-      message:
-          'Annual health check-up with Dr. Sharma scheduled for tomorrow at 10:30 AM at Apollo Medical Center.',
-      time: '5h ago',
-      type: 'reminder',
-      icon: Icons.medical_services_rounded,
-      color: const Color(0xFF10B981),
-      isRead: true,
-    ),
-    NotificationItem(
-      id: 'notif_4',
-      title: 'LifeUse v2.0 Dashboard Active',
-      message:
-          'Welcome to the upgraded modular dashboard experience with live Money Manager micro-app integration.',
-      time: '1d ago',
-      type: 'system',
-      icon: Icons.verified_rounded,
-      color: const Color(0xFF8B5CF6),
-      isRead: true,
-    ),
-  ];
-
-  int get _unreadCount => _notifications.where((n) => !n.isRead).length;
-
   void _markAllAsRead() {
-    setState(() {
-      for (final n in _notifications) {
-        n.isRead = true;
-      }
-    });
+    context.read<NotificationProvider>().markAllAsRead();
   }
 
-  void _toggleNotificationRead(NotificationItem item) {
-    setState(() {
-      item.isRead = !item.isRead;
-    });
+  void _toggleNotificationRead(NotificationModel item) {
+    context.read<NotificationProvider>().toggleRead(item.id);
   }
 
   @override
@@ -108,7 +37,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     final borderColor = AppColors.borderOf(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final filteredList = _notifications.where((n) {
+    final notifProvider = context.watch<NotificationProvider>();
+    final notifications = notifProvider.notifications;
+    final unreadCount = notifProvider.unreadCount;
+
+    final filteredList = notifications.where((n) {
       if (_selectedFilter == 'REMINDERS') return n.type == 'reminder';
       if (_selectedFilter == 'FINANCE') return n.type == 'finance';
       if (_selectedFilter == 'SYSTEM') return n.type == 'system';
@@ -120,14 +53,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       appBar: AppBar(
         title: Text(
           'Notifications & Alerts',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 18,
             fontWeight: FontWeight.w700,
             color: textPrimary,
           ),
         ),
         actions: [
-          if (_unreadCount > 0)
+          if (unreadCount > 0)
             TextButton(
               onPressed: _markAllAsRead,
               child: Text(
@@ -154,13 +87,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   // 1. Filter Chips
                   Row(
                     children: [
-                      _buildFilterChip('ALL', 'All (${_notifications.length})'),
+                      _buildFilterChip('ALL', 'All (${notifications.length})'),
                       const SizedBox(width: 8),
-                      _buildFilterChip('REMINDERS', 'Reminders (2)'),
+                      _buildFilterChip('REMINDERS', 'Reminders (${notifications.where((n) => n.type == 'reminder').length})'),
                       const SizedBox(width: 8),
-                      _buildFilterChip('FINANCE', 'Finance (1)'),
+                      _buildFilterChip('FINANCE', 'Finance (${notifications.where((n) => n.type == 'finance').length})'),
                       const SizedBox(width: 8),
-                      _buildFilterChip('SYSTEM', 'System (1)'),
+                      _buildFilterChip('SYSTEM', 'System (${notifications.where((n) => n.type == 'system').length})'),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -178,8 +111,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       child: Column(
                         children: [
                           Icon(
-                            Icons.notifications_none_rounded,
-                            size: 48,
+                            LucideIcons.bellOff,
+                            size: 44,
                             color: textSecondary.withValues(alpha: 0.5),
                           ),
                           const SizedBox(height: 12),
@@ -314,11 +247,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         );
                       },
                     ),
-                  const SizedBox(height: 40),
+                  // Clearance for floating bottom navigation bar
+                  const SizedBox(height: 100),
                 ],
               ),
             ),
-          ),
+          ).animate().fadeIn(duration: 250.ms),
         ),
       ),
     );

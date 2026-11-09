@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
@@ -169,7 +170,7 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close_rounded, size: 20),
+                    icon: const Icon(LucideIcons.x, size: 20),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -181,7 +182,7 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                 label: 'Title / Description',
                 hint: 'e.g., Diwali shopping, Laptop purchase',
                 controller: _titleController,
-                prefixIcon: Icons.title_rounded,
+                prefixIcon: LucideIcons.fileText,
                 validator: (val) => val == null || val.trim().isEmpty ? 'Enter title' : null,
               ),
               const SizedBox(height: 16),
@@ -211,7 +212,7 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                       decoration: InputDecoration(
                         labelText: 'Category',
                         labelStyle: GoogleFonts.inter(color: textSecondary),
-                        prefixIcon: Icon(Icons.category_outlined, color: textSecondary, size: 20),
+                        prefixIcon: Icon(LucideIcons.layoutGrid, color: textSecondary, size: 18),
                         filled: true,
                         fillColor: isDark
                             ? Colors.white.withValues(alpha: 0.04)
@@ -302,7 +303,7 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                 label: 'Notes (optional)',
                 hint: 'e.g., Saved for online sale offer',
                 controller: _notesController,
-                prefixIcon: Icons.notes_rounded,
+                prefixIcon: LucideIcons.fileText,
               ),
               const SizedBox(height: 24),
 
@@ -310,7 +311,7 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
               AppButton(
                 title: 'Schedule Expense',
                 isLoading: _isSubmitting,
-                icon: Icons.event_available_rounded,
+                icon: LucideIcons.calendar,
                 onPressed: _submit,
               ),
             ],
