@@ -76,10 +76,10 @@ class _ModulesScreenState extends State<ModulesScreen> {
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: isDark ? 0.16 : 0.08),
+              color: AppColors.badgeBgOf(context),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.25),
+                color: isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0),
               ),
             ),
             child: Center(
@@ -88,7 +88,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                 style: GoogleFonts.inter(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.primary,
+                  color: AppColors.badgeTextOf(context),
                 ),
               ),
             ),

@@ -18,11 +18,11 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       scaffoldBackgroundColor: AppColors.darkBackground,
-      primaryColor: AppColors.primary,
+      primaryColor: AppColors.darkButton,
       textTheme: textTheme,
       colorScheme: const ColorScheme.dark(
-        primary: AppColors.primary,
-        secondary: AppColors.neonCyan,
+        primary: AppColors.darkButton,
+        secondary: AppColors.darkAccent,
         surface: AppColors.darkSurface,
         error: AppColors.error,
         onPrimary: Colors.white,
@@ -41,7 +41,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.darkSurface,
+        fillColor: AppColors.darkInput,
         contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         labelStyle: textTheme.bodyMedium?.copyWith(
           color: AppColors.darkTextSecondary,
@@ -58,7 +58,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.8),
+          borderSide: const BorderSide(color: AppColors.darkAccent, width: 1.8),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
@@ -76,7 +76,7 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
+          backgroundColor: AppColors.darkButton,
           foregroundColor: Colors.white,
           elevation: 0,
           minimumSize: const Size.fromHeight(52),
@@ -107,11 +107,11 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.light,
       scaffoldBackgroundColor: AppColors.lightBackground,
-      primaryColor: AppColors.primaryDark,
+      primaryColor: AppColors.primary,
       textTheme: textTheme,
       colorScheme: const ColorScheme.light(
-        primary: AppColors.primaryDark,
-        secondary: AppColors.neonCyan,
+        primary: AppColors.primary,
+        secondary: AppColors.softLavender,
         surface: AppColors.lightSurface,
         error: AppColors.error,
         onPrimary: Colors.white,
@@ -147,7 +147,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.primaryDark, width: 1.8),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.8),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
@@ -165,7 +165,7 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryDark,
+          backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
           elevation: 0,
           minimumSize: const Size.fromHeight(52),

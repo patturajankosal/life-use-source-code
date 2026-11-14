@@ -74,7 +74,7 @@ class HardcodedModuleItem {
           description: 'Manage personal finances, budgets, transactions, and cash flow.',
           icon: LucideIcons.wallet,
           navIcon: LucideIcons.wallet,
-          accentColor: const Color(0xFF10B981), // Emerald
+          accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Finance',
           badgeText: 'Live API',
           status: ModuleStatus.active,
@@ -88,7 +88,7 @@ class HardcodedModuleItem {
           description: 'Control smart devices, track home supplies, and equipment warranties.',
           icon: LucideIcons.home,
           navIcon: LucideIcons.home,
-          accentColor: const Color(0xFFF59E0B), // Amber
+          accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Lifestyle',
           badgeText: 'Active',
           status: ModuleStatus.active,
@@ -102,7 +102,7 @@ class HardcodedModuleItem {
           description: 'Organize tasks, recurring habits, and daily priorities.',
           icon: LucideIcons.checkSquare,
           navIcon: LucideIcons.checkSquare,
-          accentColor: const Color(0xFF0EA5E9), // Sky Blue
+          accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Productivity',
           badgeText: 'Active',
           status: ModuleStatus.active,
@@ -116,7 +116,7 @@ class HardcodedModuleItem {
           description: 'Track daily water intake, vitals, workouts, and sleep.',
           icon: LucideIcons.heartPulse,
           navIcon: LucideIcons.activity,
-          accentColor: const Color(0xFFEC4899), // Pink
+          accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Lifestyle',
           badgeText: 'Active',
           status: ModuleStatus.active,
@@ -130,7 +130,7 @@ class HardcodedModuleItem {
           description: 'Monitor recurring bills, due dates, and auto-pay services.',
           icon: LucideIcons.receipt,
           navIcon: LucideIcons.receipt,
-          accentColor: const Color(0xFFF97316), // Orange
+          accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Finance',
           badgeText: 'Active',
           status: ModuleStatus.active,
@@ -144,7 +144,7 @@ class HardcodedModuleItem {
           description: 'Stay on top of critical reminders, notifications, and alarms.',
           icon: LucideIcons.bellRing,
           navIcon: LucideIcons.bell,
-          accentColor: const Color(0xFF8B5CF6), // Purple
+          accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Productivity',
           badgeText: 'Active',
           status: ModuleStatus.active,
@@ -157,7 +157,7 @@ class HardcodedModuleItem {
           subtitle: 'Passes, itineraries & packing',
           icon: LucideIcons.plane,
           navIcon: LucideIcons.plane,
-          accentColor: const Color(0xFF06B6D4), // Cyan
+          accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Lifestyle',
           badgeText: 'Active',
           status: ModuleStatus.active,
@@ -170,7 +170,7 @@ class HardcodedModuleItem {
           subtitle: 'Courses, tests & flashcards',
           icon: LucideIcons.graduationCap,
           navIcon: LucideIcons.bookOpen,
-          accentColor: const Color(0xFF6366F1), // Indigo
+          accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Education',
           badgeText: 'Active',
           status: ModuleStatus.active,
@@ -184,7 +184,7 @@ class HardcodedModuleItem {
           description: 'Secure hardware-encrypted document storage for important IDs and certificates.',
           icon: LucideIcons.shieldCheck,
           navIcon: LucideIcons.shield,
-          accentColor: const Color(0xFF14B8A6), // Teal
+          accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Security',
           badgeText: 'Encrypted',
           status: ModuleStatus.active,
@@ -198,7 +198,7 @@ class HardcodedModuleItem {
           description: 'Life roadmap, yearly milestones, and personal bucket list.',
           icon: LucideIcons.compass,
           navIcon: LucideIcons.target,
-          accentColor: const Color(0xFFEAB308), // Yellow Gold
+          accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Planning',
           badgeText: 'Active',
           status: ModuleStatus.active,
