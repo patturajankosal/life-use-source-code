@@ -18,14 +18,15 @@ import '../money/dialogs/add_transaction_dialog.dart';
 import 'models/dashboard_module_item.dart';
 import 'widgets/module_card.dart';
 
-/// Premium, intelligent mobile application Home Dashboard for LifeUse.
-/// Inspired by Google Pay, PhonePe, and Google Gemini design principles:
-/// - Glanceable hero financial & productivity status (real live data).
-/// - High-contrast Google Pay inspired quick actions row.
-/// - Contextual module categorization (PhonePe redesign principle).
-/// - Dynamic smart insights & real-time activity stream.
-/// - Distinctive iconography with strict separation between Home (house) and Dashboard (metric grid).
-/// - Seamless Guest Mode and Authenticated Mode without redirects.
+/// Premium White & Purple Mobile Application Home Dashboard for LifeUse.
+/// Follows strict Google Pay, PhonePe, and Google Gemini design principles:
+/// - 80-90% White & soft neutral surfaces with primary purple (#7041C5) accents.
+/// - Glanceable hero financial & productivity status with privacy peek mode.
+/// - Tactile Google Pay inspired quick action hubs in consistent purple treatment.
+/// - Contextual PhonePe category filtering and icon-first modules grid.
+/// - Proactive Google Gemini intelligence capsule in soft lavender.
+/// - Distinctive iconography with strict separation between Home and Dashboard.
+/// - Seamless Guest Mode and Authenticated Cloud Sync.
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -37,25 +38,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   String _selectedCategory = 'ALL'; // ALL, FINANCE, PRODUCTIVITY, LIFESTYLE
+  bool _hideBalances = false; // Privacy mode toggle for public viewing
 
-  // Sample tasks for the interactive dashboard checklist
+  // Interactive daily rhythm checklist items (Clean White & Purple)
   final List<Map<String, dynamic>> _quickTasks = [
     {
       'title': 'Drink 500ml morning water',
       'category': 'Health',
-      'color': const Color(0xFFEC4899),
       'isDone': true,
     },
     {
       'title': 'Review monthly grocery budget',
       'category': 'Finance',
-      'color': const Color(0xFF10B981),
       'isDone': false,
     },
     {
       'title': 'Pay broadband Internet bill',
       'category': 'Bills',
-      'color': const Color(0xFFF97316),
       'isDone': false,
     },
   ];
@@ -132,7 +131,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // --- 1. App Header ---
+                    // --- 1. Ambient White & Purple Header ---
                     _buildHeader(
                       context: context,
                       user: user,
@@ -158,7 +157,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     const SizedBox(height: 18),
 
-                    // --- 3. Hero Financial & Life Overview (Google Pay & Revolut Inspired) ---
+                    // --- 3. The "Life Horizon" Hero Financial Card (White + Purple) ---
                     _buildHeroOverviewCard(
                       context: context,
                       auth: auth,
@@ -170,14 +169,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       isDark: isDark,
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 22),
 
-                    // --- 4. Google Pay Inspired Quick Action Row ---
+                    // --- 4. Google Pay Signature Action Carousel (Consistent Purple) ---
                     _buildQuickActionRow(context),
 
                     const SizedBox(height: 22),
 
-                    // --- 5. Dynamic Smart Insights Card ---
+                    // --- 5. Google Gemini Ambient Life Intelligence Capsule ---
                     _buildSmartInsightsCard(
                       context: context,
                       money: money,
@@ -188,9 +187,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       isDark: isDark,
                     ),
 
-                    const SizedBox(height: 22),
+                    const SizedBox(height: 24),
 
-                    // --- 6. Contextual Life Modules Hub (PhonePe Principle) ---
+                    // --- 6. Contextual Life Modules Hub (PhonePe Categorization) ---
                     _buildModulesHubSection(
                       context: context,
                       allModules: allModules,
@@ -218,7 +217,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     const SizedBox(height: 24),
 
-                    // --- 8. Today's Priorities Checklist ---
+                    // --- 8. Today's Rhythm & Priorities Checklist ---
                     _buildTasksPreview(
                       context: context,
                       textPrimary: textPrimary,
@@ -240,7 +239,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  // --- 1. Header Widget ---
+  // --- 1. Ambient White & Purple Header Widget ---
   Widget _buildHeader({
     required BuildContext context,
     required UserModel? user,
@@ -314,15 +313,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: isDark ? 0.2 : 0.1),
+                          color: AppColors.badgeBgOf(context),
                           borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: isDark
+                                ? const Color(0xFF3D2550)
+                                : const Color(0xFFEBE3F0),
+                            width: 0.8,
+                          ),
                         ),
                         child: Text(
                           'GUEST MODE',
                           style: GoogleFonts.inter(
                             fontSize: 9.5,
                             fontWeight: FontWeight.w800,
-                            color: AppColors.primary,
+                            color: AppColors.badgeTextOf(context),
                             letterSpacing: 0.4,
                           ),
                         ),
@@ -333,6 +338,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             ),
           ),
+        ),
+
+        // Privacy Peek Toggle Button
+        IconButton(
+          icon: Icon(
+            _hideBalances ? LucideIcons.eyeOff : LucideIcons.eye,
+            color: textSecondary,
+            size: 20,
+          ),
+          tooltip: _hideBalances ? 'Show Balances' : 'Hide Balances',
+          onPressed: () => setState(() => _hideBalances = !_hideBalances),
         ),
 
         // Dark / Light Mode Toggle Button
@@ -386,12 +402,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       decoration: BoxDecoration(
         color: surfaceColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDark ? const Color(0xFF2A2233) : borderColor,
+          width: 1.1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.03),
-            blurRadius: 8,
+            color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.03),
+            blurRadius: 10,
             offset: const Offset(0, 2),
           ),
         ],
@@ -409,12 +428,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           hintText: 'Search 10 life modules, tasks, finances...',
           hintStyle: GoogleFonts.inter(
             fontSize: 13,
-            color: textSecondary.withValues(alpha: 0.7),
+            color: textSecondary.withValues(alpha: 0.75),
           ),
-          prefixIcon: Icon(
+          prefixIcon: const Icon(
             LucideIcons.search,
             size: 18,
-            color: textSecondary,
+            color: AppColors.primary,
           ),
           suffixIcon: _searchQuery.isNotEmpty
               ? IconButton(
@@ -434,7 +453,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  // --- 3. Hero Financial & Life Overview (Google Pay & Revolut Inspired) ---
+  // --- 3. The "Life Horizon" Hero Financial Card (White + Purple) ---
   Widget _buildHeroOverviewCard({
     required BuildContext context,
     required AuthProvider auth,
@@ -453,23 +472,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final double netSavings = money.summary.netCashFlow;
     final dailyLimit = money.dailyLimit;
 
+    // Display strings honoring privacy mode
+    final displayExpense = _hideBalances ? '₹••••••' : currencyFormat.format(totalExpenses);
+    final displayIncome = _hideBalances ? '₹••••' : currencyFormat.format(totalIncome);
+    final displaySavings = _hideBalances ? '₹••••' : currencyFormat.format(netSavings);
+
     return InkWell(
       onTap: () => MainNavigationShell.openMoneyManager(context),
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(22),
       child: Container(
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: surfaceColor,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(22),
           border: Border.all(
-            color: isDark ? const Color(0xFF1E293B) : borderColor,
+            color: isDark ? const Color(0xFF2A2233) : borderColor,
             width: 1.2,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.28 : 0.05),
-              blurRadius: 14,
-              offset: const Offset(0, 4),
+              color: AppColors.primary.withValues(alpha: isDark ? 0.08 : 0.03),
+              blurRadius: 18,
+              offset: const Offset(0, 6),
+            ),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: isDark ? 0.30 : 0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -482,7 +511,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               children: [
                 Row(
                   children: [
-                    // Distinctive dashboard grid icon (strictly separated from Home navigation icon)
+                    // Distinctive dashboard grid icon in Soft Lavender container
                     const LifeUseDashboardIcon(
                       icon: LucideIcons.layoutDashboard,
                       accentColor: AppColors.primary,
@@ -495,7 +524,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       'FINANCIAL & LIFE OVERVIEW',
                       style: GoogleFonts.inter(
                         fontSize: 11,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w800,
                         letterSpacing: 0.8,
                         color: AppColors.primary,
                       ),
@@ -509,21 +538,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: textSecondary,
+                        color: AppColors.primary,
                       ),
                     ),
                     const SizedBox(width: 4),
-                    Icon(
+                    const Icon(
                       LucideIcons.chevronRight,
                       size: 14,
-                      color: textSecondary,
+                      color: AppColors.primary,
                     ),
                   ],
                 ),
               ],
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
 
             // Big Metric Display
             if (isAuthenticated) ...[
@@ -535,19 +564,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 5),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
                 children: [
                   Text(
-                    currencyFormat.format(totalExpenses),
+                    displayExpense,
                     style: GoogleFonts.plusJakartaSans(
-                      fontSize: 28,
+                      fontSize: 30,
                       fontWeight: FontWeight.w800,
                       color: textPrimary,
-                      letterSpacing: -0.6,
-                      fontFeatures: const [FontFeature.tabularFigures()],
+                      letterSpacing: -0.8,
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -561,41 +589,50 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ],
               ),
 
-              const SizedBox(height: 14),
+              const SizedBox(height: 16),
 
-              // Inflow vs Net Savings Row
+              // Inflow vs Net Savings Row (White & Purple styling)
               Row(
                 children: [
                   // Income Inflow
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF10B981).withValues(alpha: isDark ? 0.12 : 0.08),
+                        color: isDark
+                            ? const Color(0xFF2A1838)
+                            : AppColors.softLavender,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: const Color(0xFF10B981).withValues(alpha: 0.22),
+                          color: isDark
+                              ? const Color(0xFF3D2550)
+                              : const Color(0xFFEBE3F0),
                         ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Total Inflow',
-                            style: GoogleFonts.inter(
-                              fontSize: 10.5,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF10B981),
-                            ),
+                          Row(
+                            children: [
+                              const Icon(LucideIcons.arrowDownLeft, size: 13, color: AppColors.primary),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Total Inflow',
+                                style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: textSecondary,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 3),
+                          const SizedBox(height: 4),
                           Text(
-                            currencyFormat.format(totalIncome),
+                            displayIncome,
                             style: GoogleFonts.inter(
-                              fontSize: 14,
+                              fontSize: 14.5,
                               fontWeight: FontWeight.w700,
-                              color: const Color(0xFF10B981),
-                              fontFeatures: const [FontFeature.tabularFigures()],
+                              color: textPrimary,
                             ),
                           ),
                         ],
@@ -606,33 +643,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   // Net Savings
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0EA5E9).withValues(alpha: isDark ? 0.12 : 0.08),
+                        color: isDark
+                            ? const Color(0xFF2A1838)
+                            : AppColors.softLavender,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: const Color(0xFF0EA5E9).withValues(alpha: 0.22),
+                          color: isDark
+                              ? const Color(0xFF3D2550)
+                              : const Color(0xFFEBE3F0),
                         ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Net Cash Flow',
-                            style: GoogleFonts.inter(
-                              fontSize: 10.5,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF0EA5E9),
-                            ),
+                          Row(
+                            children: [
+                              const Icon(LucideIcons.trendingUp, size: 13, color: AppColors.primary),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Net Cash Flow',
+                                style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: textSecondary,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 3),
+                          const SizedBox(height: 4),
                           Text(
-                            currencyFormat.format(netSavings),
+                            displaySavings,
                             style: GoogleFonts.inter(
-                              fontSize: 14,
+                              fontSize: 14.5,
                               fontWeight: FontWeight.w700,
-                              color: const Color(0xFF0EA5E9),
-                              fontFeatures: const [FontFeature.tabularFigures()],
+                              color: AppColors.primary,
                             ),
                           ),
                         ],
@@ -643,12 +689,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
 
               if (dailyLimit != null && dailyLimit.recommendedDailyLimit > 0) ...[
-                const SizedBox(height: 12),
+                const SizedBox(height: 14),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(6),
                   child: LinearProgressIndicator(
                     value: (dailyLimit.spentToday / dailyLimit.recommendedDailyLimit).clamp(0.0, 1.0),
-                    backgroundColor: borderColor,
+                    backgroundColor: isDark ? const Color(0xFF2A1838) : const Color(0xFFEBE3F0),
                     valueColor: AlwaysStoppedAnimation<Color>(
                       (dailyLimit.spentToday > dailyLimit.recommendedDailyLimit)
                           ? AppColors.error
@@ -662,7 +708,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Daily Pace: ${currencyFormat.format(dailyLimit.remainingTodayAllowance)} left today',
+                      _hideBalances
+                          ? 'Daily Pace: Allowance protected'
+                          : 'Daily Pace: ${currencyFormat.format(dailyLimit.remainingTodayAllowance)} left today',
                       style: GoogleFonts.inter(
                         fontSize: 11,
                         color: textSecondary,
@@ -674,7 +722,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           : 'Spending Safe',
                       style: GoogleFonts.inter(
                         fontSize: 11,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                         color: (dailyLimit.spentToday > dailyLimit.recommendedDailyLimit)
                             ? AppColors.error
                             : AppColors.primary,
@@ -692,7 +740,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Text(
                     '₹0.00',
                     style: GoogleFonts.plusJakartaSans(
-                      fontSize: 28,
+                      fontSize: 30,
                       fontWeight: FontWeight.w800,
                       color: textPrimary,
                       letterSpacing: -0.6,
@@ -708,7 +756,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               Text(
                 'Live Spring Boot backend active. Sign in to synchronize financial profiles, bank transactions, and active budget plans across all devices.',
                 style: GoogleFonts.inter(
@@ -717,7 +765,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   height: 1.35,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 14),
               OutlinedButton.icon(
                 onPressed: () {
                   AuthGuardDialog.protect(
@@ -746,7 +794,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  // --- 4. Google Pay Inspired Quick Action Row ---
+  // --- 4. Google Pay Signature Action Carousel (Consistent Purple Treatment) ---
   Widget _buildQuickActionRow(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -758,7 +806,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             context: context,
             label: 'Record',
             icon: LucideIcons.plusCircle,
-            color: const Color(0xFF10B981),
             onTap: () {
               AuthGuardDialog.protect(
                 context,
@@ -774,44 +821,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
               );
             },
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 14),
 
           // 2. Open Money Manager Micro-App
           _buildActionPill(
             context: context,
             label: 'Money Manager',
             icon: LucideIcons.wallet,
-            color: const Color(0xFF14B8A6),
             onTap: () => MainNavigationShell.openMoneyManager(context),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 14),
 
           // 3. Add Task (Switches to Activity Tab)
           _buildActionPill(
             context: context,
             label: 'Add Task',
             icon: LucideIcons.checkSquare,
-            color: const Color(0xFF0EA5E9),
             onTap: () => MainNavigationShell.switchTab(context, 2),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 14),
 
           // 4. Set Alert / Reminder (Switches to Alerts Tab)
           _buildActionPill(
             context: context,
             label: 'Set Alert',
             icon: LucideIcons.bellPlus,
-            color: const Color(0xFF8B5CF6),
             onTap: () => MainNavigationShell.switchTab(context, 3),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 14),
 
           // 5. Pay Bills (Navigates to Bills & Payments Screen)
           _buildActionPill(
             context: context,
             label: 'Pay Bills',
             icon: LucideIcons.receipt,
-            color: const Color(0xFFF97316),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const BillsPaymentsScreen()),
@@ -827,18 +870,59 @@ class _DashboardScreenState extends State<DashboardScreen> {
     required BuildContext context,
     required String label,
     required IconData icon,
-    required Color color,
     required VoidCallback onTap,
   }) {
-    return LifeUseActionButton(
-      icon: icon,
-      label: label,
-      color: color,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final containerBg = isDark ? const Color(0xFF2A1838) : AppColors.softLavender;
+    final containerBorder = isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0);
+
+    return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(18),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(
+                color: containerBg,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: containerBorder,
+                  width: 1.2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.03),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Icon(icon, size: 22, color: AppColors.primary),
+              ),
+            ),
+            const SizedBox(height: 7),
+            Text(
+              label,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimaryOf(context),
+                letterSpacing: -0.1,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  // --- 5. Dynamic Smart Insights Card ---
+  // --- 5. Google Gemini Ambient Life Intelligence Capsule (Soft Lavender & Purple) ---
   Widget _buildSmartInsightsCard({
     required BuildContext context,
     required MoneyProvider money,
@@ -853,7 +937,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final hasHighPressure = money.budgetPressure?.isHigh ?? false;
 
     final IconData insightIcon;
-    final Color insightColor;
     final String insightTitle;
     final String insightMessage;
     final String actionText;
@@ -861,7 +944,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     if (hasUnreadNotifs) {
       insightIcon = LucideIcons.bellRing;
-      insightColor = const Color(0xFF8B5CF6);
       insightTitle = 'Pending Alerts & Reminders';
       insightMessage =
           'You have unread reminders and utility alerts. Tap to review deadlines.';
@@ -869,7 +951,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       onAction = () => MainNavigationShell.switchTab(context, 3);
     } else if (hasHighPressure) {
       insightIcon = LucideIcons.triangleAlert;
-      insightColor = const Color(0xFFF59E0B);
       insightTitle = 'Budget Pressure Alert';
       insightMessage =
           'Spending in certain categories is exceeding safe threshold pacing.';
@@ -877,7 +958,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       onAction = () => MainNavigationShell.openMoneyManager(context, initialTabIndex: 2);
     } else {
       insightIcon = LucideIcons.sparkles;
-      insightColor = const Color(0xFF10B981);
       insightTitle = 'Pace & Wellness On Track';
       insightMessage =
           'Daily expenses and routine priorities are pacing within healthy targets.';
@@ -885,14 +965,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
       onAction = () => MainNavigationShell.switchTab(context, 1);
     }
 
+    final cardBg = isDark ? const Color(0xFF2A1838) : AppColors.softLavender;
+    final cardBorder = isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: insightColor.withValues(alpha: isDark ? 0.10 : 0.06),
+        color: cardBg,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: insightColor.withValues(alpha: isDark ? 0.30 : 0.20),
-          width: 1,
+          color: cardBorder,
+          width: 1.1,
         ),
       ),
       child: Row(
@@ -901,10 +984,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              color: insightColor.withValues(alpha: isDark ? 0.20 : 0.12),
+              color: isDark ? const Color(0xFF181220) : Colors.white,
               borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0),
+                width: 1,
+              ),
             ),
-            child: Icon(insightIcon, size: 20, color: insightColor),
+            child: Icon(insightIcon, size: 20, color: AppColors.primary),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -944,7 +1031,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               style: GoogleFonts.inter(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: insightColor,
+                color: AppColors.primary,
               ),
             ),
           ),
@@ -996,10 +1083,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: isDark ? 0.15 : 0.08),
+                color: AppColors.badgeBgOf(context),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.2),
+                  color: isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0),
                 ),
               ),
               child: Text(
@@ -1007,7 +1094,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 style: GoogleFonts.inter(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.primary,
+                  color: AppColors.badgeTextOf(context),
                 ),
               ),
             ),
@@ -1035,7 +1122,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
         const SizedBox(height: 14),
 
-        // Responsive 2-column or 3-column Grid
+        // Responsive Asymmetric Grid
         LayoutBuilder(
           builder: (ctx, constraints) {
             final isTablet = constraints.maxWidth >= 600;
@@ -1095,14 +1182,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       borderRadius: BorderRadius.circular(10),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primary
-              : (isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9)),
+              : (isDark ? const Color(0xFF2A1838) : AppColors.secondarySurface),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected ? AppColors.primary : Colors.transparent,
+            color: isSelected
+                ? AppColors.primary
+                : (isDark ? const Color(0xFF2A2233) : const Color(0xFFEBE3F0)),
           ),
         ),
         child: Text(
@@ -1132,14 +1221,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final transactions = money.transactions.take(3).toList();
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: surfaceColor,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark ? const Color(0xFF2A2233) : borderColor,
+          width: 1.1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+            color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.03),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -1154,22 +1246,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Row(
                 children: [
                   Container(
-                    width: 28,
-                    height: 28,
+                    width: 30,
+                    height: 30,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF10B981).withValues(alpha: isDark ? 0.2 : 0.1),
+                      color: isDark ? const Color(0xFF2A1838) : AppColors.softLavender,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(
                       LucideIcons.receipt,
                       size: 16,
-                      color: Color(0xFF10B981),
+                      color: AppColors.primary,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 10),
                   Text(
                     'Recent Activity',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -1201,10 +1293,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (isAuthenticated && transactions.isNotEmpty) ...[
             ...transactions.map((tx) {
               final isIncome = tx.isIncome;
-              final txColor = isIncome ? const Color(0xFF10B981) : const Color(0xFFEF4444);
               final description = (tx.notes != null && tx.notes!.isNotEmpty)
                   ? tx.notes!
                   : tx.categoryName;
+              final displayAmount = _hideBalances
+                  ? '₹••••'
+                  : '${isIncome ? '+' : '-'}${currencyFormat.format(tx.amount)}';
 
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
@@ -1214,16 +1308,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Row(
                     children: [
                       Container(
-                        width: 34,
-                        height: 34,
+                        width: 36,
+                        height: 36,
                         decoration: BoxDecoration(
-                          color: txColor.withValues(alpha: isDark ? 0.16 : 0.08),
+                          color: isDark ? const Color(0xFF2A1838) : AppColors.softLavender,
                           borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0),
+                            width: 0.8,
+                          ),
                         ),
                         child: Icon(
                           isIncome ? LucideIcons.arrowDownLeft : LucideIcons.arrowUpRight,
                           size: 16,
-                          color: txColor,
+                          color: AppColors.primary,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -1252,12 +1350,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ),
                       Text(
-                        '${isIncome ? '+' : '-'}${currencyFormat.format(tx.amount)}',
+                        displayAmount,
                         style: GoogleFonts.inter(
                           fontSize: 13.5,
                           fontWeight: FontWeight.w700,
-                          color: txColor,
-                          fontFeatures: const [FontFeature.tabularFigures()],
+                          color: isIncome ? AppColors.financialPositive : textPrimary,
                         ),
                       ),
                     ],
@@ -1297,7 +1394,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  // --- 8. Today's Priorities Checklist ---
+  // --- 8. Today's Rhythm & Priorities Checklist ---
   Widget _buildTasksPreview({
     required BuildContext context,
     required Color textPrimary,
@@ -1306,15 +1403,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
     required Color borderColor,
     required bool isDark,
   }) {
+    final completedCount = _quickTasks.where((t) => t['isDone'] == true).length;
+    final totalCount = _quickTasks.length;
+    final progressFraction = totalCount > 0 ? (completedCount / totalCount) : 0.0;
+
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: surfaceColor,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark ? const Color(0xFF2A2233) : borderColor,
+          width: 1.1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+            color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.03),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -1329,22 +1433,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Row(
                 children: [
                   Container(
-                    width: 28,
-                    height: 28,
+                    width: 30,
+                    height: 30,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0EA5E9).withValues(alpha: isDark ? 0.2 : 0.1),
+                      color: isDark ? const Color(0xFF2A1838) : AppColors.softLavender,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(
                       LucideIcons.checkSquare,
                       size: 16,
-                      color: Color(0xFF0EA5E9),
+                      color: AppColors.primary,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 10),
                   Text(
                     "Today's Priorities",
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -1370,11 +1474,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ],
           ),
+
+          const SizedBox(height: 10),
+
+          // Completion Progress Bar in Primary Purple
+          Row(
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: progressFraction,
+                    backgroundColor: isDark ? const Color(0xFF2A1838) : const Color(0xFFEBE3F0),
+                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                    minHeight: 4,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                '$completedCount of $totalCount completed',
+                style: GoogleFonts.inter(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: textSecondary,
+                ),
+              ),
+            ],
+          ),
+
           const SizedBox(height: 12),
+
           ..._quickTasks.map((task) {
             final isDone = task['isDone'] as bool;
             final category = task['category'] as String;
-            final color = task['color'] as Color;
 
             return InkWell(
               onTap: () {
@@ -1390,7 +1523,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     Icon(
                       isDone ? LucideIcons.checkCircle2 : LucideIcons.circle,
                       size: 18,
-                      color: isDone ? const Color(0xFF10B981) : textSecondary,
+                      color: isDone ? AppColors.primary : textSecondary,
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -1405,17 +1538,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2.5),
                       decoration: BoxDecoration(
-                        color: color.withValues(alpha: isDark ? 0.16 : 0.08),
+                        color: AppColors.badgeBgOf(context),
                         borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
+                          color: isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0),
+                          width: 0.8,
+                        ),
                       ),
                       child: Text(
                         category,
                         style: GoogleFonts.inter(
                           fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: color,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.badgeTextOf(context),
                         ),
                       ),
                     ),

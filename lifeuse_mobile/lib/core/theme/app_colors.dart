@@ -23,17 +23,30 @@ class AppColors {
   static const Color darkBase800 = Color(0xFFCCCCCC);
 
   // ===========================================================================
-  // 2. PRIMARY EMERALD (PREMIUM MINIMAL) & BRAND VIOLET TOKENS
+  // 2. PRIMARY PURPLE (AMETHYST PURPLE & OLED TRUE BLACK SYSTEM)
+  // Light: Deepened Amethyst Purple #7F35AD (increased darkness for rich contrast)
+  // Dark: OLED True Black with Amethyst Violet Accents #C79BEF / #9B4DCA
   // ===========================================================================
-  static const Color primary = Color(0xFF10B981); // Approved Premium Minimal Accent: Emerald #10B981
-  static const Color primaryDark = Color(0xFF059669);
-  static const Color primaryDeep = Color(0xFF047857);
-  static const Color primaryViolet = Color(0xFFA855F7); // LifeUse Brand Violet
-  static const Color purple400 = Color(0xFFC084FC);
-  static const Color purple425 = Color(0xFFB978FA);
-  static const Color primaryLight = Color(0xFF34D399);
-  static const Color primaryGlow = Color(0x4D10B981);
-  static const Color primarySubtle = Color(0x1A10B981);
+  static const Color primary = Color(0xFF7F35AD);      // Deepened Amethyst Purple #7F35AD (Light Mode)
+  static const Color primaryDark = Color(0xFF6A2A92);  // Button Pressed / Deep Accent #6A2A92
+  static const Color primaryDeep = Color(0xFF541C7A);  // Midnight Violet #541C7A
+  static const Color primaryLight = Color(0xFFA05DCB); // Secondary Purple #A05DCB
+  static const Color softLavender = Color(0xFFF5ECFA); // Tonal Purple / Selected #F5ECFA
+  static const Color secondarySurface = Color(0xFFFBFAFC); // Page Background #FBFAFC
+  static const Color primaryGlow = Color(0x337F35AD);  // Purple subtle glow
+  static const Color primarySubtle = Color(0x1A7F35AD); // 10% Purple tint
+  static const Color primaryViolet = Color(0xFF7F35AD);
+  static const Color purple400 = Color(0xFFA05DCB);
+  static const Color purple425 = Color(0xFF8A3FB8);
+
+  // OLED True Black Dark Mode Palette Tokens
+  static const Color darkAccent = Color(0xFFC79BEF);   // OLED Accent #C79BEF
+  static const Color darkButton = Color(0xFF9B4DCA);   // OLED Button #9B4DCA
+  static const Color darkButtonPressed = Color(0xFFAE63DD); // OLED Pressed #AE63DD
+  static const Color darkSecondary = Color(0xFFB57EE0); // OLED Secondary #B57EE0
+  static const Color darkTonal = Color(0xFF2A1838);    // OLED Tonal #2A1838
+  static const Color darkBadgeBg = Color(0xFF2E1A40);  // OLED Badge Bg #2E1A40
+  static const Color darkBadgeText = Color(0xFFDDB8F7);// OLED Badge Text #DDB8F7
 
   // ===========================================================================
   // 3. LIFEUSE INK SCALE
@@ -142,57 +155,65 @@ class AppColors {
   ];
 
   // ===========================================================================
-  // 9. THEME CONTAINER COLOR PALETTES (Google-Inspired Modern Minimal Direction)
+  // 9. THEME CONTAINER COLOR PALETTES (Amethyst Purple & OLED True Black)
   // ===========================================================================
-  static const Color darkBackground = Color(0xFF0B0F19); // Obsidian Deep Canvas
-  static const Color darkSurface = Color(0xFF111827);    // Deep modern slate
-  static const Color darkSurfaceElevated = Color(0xFF1E293B); // Elevated slate
-  static const Color darkBorder = Color(0xFF1F293D);     // Subtle 1px outline
-  static const Color darkBorderActive = Color(0xFF374151);
-  static const Color darkTextPrimary = Color(0xFFF8FAFC);
-  static const Color darkTextSecondary = Color(0xFF94A3B8);
-  static const Color darkTextTertiary = Color(0xFF64748B);
+  // OLED True Black Dark Mode Palette
+  static const Color darkBackground = Color(0xFF000000); // OLED True Black #000000
+  static const Color darkSurface = Color(0xFF0F0B14);    // OLED True Black Card #0F0B14
+  static const Color darkSurfaceElevated = Color(0xFF181220); // Elevated Sheet #181220
+  static const Color darkBorder = Color(0xFF2A2233);     // Subtle Border #2A2233
+  static const Color darkBorderActive = Color(0xFF3D2F4A);
+  static const Color darkTextPrimary = Color(0xFFF6F0FB); // Heading #F6F0FB
+  static const Color darkTextSecondary = Color(0xFFCFC4DB); // Body Text #CFC4DB
+  static const Color darkTextTertiary = Color(0xFF8E8299);  // Muted Text #8E8299
+  static const Color darkIcon = Color(0xFF8E8299);       // Inactive Icon #8E8299
+  static const Color darkNav = Color(0xFF0A0710);        // Bottom Nav #0A0710
+  static const Color darkInput = Color(0xFF120D18);      // Input Background #120D18
 
-  static const Color lightBackground = Color(0xFFF8FAFC);
-  static const Color lightSurface = Color(0xFFFFFFFF);
-  static const Color lightSurfaceElevated = Color(0xFFF1F5F9);
-  static const Color lightBorder = Color(0xFFE2E8F0);
-  static const Color lightBorderActive = Color(0xFFCBD5E1);
-  static const Color lightTextPrimary = Color(0xFF0F172A);
-  static const Color lightTextSecondary = Color(0xFF64748B);
-  static const Color lightTextTertiary = Color(0xFF94A3B8);
+  // Light Mode Palette (Classic Amethyst with Deepened Purple)
+  static const Color lightBackground = Color(0xFFFBFAFC); // Page Background #FBFAFC
+  static const Color lightSurface = Color(0xFFFFFFFF);    // Card Background #FFFFFF
+  static const Color lightSurfaceElevated = Color(0xFFFFFFFF); // Elevated Sheet #FFFFFF
+  static const Color lightBorder = Color(0xFFEBE3F0);     // Border #EBE3F0
+  static const Color lightBorderActive = Color(0xFFD4C7DB);
+  static const Color lightTextPrimary = Color(0xFF221530);   // Heading #221530
+  static const Color lightTextSecondary = Color(0xFF54485F); // Body Text #54485F
+  static const Color lightTextTertiary = Color(0xFF7A6E87);  // Muted Text #7A6E87
+  static const Color lightIcon = Color(0xFF756B82);       // Inactive Icon #756B82
+  static const Color lightNav = Color(0xFFFFFFFF);        // Bottom Nav #FFFFFF
+  static const Color lightInput = Color(0xFFFFFFFF);      // Input Background #FFFFFF
 
   // M3 Tonal Containers & Accents
-  static const Color primaryContainer = Color(0x1F10B981); // 12% primary tint
-  static const Color secondaryIndigo = Color(0xFF6366F1);  // Google analytics & secondary
-  static const Color secondaryIndigoContainer = Color(0x1F6366F1);
+  static const Color primaryContainer = Color(0xFFF5ECFA); // Tonal Purple #F5ECFA
+  static const Color secondaryIndigo = Color(0xFF6A2A92);  // Button Pressed #6A2A92
+  static const Color secondaryIndigoContainer = Color(0xFFF5ECFA);
   static const Color tertiaryAmber = Color(0xFFF59E0B);    // Deadlines & budget warnings
   static const Color tertiaryAmberContainer = Color(0x1FF59E0B);
 
-  // Financial Semantics (Tabular & Graph)
+  // Financial Semantics (Status only - retained for ledger clarity)
   static const Color financialPositive = Color(0xFF10B981); // Inflow & Income
-  static const Color financialNegative = Color(0xFFF43F5E); // Outflow & Expenses (Rose 500)
+  static const Color financialNegative = Color(0xFFEF4444); // Outflow & Expenses
   static const Color financialWarning = Color(0xFFF59E0B);  // Budget caution
 
   // Role Badges
-  static const Color roleSuperAdmin = Color(0xFFA855F7);
-  static const Color roleAdmin = Color(0xFF6366F1);
-  static const Color roleCustomer = Color(0xFF06B6D4);
-  static const Color roleUser = Color(0xFF10B981);
+  static const Color roleSuperAdmin = Color(0xFF7F35AD);
+  static const Color roleAdmin = Color(0xFF6A2A92);
+  static const Color roleCustomer = Color(0xFFA05DCB);
+  static const Color roleUser = Color(0xFF7F35AD);
 
   // Aliases
-  static const Color accent = neonCyan;
-  static const Color accentLight = neonCyan;
+  static const Color accent = primary;
+  static const Color accentLight = primaryLight;
   static const Color accentGold = amberGold;
   static const Color errorBackground = errorSubtle;
   static const Color successBackground = successSubtle;
-  static const Color background = darkBackground;
-  static const Color surface = darkSurface;
-  static const Color surfaceElevated = darkSurfaceElevated;
-  static const Color border = darkBorder;
-  static const Color textPrimary = darkTextPrimary;
-  static const Color textSecondary = darkTextSecondary;
-  static const Color textTertiary = darkTextTertiary;
+  static const Color background = lightBackground;
+  static const Color surface = lightSurface;
+  static const Color surfaceElevated = lightSurfaceElevated;
+  static const Color border = lightBorder;
+  static const Color textPrimary = lightTextPrimary;
+  static const Color textSecondary = lightTextSecondary;
+  static const Color textTertiary = lightTextTertiary;
 
   // Dynamic context helpers
   static Color backgroundOf(BuildContext context) =>
@@ -230,10 +251,30 @@ class AppColors {
           ? darkTextTertiary
           : lightTextTertiary;
 
+  static Color primaryOf(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? darkAccent
+          : primary;
+
   static Color primaryContainerOf(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
-          ? const Color(0x2610B981) // 15% opacity on dark
-          : const Color(0x1A10B981); // 10% opacity on light
+          ? darkTonal
+          : softLavender;
+
+  static Color inactiveIconOf(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? darkIcon
+          : lightIcon;
+
+  static Color badgeBgOf(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? darkBadgeBg
+          : softLavender;
+
+  static Color badgeTextOf(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? darkBadgeText
+          : primaryDark;
 
   /// Input label color: #4D4D4D in Light, #E6E6E6 in Dark (Matches user uploaded image)
   static Color inputLabelOf(BuildContext context) =>

@@ -65,10 +65,12 @@ class ModuleCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                       decoration: BoxDecoration(
-                        color: module.accentColor.withValues(alpha: isDark ? 0.14 : 0.08),
+                        color: AppColors.badgeBgOf(context),
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(
-                          color: module.accentColor.withValues(alpha: 0.25),
+                          color: isDark
+                              ? const Color(0xFF3D2550)
+                              : const Color(0xFFEBE3F0),
                           width: 0.8,
                         ),
                       ),
@@ -77,7 +79,7 @@ class ModuleCard extends StatelessWidget {
                         style: GoogleFonts.inter(
                           fontSize: 9.5,
                           fontWeight: FontWeight.w700,
-                          color: module.accentColor,
+                          color: AppColors.badgeTextOf(context),
                           letterSpacing: 0.3,
                         ),
                       ),
