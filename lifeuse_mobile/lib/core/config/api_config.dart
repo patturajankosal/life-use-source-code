@@ -69,6 +69,13 @@ class ApiConfig {
   static String moneyCommitment(dynamic id) => '$moneyCommitments/$id';
   static String moneySavingsGoal(dynamic id) => '$moneySavingsGoals/$id';
 
+  // Unsplash Configuration for Dynamic UI Photography & Avatars
+  // Application ID: 1154191
+  static const String unsplashApplicationId = '1154191';
+  static const String unsplashAccessKey = 'YOUR_UNSPLASH_ACCESS_KEY';
+  static const String unsplashSecretKey = '8OyFk9cZ2CLKhXTVXJt2jt7eX1G9WwmR8GpM-8Abrt4';
+  static const String unsplashApiBase = 'https://api.unsplash.com';
+
   // Timeout settings
   static const Duration requestTimeout = Duration(seconds: 15);
 }

@@ -164,3 +164,39 @@ logs/
 *.sql.bak
 *.dump
 *.db.bak
+
+# ------------------------------------------------------------------------------
+# 11. Android & Kotlin Ephemeral Caches
+# ------------------------------------------------------------------------------
+**/.kotlin/
+**/android/.kotlin/
+**/android/app/build/
+**/crashlytics-build.properties
+
+# ------------------------------------------------------------------------------
+# 12. AI Agents, Claude Code & Local Dev State (Preserves all local files on disk)
+# ------------------------------------------------------------------------------
+.agents/
+.claude/
+agent/
+skills-lock.json
+.cursor/
+.antigravity/
+*.local.json
+mcp.config.local.json
+*mcp*.local.*
+
+# ------------------------------------------------------------------------------
+# 13. Preserved Shared Team Files & Templates (Explicit Whitelist)
+# ------------------------------------------------------------------------------
+!AGENTS.md
+!**/AGENTS.md
+!CLAUDE.md
+!**/CLAUDE.md
+!.env.example
+!**/.env.example
+!pubspec.yaml
+!pubspec.lock
+!analysis_options.yaml
+!README.md
+!**/README.md

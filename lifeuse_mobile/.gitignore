@@ -46,3 +46,36 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Environment Variables & Secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Android & Kotlin Ephemeral Caches
+.kotlin/
+android/.kotlin/
+android/local.properties
+key.properties
+*.keystore
+*.jks
+
+# AI Agents, Claude Code & Local Development Tools
+.agents/
+.claude/
+agent/
+skills-lock.json
+.cursor/
+.antigravity/
+*.local.json
+mcp.config.local.json
+
+# Whitelisted Shared Team Files & Templates
+!pubspec.yaml
+!pubspec.lock
+!analysis_options.yaml
+!README.md
+!.env.example
+!AGENTS.md
+!CLAUDE.md
