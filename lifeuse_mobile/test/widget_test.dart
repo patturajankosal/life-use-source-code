@@ -15,6 +15,7 @@ import 'package:lifeuse_mobile/data/models/login_response.dart';
 import 'package:lifeuse_mobile/data/services/api_client.dart';
 import 'package:lifeuse_mobile/data/services/auth_service.dart';
 import 'package:lifeuse_mobile/data/services/money_service.dart';
+import 'package:lifeuse_mobile/presentation/screens/dashboard/dashboard_screen.dart';
 import 'package:lifeuse_mobile/presentation/screens/dashboard/models/dashboard_module_item.dart';
 import 'package:lifeuse_mobile/presentation/screens/dashboard/widgets/animated_hero_banner.dart';
 import 'package:lifeuse_mobile/presentation/screens/dashboard/widgets/bento_life_overview.dart';
@@ -53,9 +54,10 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verify application starts directly on Dashboard with hardcoded modules in Guest Mode
-    expect(find.textContaining('Guest Explorer'), findsOneWidget);
+    expect(find.text('LIFEUSE'), findsWidgets);
+    expect(find.text('Autonomous Lifestyle OS'), findsOneWidget);
     expect(find.text('Money Manager'), findsWidgets);
-    expect(find.text('Explore modules'), findsOneWidget);
+    expect(find.text('Explore LifeUse'), findsOneWidget);
   });
 
   testWidgets('Reusable UI Components render smoothly across variants',
@@ -243,23 +245,15 @@ void main() {
 
     // Verify Direct Controls quick actions exist
     expect(find.text('Record'), findsOneWidget);
+    expect(find.text('Money Manager'), findsWidgets);
     expect(find.text('Add Task'), findsOneWidget);
     expect(find.text('Set Alert'), findsOneWidget);
     expect(find.text('Pay Bills'), findsOneWidget);
 
-    // Verify Hero Zone greeting and banner
-    expect(find.textContaining('Guest Explorer'), findsOneWidget);
-    expect(find.text('Explore modules'), findsOneWidget);
-
-    // Test Search input filtering by typing 'bills'
-    await tester.enterText(find.byType(TextField), 'bills');
-    await tester.pumpAndSettle();
-    expect(find.text('Bills & Payments'), findsWidgets);
-
-    // Clear search and verify it returns to main view
-    await tester.enterText(find.byType(TextField), '');
-    await tester.pumpAndSettle();
-    expect(find.text('Record'), findsOneWidget);
+    // Verify Signature Header branding and hero banner
+    expect(find.text('LIFEUSE'), findsWidgets);
+    expect(find.text('Autonomous Lifestyle OS'), findsOneWidget);
+    expect(find.text('Explore LifeUse'), findsOneWidget);
   });
 
   testWidgets(
@@ -337,11 +331,13 @@ void main() {
 
     await tester.pumpAndSettle();
 
+    expect(find.text('My Modules'), findsOneWidget);
     expect(find.text('Daily Life Overview'), findsOneWidget);
-    expect(find.text('Health & Body'), findsOneWidget);
-    expect(find.text('Upcoming Bills'), findsOneWidget);
-    expect(find.text('Home Sanctuary'), findsOneWidget);
-    expect(find.text('Tasks & Routine'), findsOneWidget);
+    expect(find.text('Money Manager'), findsOneWidget);
+    expect(find.text('Home'), findsOneWidget);
+    expect(find.text('Health'), findsOneWidget);
+    expect(find.text('Daily Tasks'), findsOneWidget);
+    expect(find.text('Bills & EMI'), findsOneWidget);
   });
 
   testWidgets(
@@ -399,5 +395,59 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('ZERO PENALTY RADAR'), findsOneWidget);
     expect(find.text('Pay & Schedule'), findsOneWidget);
+  });
+
+  testWidgets(
+      'Automatic system theme detection reacts to platform brightness changes',
+      (WidgetTester tester) async {
+    // 1. Start with phone appearance as Light Mode
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
+
+    final apiClient = ApiClient();
+    final authService = AuthService(apiClient);
+    final authProvider = AuthProvider(authService);
+    final moneyService = MoneyService(apiClient);
+    final moneyProvider = MoneyProvider(moneyService);
+    final themeProvider = ThemeProvider();
+    final notificationProvider = NotificationProvider();
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          Provider<ApiClient>.value(value: apiClient),
+          Provider<AuthService>.value(value: authService),
+          Provider<MoneyService>.value(value: moneyService),
+          ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
+          ChangeNotifierProvider<MoneyProvider>.value(value: moneyProvider),
+          ChangeNotifierProvider<ThemeProvider>.value(value: themeProvider),
+          ChangeNotifierProvider<NotificationProvider>.value(
+              value: notificationProvider),
+        ],
+        child: const LifeUseApp(),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    // Verify app starts in Light Mode based on system brightness
+    final BuildContext lightContext =
+        tester.element(find.byType(DashboardScreen));
+    expect(Theme.of(lightContext).brightness, Brightness.light);
+
+    // 2. Change phone appearance from Light Mode to Dark Mode while running
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    await tester.pumpAndSettle();
+
+    // Verify app automatically switched to Dark Mode without restart
+    final BuildContext darkContext =
+        tester.element(find.byType(DashboardScreen));
+    expect(Theme.of(darkContext).brightness, Brightness.dark);
+
+    // 3. Switch to Profile tab (index 4) and verify absence of manual theme toggles
+    await tester.tap(find.text('Profile'));
+    await tester.pumpAndSettle();
+
+    expect(find.byTooltip('Switch to Light Mode'), findsNothing);
+    expect(find.byTooltip('Switch to Dark Mode'), findsNothing);
   });
 }

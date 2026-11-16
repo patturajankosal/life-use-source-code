@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/icons/lifeuse_icons.dart';
@@ -43,8 +43,8 @@ class ModuleCard extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: onTap,
-          splashColor: module.accentColor.withValues(alpha: 0.08),
-          highlightColor: module.accentColor.withValues(alpha: 0.04),
+          splashColor: AppColors.primary.withValues(alpha: 0.08),
+          highlightColor: AppColors.primary.withValues(alpha: 0.04),
           child: Padding(
             padding: const EdgeInsets.all(14),
             child: Column(
@@ -58,9 +58,9 @@ class ModuleCard extends StatelessWidget {
                     LifeUseIcon.duotone(
                       module.icon,
                       accentColor: module.accentColor,
-                      customSize: 21,
-                      customContainerSize: 42,
-                      customRadius: 12,
+                      customSize: 26,
+                      customContainerSize: 50,
+                      customRadius: 15,
                       semanticLabel: module.title,
                     ),
                     Container(
@@ -70,15 +70,13 @@ class ModuleCard extends StatelessWidget {
                         color: AppColors.badgeBgOf(context),
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(
-                          color: isDark
-                              ? const Color(0xFF3D2550)
-                              : const Color(0xFFEBE3F0),
+                          color: borderColor,
                           width: 0.8,
                         ),
                       ),
                       child: Text(
                         module.badgeText,
-                        style: GoogleFonts.inter(
+                        style: AppFonts.inter(
                           fontSize: 9.5,
                           fontWeight: FontWeight.w700,
                           color: AppColors.badgeTextOf(context),
@@ -99,7 +97,7 @@ class ModuleCard extends StatelessWidget {
                       module.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.plusJakartaSans(
+                      style: AppFonts.plusJakartaSans(
                         fontSize: 14.5,
                         fontWeight: FontWeight.w600,
                         color: textPrimary,
@@ -111,7 +109,7 @@ class ModuleCard extends StatelessWidget {
                       module.subtitle,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
+                      style: AppFonts.inter(
                         fontSize: 11.5,
                         color: textSecondary,
                         height: 1.25,

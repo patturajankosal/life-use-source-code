@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
 
 /// Preset date range options matching the specification:
@@ -265,7 +266,7 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
             ),
             child: Text(
               p['label'] as String,
-              style: GoogleFonts.inter(
+              style: AppFonts.inter(
                 fontSize: 13.5,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: isSelected
@@ -297,7 +298,7 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Icon(
-                Icons.arrow_forward_rounded,
+                LucideIcons.arrowRight,
                 size: 16,
                 color: Color(0xFF94A3B8),
               ),
@@ -314,7 +315,7 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
-              icon: const Icon(Icons.chevron_left_rounded, size: 20),
+              icon: const Icon(LucideIcons.chevronLeft, size: 20),
               onPressed: () {
                 setState(() {
                   _viewMonth =
@@ -324,14 +325,14 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
             ),
             Text(
               '${_getMonthName(_viewMonth.month)} ${_viewMonth.year}',
-              style: GoogleFonts.inter(
+              style: AppFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
                 color: isDark ? Colors.white : const Color(0xFF0F172A),
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.chevron_right_rounded, size: 20),
+              icon: const Icon(LucideIcons.chevronRight, size: 20),
               onPressed: () {
                 setState(() {
                   _viewMonth =
@@ -352,7 +353,7 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
               child: Text(
                 d,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w500,
                   color: const Color(0xFF94A3B8),
@@ -376,7 +377,7 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
                 onPressed: widget.onClear,
                 child: Text(
                   'Clear',
-                  style: GoogleFonts.inter(
+                  style: AppFonts.inter(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w600,
                     color: AppColors.error,
@@ -391,7 +392,7 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
                   onPressed: () => setState(() => _isCustomMode = false),
                   child: Text(
                     'Cancel',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w600,
                       color: isDark
@@ -415,7 +416,7 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
                   onPressed: _applyCustom,
                   child: Text(
                     'Apply',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w700,
                     ),
@@ -442,7 +443,7 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
       child: Text(
         LifeUseDateRange._format(date),
         textAlign: TextAlign.center,
-        style: GoogleFonts.inter(
+        style: AppFonts.inter(
           fontSize: 12,
           fontWeight: FontWeight.w700,
           color: isDark ? Colors.white : const Color(0xFF0F172A),
@@ -509,7 +510,7 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
             child: Center(
               child: Text(
                 '$dayNumber',
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 12.5,
                   fontWeight:
                       isStart || isEnd ? FontWeight.w700 : FontWeight.w500,

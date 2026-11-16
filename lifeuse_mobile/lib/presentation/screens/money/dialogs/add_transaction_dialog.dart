@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../../core/widgets/sweet_alert.dart';
 import '../../../../data/models/money/transaction_models.dart';
 import '../../../state/money_provider.dart';
@@ -37,6 +38,8 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
   bool _isEssential = true;
   DateTime _selectedDate = DateTime.now();
   bool _isSubmitting = false;
+  bool _isShared = false;
+  int? _selectedGroupId;
 
   final List<String> _defaultCategories = [
     'Food & Dining',
@@ -74,6 +77,16 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
       return;
     }
 
+    if (_isShared && _selectedGroupId == null) {
+      SweetAlert.showWarning(
+        context,
+        title: 'Group Required',
+        message:
+            'Please select a finance group to share this transaction with.',
+      );
+      return;
+    }
+
     setState(() => _isSubmitting = true);
 
     try {
@@ -88,6 +101,8 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
         notes: _notesController.text.trim().isNotEmpty
             ? _notesController.text.trim()
             : null,
+        groupId: _isShared ? _selectedGroupId : null,
+        isShared: _isShared,
       );
 
       final moneyProvider = context.read<MoneyProvider>();
@@ -172,14 +187,14 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 children: [
                   Text(
                     'Record Transaction',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 19,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(LucideIcons.x, size: 20),
+                    icon: const AppIcon(AppIcons.close, size: 20),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -212,7 +227,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 controller: _amountController,
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
-                prefixIcon: Icons.currency_rupee_rounded,
+                prefixIcon: LucideIcons.indianRupee,
                 validator: (val) {
                   if (val == null || val.trim().isEmpty) return 'Enter amount';
                   if (double.tryParse(val.trim()) == null) {
@@ -229,8 +244,8 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 dropdownColor: surfaceColor,
                 decoration: InputDecoration(
                   labelText: 'Category',
-                  labelStyle: GoogleFonts.inter(color: textSecondary),
-                  prefixIcon: Icon(Icons.category_outlined,
+                  labelStyle: AppFonts.inter(color: textSecondary),
+                  prefixIcon: Icon(LucideIcons.layoutGrid,
                       color: textSecondary, size: 20),
                   filled: true,
                   fillColor: isDark
@@ -245,7 +260,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                     borderSide: BorderSide(color: borderColor),
                   ),
                 ),
-                style: GoogleFonts.inter(fontSize: 14, color: textPrimary),
+                style: AppFonts.inter(fontSize: 14, color: textPrimary),
                 items: categories.map((cat) {
                   return DropdownMenuItem(value: cat, child: Text(cat));
                 }).toList(),
@@ -264,8 +279,8 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                       dropdownColor: surfaceColor,
                       decoration: InputDecoration(
                         labelText: 'Payment Method',
-                        labelStyle: GoogleFonts.inter(color: textSecondary),
-                        prefixIcon: Icon(Icons.payment_rounded,
+                        labelStyle: AppFonts.inter(color: textSecondary),
+                        prefixIcon: Icon(LucideIcons.creditCard,
                             color: textSecondary, size: 20),
                         filled: true,
                         fillColor: isDark
@@ -280,8 +295,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                           borderSide: BorderSide(color: borderColor),
                         ),
                       ),
-                      style:
-                          GoogleFonts.inter(fontSize: 14, color: textPrimary),
+                      style: AppFonts.inter(fontSize: 14, color: textPrimary),
                       items: _paymentMethods.map((pm) {
                         return DropdownMenuItem(value: pm, child: Text(pm));
                       }).toList(),
@@ -320,13 +334,13 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                         ),
                         child: Row(
                           children: [
-                            Icon(LucideIcons.calendar,
+                            AppIcon(AppIcons.calendar,
                                 size: 18, color: textSecondary),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                                style: GoogleFonts.inter(
+                                style: AppFonts.inter(
                                     fontSize: 13, color: textPrimary),
                               ),
                             ),
@@ -347,7 +361,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                     contentPadding: EdgeInsets.zero,
                     title: Text(
                       'Essential Expense',
-                      style: GoogleFonts.inter(
+                      style: AppFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: textPrimary,
@@ -355,22 +369,92 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                     ),
                     subtitle: Text(
                       'Categorize as necessity (food, rent, medicine) vs discretionary',
-                      style:
-                          GoogleFonts.inter(fontSize: 12, color: textSecondary),
+                      style: AppFonts.inter(fontSize: 12, color: textSecondary),
                     ),
                     value: _isEssential,
                     activeThumbColor: AppColors.primary,
                     onChanged: (val) => setState(() => _isEssential = val),
                   ),
                 ),
+
+              // 6. Shared Group Toggle
+              if (moneyProvider.userGroups.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                Material(
+                  color: Colors.transparent,
+                  child: SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(
+                      'Share with Family / Group',
+                      style: AppFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: textPrimary,
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Post this transaction to a shared finance group',
+                      style: AppFonts.inter(fontSize: 12, color: textSecondary),
+                    ),
+                    value: _isShared,
+                    activeThumbColor: AppColors.primary,
+                    onChanged: (val) {
+                      setState(() {
+                        _isShared = val;
+                        if (val &&
+                            _selectedGroupId == null &&
+                            moneyProvider.userGroups.isNotEmpty) {
+                          _selectedGroupId = moneyProvider.userGroups.first.id;
+                        }
+                      });
+                    },
+                  ),
+                ),
+                if (_isShared) ...[
+                  const SizedBox(height: 10),
+                  DropdownButtonFormField<int>(
+                    initialValue:
+                        _selectedGroupId ?? moneyProvider.userGroups.first.id,
+                    dropdownColor: surfaceColor,
+                    decoration: InputDecoration(
+                      labelText: 'Select Group',
+                      labelStyle: AppFonts.inter(color: textSecondary),
+                      prefixIcon: AppIcon(AppIcons.familyFinance,
+                          color: textSecondary, size: 20),
+                      filled: true,
+                      fillColor: isDark
+                          ? Colors.white.withValues(alpha: 0.04)
+                          : Colors.black.withValues(alpha: 0.02),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: borderColor),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: borderColor),
+                      ),
+                    ),
+                    style: AppFonts.inter(fontSize: 14, color: textPrimary),
+                    items: moneyProvider.userGroups.map((grp) {
+                      return DropdownMenuItem<int>(
+                        value: grp.id,
+                        child: Text('${grp.name} (${grp.currency})'),
+                      );
+                    }).toList(),
+                    onChanged: (val) {
+                      if (val != null) setState(() => _selectedGroupId = val);
+                    },
+                  ),
+                ],
+              ],
               const SizedBox(height: 10),
 
-              // 6. Notes Input
+              // 7. Notes Input
               AppTextField(
                 label: 'Notes (optional)',
                 hint: 'e.g., Grocery shopping at Supermart',
                 controller: _notesController,
-                prefixIcon: LucideIcons.fileText,
+                prefixIcon: AppIcons.fileText,
               ),
               const SizedBox(height: 24),
 
@@ -378,7 +462,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
               AppButton(
                 title: 'Save Transaction',
                 isLoading: _isSubmitting,
-                icon: LucideIcons.checkCircle2,
+                icon: AppIcons.checkCircle,
                 onPressed: _submit,
               ),
             ],
@@ -409,7 +493,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
           child: Center(
             child: Text(
               label,
-              style: GoogleFonts.inter(
+              style: AppFonts.inter(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: isSelected

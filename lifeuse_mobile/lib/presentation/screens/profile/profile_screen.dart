@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/config/api_config.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/theme_provider.dart';
 import '../../../core/widgets/app_button.dart';
+import '../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 import '../../../core/widgets/lifeuse_stat_card.dart';
 import '../../navigation/main_navigation_shell.dart';
@@ -22,9 +21,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
-    final theme = context.watch<ThemeProvider>();
     final user = auth.currentUser;
-    final isDark = theme.isDark;
     final textPrimary = AppColors.textPrimaryOf(context);
 
     return Scaffold(
@@ -32,31 +29,22 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         leading: Navigator.canPop(context)
             ? IconButton(
-                icon: const Icon(LucideIcons.arrowLeft, size: 20),
+                icon: const AppIcon(AppIcons.arrowLeft, size: 22),
                 onPressed: () => Navigator.pop(context),
               )
             : null,
         title: Text(
           user != null ? 'Account Profile' : 'Guest Account',
-          style: GoogleFonts.plusJakartaSans(
+          style: AppFonts.plusJakartaSans(
             fontSize: 18,
             fontWeight: FontWeight.w700,
             color: textPrimary,
           ),
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              isDark ? LucideIcons.sun : LucideIcons.moon,
-              size: 20,
-              color: isDark ? AppColors.amberGold : AppColors.primary,
-            ),
-            tooltip: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
-            onPressed: () => theme.toggleTheme(),
-          ),
           if (user != null)
             IconButton(
-              icon: const Icon(LucideIcons.logOut, size: 20),
+              icon: const AppIcon(AppIcons.logOut, size: 22),
               tooltip: 'Sign Out',
               onPressed: () => _confirmLogout(context),
             ),
@@ -64,13 +52,13 @@ class ProfileScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 580),
               child: user != null
-                  ? _buildAuthenticatedContent(context, user, theme)
-                  : _buildGuestContent(context, theme),
+                  ? _buildAuthenticatedContent(context, user)
+                  : _buildGuestContent(context),
             ),
           ),
         ).animate().fadeIn(duration: 250.ms),
@@ -82,13 +70,12 @@ class ProfileScreen extends StatelessWidget {
   Widget _buildAuthenticatedContent(
     BuildContext context,
     dynamic user,
-    ThemeProvider theme,
   ) {
     final surfaceColor = AppColors.surfaceOf(context);
     final borderColor = AppColors.borderOf(context);
     final textPrimary = AppColors.textPrimaryOf(context);
     final textSecondary = AppColors.textSecondaryOf(context);
-    final isDark = theme.isDark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -123,7 +110,7 @@ class ProfileScreen extends StatelessWidget {
                     user.username.isNotEmpty
                         ? user.username[0].toUpperCase()
                         : 'U',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
                       color: user.roleColor,
@@ -134,7 +121,7 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 user.fullName,
-                style: GoogleFonts.plusJakartaSans(
+                style: AppFonts.plusJakartaSans(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: textPrimary,
@@ -143,7 +130,7 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 '@${user.username}',
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
                   color: textSecondary,
@@ -188,7 +175,7 @@ class ProfileScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
           child: Text(
             'Account Information',
-            style: GoogleFonts.inter(
+            style: AppFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: textSecondary,
@@ -206,14 +193,14 @@ class ProfileScreen extends StatelessWidget {
             children: [
               _buildDetailRow(
                 context: context,
-                icon: LucideIcons.userCheck,
+                icon: AppIcons.userCheck,
                 label: 'User ID',
                 value: '#${user.id}',
               ),
               Divider(height: 1, color: borderColor),
               _buildDetailRow(
                 context: context,
-                icon: LucideIcons.mail,
+                icon: AppIcons.mail,
                 label: 'Email address',
                 value: user.email,
                 trailing: _buildVerificationBadge(user.emailVerified),
@@ -221,7 +208,7 @@ class ProfileScreen extends StatelessWidget {
               Divider(height: 1, color: borderColor),
               _buildDetailRow(
                 context: context,
-                icon: LucideIcons.phone,
+                icon: AppIcons.phone,
                 label: 'Phone number',
                 value: user.phoneNumber,
                 trailing: _buildVerificationBadge(user.phoneVerified),
@@ -239,7 +226,7 @@ class ProfileScreen extends StatelessWidget {
         AppButton(
           title: 'Sign Out',
           isOutlined: true,
-          icon: LucideIcons.logOut,
+          icon: AppIcons.logOut,
           onPressed: () => _confirmLogout(context),
         ),
         // Extra clearance for floating navigation capsule
@@ -249,12 +236,12 @@ class ProfileScreen extends StatelessWidget {
   }
 
   /// View when user is in guest mode (unauthenticated)
-  Widget _buildGuestContent(BuildContext context, ThemeProvider theme) {
+  Widget _buildGuestContent(BuildContext context) {
     final surfaceColor = AppColors.surfaceOf(context);
     final borderColor = AppColors.borderOf(context);
     final textPrimary = AppColors.textPrimaryOf(context);
     final textSecondary = AppColors.textSecondaryOf(context);
-    final isDark = theme.isDark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -277,26 +264,28 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                width: 72,
-                height: 72,
+                width: 68,
+                height: 68,
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.primary.withValues(alpha: 0.12),
+                  color: AppColors.iconBackgroundOf(context),
+                  borderRadius: BorderRadius.circular(22),
                   border: Border.all(
-                    color: AppColors.primary.withValues(alpha: 0.3),
-                    width: 2,
+                    color: AppColors.iconBorderOf(context),
+                    width: 1.2,
                   ),
                 ),
-                child: const Icon(
-                  LucideIcons.user,
-                  size: 34,
-                  color: AppColors.primary,
+                child: Center(
+                  child: AppIcon(
+                    AppIcons.profileOutline,
+                    size: 32,
+                    color: AppColors.brandIconOf(context),
+                  ),
                 ),
               ),
               const SizedBox(height: 14),
               Text(
                 'Guest Explorer Mode',
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: textPrimary,
@@ -306,7 +295,7 @@ class ProfileScreen extends StatelessWidget {
               Text(
                 'Sign in or create an account to access persistent cloud sync, personal finance records, and daily habits.',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 13,
                   height: 1.45,
                   color: textSecondary,
@@ -323,10 +312,11 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  icon: const Icon(LucideIcons.logIn, size: 18),
+                  icon: const AppIcon(AppIcons.logIn,
+                      size: 20, color: Colors.white),
                   label: Text(
                     'Sign In to LifeUse',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 14.5,
                       fontWeight: FontWeight.w700,
                     ),
@@ -351,10 +341,11 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  icon: const Icon(LucideIcons.userPlus, size: 18),
+                  icon:
+                      AppIcon(AppIcons.userPlus, size: 20, color: textPrimary),
                   label: Text(
                     'Create New Account',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 14.5,
                       fontWeight: FontWeight.w600,
                     ),
@@ -393,7 +384,7 @@ class ProfileScreen extends StatelessWidget {
             children: [
               Text(
                 'Enterprise Features with Account',
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
                   color: textPrimary,
@@ -402,21 +393,21 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 12),
               _buildFeatureRow(
                 context,
-                LucideIcons.wallet,
+                AppIcons.moneyManager,
                 'Money Manager Sync',
                 'Live PostgreSQL backend integration for expense budgets',
               ),
               const SizedBox(height: 10),
               _buildFeatureRow(
                 context,
-                LucideIcons.shieldCheck,
+                AppIcons.documentsVault,
                 'Zero-Knowledge Security',
                 'Encrypted JWT sessions and BCrypt credential hashing',
               ),
               const SizedBox(height: 10),
               _buildFeatureRow(
                 context,
-                LucideIcons.laptop,
+                AppIcons.category,
                 'Cross-Device Synchronization',
                 'Pick up where you left off on web, tablet, or phone',
               ),
@@ -439,17 +430,24 @@ class ProfileScreen extends StatelessWidget {
     String title,
     String desc,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 32,
-          height: 32,
+          width: 38,
+          height: 38,
           decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
+            color: isDark ? const Color(0xFF262626) : const Color(0xFFF4F4F5),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: AppColors.borderOf(context),
+              width: 0.8,
+            ),
           ),
-          child: Icon(icon, size: 16, color: AppColors.primary),
+          child: Center(
+            child: AppIcon(icon, size: 20, color: AppColors.iconOf(context)),
+          ),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -458,7 +456,7 @@ class ProfileScreen extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textPrimaryOf(context),
@@ -467,7 +465,7 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 desc,
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 11.5,
                   color: AppColors.textSecondaryOf(context),
                 ),
@@ -508,7 +506,7 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 'Spring Boot API Connection',
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -519,7 +517,7 @@ class ProfileScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             'Active Base URL: ${ApiConfig.baseUrl}',
-            style: GoogleFonts.inter(
+            style: AppFonts.inter(
               fontSize: 12,
               color: textSecondary,
             ),
@@ -540,7 +538,7 @@ class ProfileScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: AppColors.textSecondaryOf(context)),
+          AppIcon(icon, size: 20, color: AppColors.textSecondaryOf(context)),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -548,7 +546,7 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: GoogleFonts.inter(
+                  style: AppFonts.inter(
                     fontSize: 12,
                     color: AppColors.textTertiaryOf(context),
                   ),
@@ -556,7 +554,7 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style: GoogleFonts.inter(
+                  style: AppFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: AppColors.textPrimaryOf(context),
@@ -586,14 +584,14 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: AppColors.surfaceOf(context),
         title: Text(
           'Sign Out',
-          style: GoogleFonts.inter(
+          style: AppFonts.inter(
             fontWeight: FontWeight.w700,
             color: AppColors.textPrimaryOf(context),
           ),
         ),
         content: Text(
           'Are you sure you want to sign out of LifeUse?',
-          style: GoogleFonts.inter(
+          style: AppFonts.inter(
             color: AppColors.textSecondaryOf(context),
           ),
         ),
@@ -602,7 +600,7 @@ class ProfileScreen extends StatelessWidget {
             onPressed: () => Navigator.pop(ctx),
             child: Text(
               'Cancel',
-              style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+              style: AppFonts.inter(fontWeight: FontWeight.w600),
             ),
           ),
           ElevatedButton(
@@ -619,7 +617,7 @@ class ProfileScreen extends StatelessWidget {
             },
             child: Text(
               'Sign Out',
-              style: GoogleFonts.inter(
+              style: AppFonts.inter(
                 fontWeight: FontWeight.w700,
                 color: Colors.white,
               ),

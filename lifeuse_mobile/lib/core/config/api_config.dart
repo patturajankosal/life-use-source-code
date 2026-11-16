@@ -32,7 +32,9 @@ class ApiConfig {
   static String get verifyEmail => '$baseUrl/auth/verify/email';
   static String get verifyPhone => '$baseUrl/auth/verify/phone';
   static String get resendOtp => '$baseUrl/auth/verify/resend';
+  static String get sendOtp => '$baseUrl/auth/verify/send';
   static String get forgotPassword => '$baseUrl/auth/password/forgot';
+  static String get verifyPasswordOtp => '$baseUrl/auth/password/verify';
   static String get resetPassword => '$baseUrl/auth/password/reset';
 
   // User endpoints (matching com.lifeuse.AppRoutes.User)
@@ -65,6 +67,49 @@ class ApiConfig {
       '$baseUrl/money/reminders/preferences';
   static String get moneyNotifications =>
       '$baseUrl/money/reminders/notifications';
+
+  // Family & Shared Finance endpoints (matching com.lifeuse.AppRoutes.Money)
+  static String get moneyGroups => '$baseUrl/money/groups';
+  static String get moneyMyInvitations =>
+      '$baseUrl/money/groups/invitations/my';
+  static String moneyGroup(dynamic id) => '$moneyGroups/$id';
+  static String moneyLeaveGroup(dynamic id) => '$moneyGroups/$id/leave';
+  static String moneyTransferGroupOwner(dynamic id) =>
+      '$moneyGroups/$id/transfer-owner';
+  static String moneyGroupInvitations(dynamic groupId) =>
+      '$moneyGroups/$groupId/invitations';
+  static String moneyAcceptInvitation(dynamic id) =>
+      '$baseUrl/money/groups/invitations/$id/accept';
+  static String moneyRejectInvitation(dynamic id) =>
+      '$baseUrl/money/groups/invitations/$id/reject';
+  static String moneyCancelInvitation(dynamic groupId, dynamic id) =>
+      '$moneyGroups/$groupId/invitations/$id';
+  static String moneyGroupMembers(dynamic groupId) =>
+      '$moneyGroups/$groupId/members';
+  static String moneyGroupMemberRole(dynamic groupId, dynamic memberId) =>
+      '$moneyGroups/$groupId/members/$memberId/role';
+  static String moneyGroupMember(dynamic groupId, dynamic memberId) =>
+      '$moneyGroups/$groupId/members/$memberId';
+  static String moneyGroupPrivacy(dynamic groupId) =>
+      '$moneyGroups/$groupId/privacy';
+  static String moneyGroupPrivacyAudit(dynamic groupId) =>
+      '$moneyGroups/$groupId/privacy/audit';
+  static String moneyGroupBudgets(dynamic groupId) =>
+      '$moneyGroups/$groupId/budgets';
+  static String moneyActiveGroupBudget(dynamic groupId) =>
+      '$moneyGroups/$groupId/budgets/active';
+  static String moneyGroupBudget(dynamic groupId, dynamic budgetId) =>
+      '$moneyGroups/$groupId/budgets/$budgetId';
+  static String moneyGroupTransactions(dynamic groupId) =>
+      '$moneyGroups/$groupId/transactions';
+  static String moneyGroupTxSummary(dynamic groupId) =>
+      '$moneyGroups/$groupId/transactions/summary';
+  static String moneyGroupDashboard(dynamic groupId) =>
+      '$moneyGroups/$groupId/dashboard';
+  static String moneyGroupMemberReport(dynamic groupId) =>
+      '$moneyGroups/$groupId/reports/member-wise';
+  static String moneyGroupCategoryReport(dynamic groupId) =>
+      '$moneyGroups/$groupId/reports/category-wise';
 
   // ID-based resource routes
   static String moneyTransaction(dynamic id) => '$moneyTransactions/$id';

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
 class _WorkoutLog {
@@ -33,35 +34,10 @@ class HealthWellnessScreen extends StatefulWidget {
 }
 
 class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
-  int _waterIntakeMl = 1750;
+  int _waterIntakeMl = 0;
   static const int _waterGoalMl = 3000;
 
-  final List<_WorkoutLog> _workouts = [
-    _WorkoutLog(
-      id: 'w_1',
-      activity: 'Morning Jogging & Cardio',
-      duration: '35 mins',
-      calories: 320,
-      icon: LucideIcons.activity,
-      isCompleted: true,
-    ),
-    _WorkoutLog(
-      id: 'w_2',
-      activity: 'Core Strength & Pushups',
-      duration: '20 mins',
-      calories: 180,
-      icon: LucideIcons.dumbbell,
-      isCompleted: true,
-    ),
-    _WorkoutLog(
-      id: 'w_3',
-      activity: 'Evening Yoga & Stretch',
-      duration: '25 mins',
-      calories: 120,
-      icon: LucideIcons.heartPulse,
-      isCompleted: false,
-    ),
-  ];
+  final List<_WorkoutLog> _workouts = [];
 
   void _addWater(int amount) {
     setState(() {
@@ -81,7 +57,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         title: Text(
           'Log Workout Session',
-          style: GoogleFonts.inter(fontWeight: FontWeight.w700),
+          style: AppFonts.inter(fontWeight: FontWeight.w700),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -139,7 +115,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                           ? '20 mins'
                           : durCtrl.text.trim(),
                       calories: int.tryParse(calCtrl.text) ?? 150,
-                      icon: LucideIcons.activity,
+                      icon: AppIcons.healthWellness,
                       isCompleted: true,
                     ),
                   );
@@ -173,12 +149,12 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
       appBar: AppBar(
         title: Text(
           'Health & Wellness',
-          style: GoogleFonts.plusJakartaSans(
+          style: AppFonts.plusJakartaSans(
               fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
-            icon: const Icon(LucideIcons.plus, size: 20),
+            icon: const AppIcon(AppIcons.plus, size: 20),
             tooltip: 'Log Workout',
             onPressed: _showAddWorkoutDialog,
           ),
@@ -218,13 +194,22 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                             Row(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.all(10),
+                                  width: 44,
+                                  height: 44,
                                   decoration: BoxDecoration(
-                                    color: Colors.blue.withValues(alpha: 0.12),
-                                    borderRadius: BorderRadius.circular(12),
+                                    color: AppColors.iconBackgroundOf(context),
+                                    borderRadius: BorderRadius.circular(13),
+                                    border: Border.all(
+                                      color: AppColors.iconBorderOf(context),
+                                    ),
                                   ),
-                                  child: const Icon(LucideIcons.droplets,
-                                      color: Colors.blue, size: 22),
+                                  child: Center(
+                                    child: AppIcon(
+                                      AppIcons.water,
+                                      color: AppColors.brandIconOf(context),
+                                      size: 21,
+                                    ),
+                                  ),
                                 ),
                                 const SizedBox(width: 12),
                                 Column(
@@ -232,7 +217,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                                   children: [
                                     Text(
                                       'Daily Hydration',
-                                      style: GoogleFonts.inter(
+                                      style: AppFonts.inter(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
                                         color: textPrimary,
@@ -240,7 +225,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                                     ),
                                     Text(
                                       'Target: 3,000 ml',
-                                      style: GoogleFonts.inter(
+                                      style: AppFonts.inter(
                                           fontSize: 12, color: textSecondary),
                                     ),
                                   ],
@@ -265,7 +250,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                             minHeight: 12,
                             backgroundColor: borderColor,
                             valueColor: const AlwaysStoppedAnimation<Color>(
-                                Colors.blue),
+                                AppColors.primary),
                           ),
                         ),
                         const SizedBox(height: 14),
@@ -276,10 +261,10 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                           children: [
                             Text(
                               '$_waterIntakeMl / $_waterGoalMl ml',
-                              style: GoogleFonts.inter(
+                              style: AppFonts.inter(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
-                                color: Colors.blue,
+                                color: AppColors.primary,
                               ),
                             ),
                             Wrap(
@@ -302,7 +287,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                                   child: const Text('+500 ml'),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.remove_circle_outline,
+                                  icon: const Icon(LucideIcons.minusCircle,
                                       size: 20),
                                   onPressed: _waterIntakeMl > 0
                                       ? () => _addWater(-250)
@@ -325,8 +310,8 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                           context,
                           'Active Cal',
                           '$totalCalories kcal',
-                          Icons.local_fire_department_rounded,
-                          accentColor,
+                          LucideIcons.flame,
+                          AppColors.brandIconOf(context),
                           surfaceColor,
                           borderColor,
                           textPrimary,
@@ -339,8 +324,8 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                           context,
                           'Restful Sleep',
                           '7h 45m',
-                          Icons.bedtime_rounded,
-                          const Color(0xFF8B5CF6),
+                          LucideIcons.moon,
+                          AppColors.brandIconOf(context),
                           surfaceColor,
                           borderColor,
                           textPrimary,
@@ -353,8 +338,8 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                           context,
                           'Heart Rate',
                           '72 bpm',
-                          Icons.monitor_heart_rounded,
-                          const Color(0xFF10B981),
+                          LucideIcons.heartPulse,
+                          AppColors.brandIconOf(context),
                           surfaceColor,
                           borderColor,
                           textPrimary,
@@ -371,14 +356,14 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                     children: [
                       Text(
                         'Today\'s Exercise Logs',
-                        style: GoogleFonts.inter(
+                        style: AppFonts.inter(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: textPrimary,
                         ),
                       ),
                       TextButton.icon(
-                        icon: const Icon(Icons.add, size: 16),
+                        icon: const AppIcon(AppIcons.plus, size: 16),
                         label: const Text('Log Workout'),
                         onPressed: _showAddWorkoutDialog,
                       ),
@@ -386,7 +371,59 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                   ),
                   const SizedBox(height: 10),
 
-                  ListView.separated(
+                  if (_workouts.isEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 36),
+                      decoration: BoxDecoration(
+                        color: surfaceColor,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: borderColor),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              color: AppColors.iconBackgroundOf(context),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: AppColors.iconBorderOf(context),
+                                width: 1.2,
+                              ),
+                            ),
+                            child: Center(
+                              child: AppIcon(
+                                AppIcons.fitness,
+                                size: 26,
+                                color: AppColors.brandIconOf(context),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'No Workouts Logged Today',
+                            style: AppFonts.inter(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Keep track of your exercises and workouts here.\nTap \'Log Workout\' above to record your session.',
+                            textAlign: TextAlign.center,
+                            style: AppFonts.inter(
+                              fontSize: 12,
+                              color: textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: _workouts.length,
@@ -403,12 +440,20 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                         child: Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(10),
+                              width: 44,
+                              height: 44,
                               decoration: BoxDecoration(
-                                color: accentColor.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(12),
+                                color: AppColors.iconBackgroundOf(context),
+                                borderRadius: BorderRadius.circular(13),
+                                border: Border.all(
+                                  color: AppColors.iconBorderOf(context),
+                                ),
                               ),
-                              child: Icon(w.icon, color: accentColor, size: 22),
+                              child: Center(
+                                child: AppIcon(w.icon,
+                                    color: AppColors.brandIconOf(context),
+                                    size: 21),
+                              ),
                             ),
                             const SizedBox(width: 14),
                             Expanded(
@@ -417,7 +462,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                                 children: [
                                   Text(
                                     w.activity,
-                                    style: GoogleFonts.inter(
+                                    style: AppFonts.inter(
                                       fontSize: 14.5,
                                       fontWeight: FontWeight.w700,
                                       color: textPrimary,
@@ -429,7 +474,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                                   const SizedBox(height: 2),
                                   Text(
                                     '${w.duration} • ${w.calories} kcal burned',
-                                    style: GoogleFonts.inter(
+                                    style: AppFonts.inter(
                                         fontSize: 12, color: textSecondary),
                                   ),
                                 ],
@@ -477,11 +522,22 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: iconColor),
-          const SizedBox(height: 8),
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              color: AppColors.iconBackgroundOf(context),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppColors.iconBorderOf(context)),
+            ),
+            child: Center(
+              child: AppIcon(icon, size: 17, color: iconColor),
+            ),
+          ),
+          const SizedBox(height: 10),
           Text(
             value,
-            style: GoogleFonts.inter(
+            style: AppFonts.inter(
               fontSize: 15,
               fontWeight: FontWeight.w800,
               color: textPrimary,
@@ -490,7 +546,7 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
           const SizedBox(height: 2),
           Text(
             label,
-            style: GoogleFonts.inter(fontSize: 11, color: textSecondary),
+            style: AppFonts.inter(fontSize: 11, color: textSecondary),
           ),
         ],
       ),

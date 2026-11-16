@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import '../theme/app_colors.dart';
 
 /// Button visual variants matching modern Figma / shadcn tokens
@@ -228,7 +228,7 @@ class AppButton extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             title,
-            style: GoogleFonts.inter(
+            style: AppFonts.inter(
               fontSize: 14.5,
               fontWeight: FontWeight.w700,
               color: textColor,
@@ -241,7 +241,7 @@ class AppButton extends StatelessWidget {
 
     return Text(
       title,
-      style: GoogleFonts.inter(
+      style: AppFonts.inter(
         fontSize: 14.5,
         fontWeight: FontWeight.w700,
         color: textColor,

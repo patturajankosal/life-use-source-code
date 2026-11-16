@@ -14,6 +14,9 @@ class TransactionModel {
   final String? notes;
   final int? plannedExpenseId;
   final int? recurringOccurrenceId;
+  final int? groupId;
+  final bool isShared;
+  final String? memberName;
   final DateTime? createdAt;
 
   const TransactionModel({
@@ -31,6 +34,9 @@ class TransactionModel {
     this.notes,
     this.plannedExpenseId,
     this.recurringOccurrenceId,
+    this.groupId,
+    this.isShared = false,
+    this.memberName,
     this.createdAt,
   });
 
@@ -57,6 +63,9 @@ class TransactionModel {
       notes: json['notes']?.toString(),
       plannedExpenseId: (json['plannedExpenseId'] as num?)?.toInt(),
       recurringOccurrenceId: (json['recurringOccurrenceId'] as num?)?.toInt(),
+      groupId: (json['groupId'] as num?)?.toInt(),
+      isShared: json['isShared'] == true,
+      memberName: json['memberName']?.toString(),
       createdAt: json['createdAt'] != null
           ? DateTime.tryParse(json['createdAt'].toString())?.toLocal()
           : null,
@@ -79,6 +88,9 @@ class TransactionModel {
       'notes': notes,
       'plannedExpenseId': plannedExpenseId,
       'recurringOccurrenceId': recurringOccurrenceId,
+      'groupId': groupId,
+      'isShared': isShared,
+      'memberName': memberName,
       'createdAt': createdAt?.toUtc().toIso8601String(),
     };
   }
@@ -96,6 +108,8 @@ class TransactionCreateRequest {
   final String? idempotencyKey;
   final String? notes;
   final int? plannedExpenseId;
+  final int? groupId;
+  final bool isShared;
 
   const TransactionCreateRequest({
     required this.transactionType,
@@ -109,6 +123,8 @@ class TransactionCreateRequest {
     this.idempotencyKey,
     this.notes,
     this.plannedExpenseId,
+    this.groupId,
+    this.isShared = false,
   });
 
   Map<String, dynamic> toJson() {
@@ -124,6 +140,8 @@ class TransactionCreateRequest {
       'idempotencyKey': idempotencyKey,
       'notes': notes,
       'plannedExpenseId': plannedExpenseId,
+      'groupId': groupId,
+      'isShared': isShared,
     };
   }
 }

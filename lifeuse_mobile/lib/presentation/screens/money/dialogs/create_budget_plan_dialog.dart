@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../../core/widgets/sweet_alert.dart';
 import '../../../../data/models/money/budget_plan_models.dart';
 import '../../../state/money_provider.dart';
@@ -186,14 +187,14 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                 children: [
                   Text(
                     'Create Budget Plan',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 19,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(LucideIcons.x, size: 20),
+                    icon: const AppIcon(AppIcons.close, size: 20),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -206,8 +207,8 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                 dropdownColor: surfaceColor,
                 decoration: InputDecoration(
                   labelText: 'Plan Period Horizon',
-                  labelStyle: GoogleFonts.inter(color: textSecondary),
-                  prefixIcon: Icon(LucideIcons.calendar,
+                  labelStyle: AppFonts.inter(color: textSecondary),
+                  prefixIcon: AppIcon(AppIcons.calendar,
                       color: textSecondary, size: 18),
                   filled: true,
                   fillColor: isDark
@@ -222,7 +223,7 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                     borderSide: BorderSide(color: borderColor),
                   ),
                 ),
-                style: GoogleFonts.inter(fontSize: 14, color: textPrimary),
+                style: AppFonts.inter(fontSize: 14, color: textPrimary),
                 items: _periodTypes.map((p) {
                   return DropdownMenuItem(value: p, child: Text(p));
                 }).toList(),
@@ -239,7 +240,7 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                 controller: _budgetController,
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
-                prefixIcon: Icons.currency_rupee_rounded,
+                prefixIcon: LucideIcons.indianRupee,
                 validator: (val) {
                   if (val == null || val.trim().isEmpty) {
                     return 'Enter budget amount';
@@ -289,12 +290,12 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Start Date',
-                                style: GoogleFonts.inter(
+                                style: AppFonts.inter(
                                     fontSize: 11, color: textSecondary)),
                             const SizedBox(height: 4),
                             Text(
                               '${_startDate.day}/${_startDate.month}/${_startDate.year}',
-                              style: GoogleFonts.inter(
+                              style: AppFonts.inter(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
                                   color: textPrimary),
@@ -333,12 +334,12 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('End Date',
-                                style: GoogleFonts.inter(
+                                style: AppFonts.inter(
                                     fontSize: 11, color: textSecondary)),
                             const SizedBox(height: 4),
                             Text(
                               '${_endDate.day}/${_endDate.month}/${_endDate.year}',
-                              style: GoogleFonts.inter(
+                              style: AppFonts.inter(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
                                   color: textPrimary),
@@ -358,9 +359,9 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                 dropdownColor: surfaceColor,
                 decoration: InputDecoration(
                   labelText: 'Carry Forward Rule',
-                  labelStyle: GoogleFonts.inter(color: textSecondary),
-                  prefixIcon:
-                      Icon(LucideIcons.repeat, color: textSecondary, size: 18),
+                  labelStyle: AppFonts.inter(color: textSecondary),
+                  prefixIcon: AppIcon(AppIcons.recurring,
+                      color: textSecondary, size: 18),
                   filled: true,
                   fillColor: isDark
                       ? Colors.white.withValues(alpha: 0.04)
@@ -374,7 +375,7 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                     borderSide: BorderSide(color: borderColor),
                   ),
                 ),
-                style: GoogleFonts.inter(fontSize: 14, color: textPrimary),
+                style: AppFonts.inter(fontSize: 14, color: textPrimary),
                 items: _carryForwardRules.map((r) {
                   return DropdownMenuItem(value: r, child: Text(r));
                 }).toList(),
@@ -389,7 +390,7 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                 label: 'Notes (optional)',
                 hint: 'e.g., Monthly allowance plan',
                 controller: _notesController,
-                prefixIcon: LucideIcons.fileText,
+                prefixIcon: AppIcons.fileText,
               ),
               const SizedBox(height: 24),
 
@@ -397,7 +398,7 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
               AppButton(
                 title: 'Create Budget Plan',
                 isLoading: _isSubmitting,
-                icon: LucideIcons.checkCircle2,
+                icon: AppIcons.checkCircle,
                 onPressed: _submit,
               ),
             ],

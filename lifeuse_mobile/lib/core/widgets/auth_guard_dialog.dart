@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
@@ -120,7 +120,7 @@ class AuthGuardDialog extends StatelessWidget {
                 Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
+                  style: AppFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                     color: textPrimary,
@@ -133,7 +133,7 @@ class AuthGuardDialog extends StatelessWidget {
                 Text(
                   message,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
+                  style: AppFonts.inter(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w400,
                     color: textSecondary,
@@ -183,7 +183,7 @@ class AuthGuardDialog extends StatelessWidget {
                     ),
                     child: Text(
                       'Continue as Guest',
-                      style: GoogleFonts.inter(
+                      style: AppFonts.inter(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: textSecondary,

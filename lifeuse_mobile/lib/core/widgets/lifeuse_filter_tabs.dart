@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import '../theme/app_colors.dart';
 
 /// Reusable segmented tab pill switcher for LifeUse:
@@ -62,7 +62,7 @@ class LifeUseFilterTabs extends StatelessWidget {
               ),
               child: Text(
                 tabs[index],
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                   height: 20 / 12,

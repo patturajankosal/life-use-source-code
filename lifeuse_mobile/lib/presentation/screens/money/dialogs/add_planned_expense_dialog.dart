@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../../core/widgets/sweet_alert.dart';
 import '../../../../data/models/money/planned_expense_models.dart';
 import '../../../state/money_provider.dart';
@@ -167,14 +168,14 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                 children: [
                   Text(
                     'Schedule Planned Expense',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 19,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(LucideIcons.x, size: 20),
+                    icon: const AppIcon(AppIcons.close, size: 20),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -186,7 +187,7 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                 label: 'Title / Description',
                 hint: 'e.g., Diwali shopping, Laptop purchase',
                 controller: _titleController,
-                prefixIcon: LucideIcons.fileText,
+                prefixIcon: AppIcons.fileText,
                 validator: (val) =>
                     val == null || val.trim().isEmpty ? 'Enter title' : null,
               ),
@@ -199,7 +200,7 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                 controller: _amountController,
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
-                prefixIcon: Icons.currency_rupee_rounded,
+                prefixIcon: LucideIcons.indianRupee,
                 validator: (val) {
                   if (val == null || val.trim().isEmpty) return 'Enter amount';
                   if (double.tryParse(val.trim()) == null) {
@@ -219,8 +220,8 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                       dropdownColor: surfaceColor,
                       decoration: InputDecoration(
                         labelText: 'Category',
-                        labelStyle: GoogleFonts.inter(color: textSecondary),
-                        prefixIcon: Icon(LucideIcons.layoutGrid,
+                        labelStyle: AppFonts.inter(color: textSecondary),
+                        prefixIcon: AppIcon(AppIcons.category,
                             color: textSecondary, size: 18),
                         filled: true,
                         fillColor: isDark
@@ -235,8 +236,7 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                           borderSide: BorderSide(color: borderColor),
                         ),
                       ),
-                      style:
-                          GoogleFonts.inter(fontSize: 14, color: textPrimary),
+                      style: AppFonts.inter(fontSize: 14, color: textPrimary),
                       items: categories.map((cat) {
                         return DropdownMenuItem(value: cat, child: Text(cat));
                       }).toList(),
@@ -277,12 +277,12 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Planned Date',
-                                style: GoogleFonts.inter(
+                                style: AppFonts.inter(
                                     fontSize: 11, color: textSecondary)),
                             const SizedBox(height: 4),
                             Text(
                               '${_plannedDate.day}/${_plannedDate.month}/${_plannedDate.year}',
-                              style: GoogleFonts.inter(
+                              style: AppFonts.inter(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
                                   color: textPrimary),
@@ -303,7 +303,7 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                   contentPadding: EdgeInsets.zero,
                   title: Text(
                     'Essential Expense',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: textPrimary,
@@ -311,8 +311,7 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                   ),
                   subtitle: Text(
                     'Guarantees daily limit protects funds for this expense',
-                    style:
-                        GoogleFonts.inter(fontSize: 12, color: textSecondary),
+                    style: AppFonts.inter(fontSize: 12, color: textSecondary),
                   ),
                   value: _isEssential,
                   activeThumbColor: AppColors.primary,
@@ -326,7 +325,7 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                 label: 'Notes (optional)',
                 hint: 'e.g., Saved for online sale offer',
                 controller: _notesController,
-                prefixIcon: LucideIcons.fileText,
+                prefixIcon: AppIcons.fileText,
               ),
               const SizedBox(height: 24),
 
@@ -334,7 +333,7 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
               AppButton(
                 title: 'Schedule Expense',
                 isLoading: _isSubmitting,
-                icon: LucideIcons.calendar,
+                icon: AppIcons.calendar,
                 onPressed: _submit,
               ),
             ],

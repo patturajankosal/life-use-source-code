@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
 import 'app_button.dart';
@@ -33,7 +33,7 @@ class ComingSoonScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           moduleTitle,
-          style: GoogleFonts.inter(
+          style: AppFonts.inter(
             fontSize: 18,
             fontWeight: FontWeight.w700,
             color: textPrimary,
@@ -90,7 +90,7 @@ class ComingSoonScreen extends StatelessWidget {
                       ),
                       child: Text(
                         'COMING SOON',
-                        style: GoogleFonts.inter(
+                        style: AppFonts.inter(
                           fontSize: 11,
                           fontWeight: FontWeight.w800,
                           color: accentColor,
@@ -102,7 +102,7 @@ class ComingSoonScreen extends StatelessWidget {
                     Text(
                       moduleTitle,
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
+                      style: AppFonts.inter(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
                         color: textPrimary,
@@ -113,7 +113,7 @@ class ComingSoonScreen extends StatelessWidget {
                     Text(
                       moduleDescription,
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
+                      style: AppFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: textSecondary,

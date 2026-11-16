@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import '../theme/app_colors.dart';
 
 /// Button visual variants matching shadcn / CVA specification:
@@ -192,7 +192,7 @@ class _LifeUseButtonState extends State<LifeUseButton> {
                       if (widget.title != null)
                         Text(
                           widget.title!,
-                          style: GoogleFonts.inter(
+                          style: AppFonts.inter(
                             fontSize: sizeMetrics.fontSize,
                             fontWeight: FontWeight.w600,
                             color: config.textColor,

@@ -163,48 +163,66 @@ class AppColors {
   ];
 
   // ===========================================================================
-  // 9. THEME CONTAINER COLOR PALETTES (Amethyst Purple & OLED True Black)
+  // 9. MINIMAL PREMIUM COLOR PALETTES (ChatGPT-Inspired Neutral Foundation)
+  // Pure White + Black Icons (Light) | Premium Black + White Icons (Dark)
+  // Signature LifeUse Purple strictly for CTAs & important highlights
   // ===========================================================================
-  // OLED True Black Dark Mode Palette
+  // Dark Mode Palette (Near Black / Dark Neutral)
   static const Color darkBackground =
-      Color(0xFF000000); // OLED True Black #000000
+      Color(0xFF121212); // Premium Near-Black #121212
   static const Color darkSurface =
-      Color(0xFF0F0B14); // OLED True Black Card #0F0B14
+      Color(0xFF1E1E1E); // Neutral Dark Surface #1E1E1E
   static const Color darkSurfaceElevated =
-      Color(0xFF181220); // Elevated Sheet #181220
-  static const Color darkBorder = Color(0xFF2A2233); // Subtle Border #2A2233
-  static const Color darkBorderActive = Color(0xFF3D2F4A);
-  static const Color darkTextPrimary = Color(0xFFF6F0FB); // Heading #F6F0FB
-  static const Color darkTextSecondary = Color(0xFFCFC4DB); // Body Text #CFC4DB
-  static const Color darkTextTertiary = Color(0xFF8E8299); // Muted Text #8E8299
-  static const Color darkIcon = Color(0xFF8E8299); // Inactive Icon #8E8299
-  static const Color darkNav = Color(0xFF0A0710); // Bottom Nav #0A0710
-  static const Color darkInput = Color(0xFF120D18); // Input Background #120D18
+      Color(0xFF262626); // Elevated Neutral Sheet #262626
+  static const Color darkBorder =
+      Color(0xFF2E2E2E); // Subtle Neutral Border #2E2E2E
+  static const Color darkBorderActive = Color(0xFF3F3F46);
+  static const Color darkTextPrimary =
+      Color(0xFFFFFFFF); // Heading & Primary Text #FFFFFF
+  static const Color darkTextSecondary =
+      Color(0xFFA1A1AA); // Light Grey Body Text #A1A1AA
+  static const Color darkTextTertiary =
+      Color(0xFF71717A); // Medium Grey Supporting Text #71717A
+  static const Color darkIcon =
+      Color(0xFFFFFFFF); // Clean White Neutral Icon #FFFFFF
+  static const Color darkNav =
+      Color(0xFF181818); // Neutral Dark Bottom Nav #181818
+  static const Color darkInput =
+      Color(0xFF1E1E1E); // Neutral Input Background #1E1E1E
 
-  // Light Mode Palette (Classic Amethyst with Deepened Purple)
+  // Light Mode Palette (ChatGPT-Inspired Minimal Pure White)
   static const Color lightBackground =
-      Color(0xFFFBFAFC); // Page Background #FBFAFC
+      Color(0xFFFFFFFF); // Pure White Background #FFFFFF
   static const Color lightSurface =
-      Color(0xFFFFFFFF); // Card Background #FFFFFF
+      Color(0xFFFFFFFF); // Pure White Card Surface #FFFFFF
   static const Color lightSurfaceElevated =
-      Color(0xFFFFFFFF); // Elevated Sheet #FFFFFF
-  static const Color lightBorder = Color(0xFFEBE3F0); // Border #EBE3F0
-  static const Color lightBorderActive = Color(0xFFD4C7DB);
-  static const Color lightTextPrimary = Color(0xFF221530); // Heading #221530
+      Color(0xFFFFFFFF); // Elevated Surface #FFFFFF
+  static const Color lightSurfaceSecondary =
+      Color(0xFFF7F7F8); // Minimal Neutral Grey Secondary Surface #F7F7F8
+  static const Color lightBorder =
+      Color(0xFFE5E5E5); // Clean Neutral Border #E5E5E5
+  static const Color lightBorderActive = Color(0xFFD4D4D8);
+  static const Color lightTextPrimary =
+      Color(0xFF111111); // Crisp Black Heading & Primary Text #111111
   static const Color lightTextSecondary =
-      Color(0xFF54485F); // Body Text #54485F
+      Color(0xFF666666); // Neutral Grey Body Text #666666
   static const Color lightTextTertiary =
-      Color(0xFF7A6E87); // Muted Text #7A6E87
-  static const Color lightIcon = Color(0xFF756B82); // Inactive Icon #756B82
-  static const Color lightNav = Color(0xFFFFFFFF); // Bottom Nav #FFFFFF
-  static const Color lightInput = Color(0xFFFFFFFF); // Input Background #FFFFFF
+      Color(0xFF8E8E93); // Medium Grey Supporting Text #8E8E93
+  static const Color lightIcon =
+      Color(0xFF111111); // Crisp Black / Neutral Icon #111111
+  static const Color lightNav =
+      Color(0xFFFFFFFF); // Pure White Bottom Nav #FFFFFF
+  static const Color lightInput =
+      Color(0xFFFFFFFF); // Pure White Input Background #FFFFFF
+  static const Color lightInputFill =
+      Color(0xFFF7F7F8); // Neutral Input Fill #F7F7F8
 
   // M3 Tonal Containers & Accents
   static const Color primaryContainer =
-      Color(0xFFF5ECFA); // Tonal Purple #F5ECFA
+      Color(0xFFF7F7F8); // Minimal Neutral Container
   static const Color secondaryIndigo =
       Color(0xFF6A2A92); // Button Pressed #6A2A92
-  static const Color secondaryIndigoContainer = Color(0xFFF5ECFA);
+  static const Color secondaryIndigoContainer = Color(0xFFF7F7F8);
   static const Color tertiaryAmber =
       Color(0xFFF59E0B); // Deadlines & budget warnings
   static const Color tertiaryAmberContainer = Color(0x1FF59E0B);
@@ -246,6 +264,11 @@ class AppColors {
           ? darkSurface
           : lightSurface;
 
+  static Color surfaceSecondaryOf(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? darkSurfaceElevated
+          : lightSurfaceSecondary;
+
   static Color surfaceElevatedOf(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
           ? darkSurfaceElevated
@@ -271,28 +294,59 @@ class AppColors {
           ? darkTextTertiary
           : lightTextTertiary;
 
-  static Color primaryOf(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark ? darkAccent : primary;
+  static Color iconOf(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark ? darkIcon : lightIcon;
+
+  static Color primaryOf(BuildContext context) => primary;
 
   static Color primaryContainerOf(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
-          ? darkTonal
-          : softLavender;
+          ? const Color(0xFF262626)
+          : const Color(0xFFF4F4F5);
 
   static Color inactiveIconOf(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark ? darkIcon : lightIcon;
+      Theme.of(context).brightness == Brightness.dark
+          ? const Color(0xFF71717A)
+          : const Color(0xFF8E8E93);
 
   static Color badgeBgOf(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
-          ? darkBadgeBg
-          : softLavender;
+          ? const Color(0xFF262626)
+          : const Color(0xFFF4F4F5);
 
   static Color badgeTextOf(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
-          ? darkBadgeText
-          : primaryDark;
+          ? darkTextPrimary
+          : lightTextPrimary;
 
-  /// Input label color: #4D4D4D in Light, #E6E6E6 in Dark (Matches user uploaded image)
+  /// Input label color: #4D4D4D in Light, #E6E6E6 in Dark
   static Color inputLabelOf(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark ? darkBase700 : base700;
+
+  // ===========================================================================
+  // 10. UNIFIED ICON COLOR TOKENS (AIRIX & JioCare Minimal System)
+  // Light: LifeUse Dark Purple (#7F35AD) icon on very light lavender (#F5ECFA)
+  // Dark: White (#FFFFFF) icon on subtle dark purple surface (#261933)
+  // ===========================================================================
+  static const Color iconLightBackground = Color(0xFFF5ECFA);
+  static const Color iconLightBorder = Color(0xFFEBE0F5);
+  static const Color iconDarkBackground = Color(0xFF261933);
+  static const Color iconDarkBorder = Color(0xFF3D2550);
+
+  /// Unified Brand Icon color: LifeUse Dark Purple (#7F35AD) in Light Mode, White in Dark Mode.
+  static Color brandIconOf(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark ? Colors.white : primary;
+
+  /// Unified Icon Background surface: Very light lavender (#F5ECFA) in Light Mode,
+  /// subtle dark purple surface (#261933) in Dark Mode.
+  static Color iconBackgroundOf(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? iconDarkBackground
+          : iconLightBackground;
+
+  /// Unified Icon Container Border: Subtle border in Light & Dark modes.
+  static Color iconBorderOf(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? iconDarkBorder
+          : iconLightBorder;
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../theme/app_colors.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'icons/lifeuse_icon.dart';
 
 /// Data descriptor for each item in the LifeUse floating navigation.
@@ -19,15 +18,17 @@ class LifeUseNavigationItemData {
   });
 }
 
-/// Floating capsule navigation with a single gliding amethyst pill.
+/// Floating capsule navigation featuring an animated expanded active pill.
 ///
-/// - One pill slides between destinations instead of each item toggling
-///   its own background, which feels smoother and costs less to animate.
-/// - The active glyph + label turn white on the pill; inactive items stay
-///   quiet and show an unread dot where needed.
-/// - Safe-area aware: the capsule floats above the system gesture bar.
-/// - [LifeUseFloatingNavigation.heightFor] exposes the occupied height so
-///   screens can reserve exactly that much bottom padding.
+/// Follows the reference design:
+/// - Active tab: expands horizontally into a rounded pill showing [Icon + 8px + Label]
+/// - Inactive tabs: compact icon-only presentation
+/// - Light Mode: White capsule background (#FFFFFF), dark neutral active pill (#18181B)
+///   with crisp white icon and label; dark neutral inactive icons (#71717A).
+/// - Dark Mode: Dark neutral capsule (#1E1E1E), light neutral active pill (#F4F4F5)
+///   with dark icon and label (#18181B); light neutral inactive icons (#A1A1AA).
+/// - Zero purple-filled active navigation background.
+/// - Safe-area aware floating capsule.
 class LifeUseFloatingNavigation extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onItemSelected;
@@ -40,34 +41,27 @@ class LifeUseFloatingNavigation extends StatelessWidget {
     required this.currentIndex,
     required this.onItemSelected,
     required this.items,
-    this.maxWidth = 540,
+    this.maxWidth = 520,
     this.capsuleHeight = 68,
   });
 
   /// Total vertical space the navigation occupies for the given context.
   static double heightFor(BuildContext context, {double capsuleHeight = 68}) {
     final bottomPadding = MediaQuery.paddingOf(context).bottom;
-    final margin = bottomPadding > 0 ? bottomPadding + 4 : 14.0;
-    return capsuleHeight + margin + 8.0;
+    final margin = bottomPadding > 0 ? bottomPadding + 6 : 16.0;
+    return capsuleHeight + margin + 10.0;
   }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bottomPadding = MediaQuery.paddingOf(context).bottom;
-    final capsuleBottomMargin = bottomPadding > 0 ? bottomPadding + 4 : 14.0;
-    final totalHeight = capsuleHeight + capsuleBottomMargin + 8.0;
-    final reduceMotion = MediaQuery.disableAnimationsOf(context);
-    final slide =
-        reduceMotion ? Duration.zero : const Duration(milliseconds: 320);
+    final capsuleBottomMargin = bottomPadding > 0 ? bottomPadding + 6 : 16.0;
+    final totalHeight = capsuleHeight + capsuleBottomMargin + 10.0;
 
-    final capsuleBg = isDark ? const Color(0xFF0F0A17) : Colors.white;
+    final capsuleBg = isDark ? const Color(0xFF1E1E1E) : Colors.white;
     final capsuleBorder =
-        isDark ? const Color(0xFF2A2233) : const Color(0xFFEBE3F0);
-
-    // Pill only needs one count: fixed padding inside the capsule.
-    const innerPad = 6.0;
-    final count = items.length;
+        isDark ? const Color(0xFF2A2A2A) : const Color(0xFFE5E5E5);
 
     return SizedBox(
       height: totalHeight,
@@ -75,90 +69,42 @@ class LifeUseFloatingNavigation extends StatelessWidget {
         alignment: Alignment.bottomCenter,
         child: Padding(
           padding: EdgeInsets.only(
-            left: 18,
-            right: 18,
+            left: 14,
+            right: 14,
             bottom: capsuleBottomMargin,
           ),
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: maxWidth),
             child: Container(
               height: capsuleHeight,
-              padding: const EdgeInsets.all(innerPad),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               decoration: BoxDecoration(
                 color: capsuleBg,
                 borderRadius: BorderRadius.circular(capsuleHeight / 2),
-                border: Border.all(color: capsuleBorder, width: 1),
+                border: Border.all(color: capsuleBorder, width: 1.0),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary
-                        .withValues(alpha: isDark ? 0.20 : 0.14),
-                    blurRadius: 28,
-                    offset: const Offset(0, 10),
-                  ),
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: isDark ? 0.45 : 0.06),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
+                    color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.08),
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
                   ),
                 ],
               ),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final slotWidth = constraints.maxWidth / count;
-                  return Stack(
-                    children: [
-                      AnimatedPositioned(
-                        duration: slide,
-                        curve: Curves.easeOutBack,
-                        left: slotWidth * currentIndex,
-                        top: 0,
-                        bottom: 0,
-                        width: slotWidth,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 2),
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                  (capsuleHeight - innerPad * 2) / 2),
-                              gradient: const LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Color(0xFF9B4DCA),
-                                  Color(0xFF6A2A92),
-                                ],
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color:
-                                      AppColors.primary.withValues(alpha: 0.38),
-                                  blurRadius: 14,
-                                  offset: const Offset(0, 5),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Row(
-                        children: List.generate(count, (index) {
-                          return Expanded(
-                            child: LifeUseNavigationItem(
-                              item: items[index],
-                              isSelected: currentIndex == index,
-                              onTap: () {
-                                if (currentIndex != index) {
-                                  HapticFeedback.selectionClick();
-                                }
-                                onItemSelected(index);
-                              },
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(items.length, (index) {
+                  return _NavigationTabItem(
+                    item: items[index],
+                    isSelected: currentIndex == index,
+                    isDark: isDark,
+                    onTap: () {
+                      if (currentIndex != index) {
+                        HapticFeedback.selectionClick();
+                      }
+                      onItemSelected(index);
+                    },
                   );
-                },
+                }),
               ),
             ),
           ),
@@ -168,68 +114,111 @@ class LifeUseFloatingNavigation extends StatelessWidget {
   }
 }
 
-/// A single destination inside the floating capsule.
-class LifeUseNavigationItem extends StatelessWidget {
+class _NavigationTabItem extends StatelessWidget {
   final LifeUseNavigationItemData item;
   final bool isSelected;
+  final bool isDark;
   final VoidCallback onTap;
 
-  const LifeUseNavigationItem({
-    super.key,
+  const _NavigationTabItem({
     required this.item,
     required this.isSelected,
+    required this.isDark,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final inactiveColor =
-        isDark ? const Color(0xFF8E8299) : const Color(0xFF756B82);
+    // Colors matching established LifeUse rules:
+    // Light Mode: Dark neutral active pill (#18181B) with white text & icon
+    // Dark Mode: Light neutral active pill (#F4F4F5) with dark text & icon (#18181B)
+    final activePillColor =
+        isDark ? const Color(0xFFF4F4F5) : const Color(0xFF18181B);
+    final activeTextColor = isDark ? const Color(0xFF18181B) : Colors.white;
+    final inactiveIconColor =
+        isDark ? const Color(0xFFA1A1AA) : const Color(0xFF71717A);
 
     return Semantics(
       button: true,
       selected: isSelected,
       label: item.label,
-      child: InkResponse(
+      child: GestureDetector(
         onTap: onTap,
-        radius: 36,
-        highlightShape: BoxShape.rectangle,
-        splashColor: AppColors.primary.withValues(alpha: 0.10),
-        highlightColor: Colors.transparent,
-        child: Center(
-          child: Column(
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 280),
+          curve: Curves.easeOutCubic,
+          padding: EdgeInsets.symmetric(
+            horizontal: isSelected ? 18 : 12,
+            vertical: 10,
+          ),
+          decoration: BoxDecoration(
+            color: isSelected ? activePillColor : Colors.transparent,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color:
+                          Colors.black.withValues(alpha: isDark ? 0.25 : 0.15),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AnimatedScale(
-                scale: isSelected ? 1.08 : 1.0,
-                duration: const Duration(milliseconds: 220),
-                curve: Curves.easeOutBack,
-                child: LifeUseIcon.nav(
-                  item.icon,
-                  activeIcon: item.activeIcon,
-                  isSelected: isSelected,
-                  activeColor: Colors.white,
-                  inactiveColor: inactiveColor,
-                  size: 20,
-                  containerSize: 30,
-                  showDot: item.showDot,
-                ),
+              LifeUseIcon.nav(
+                item.icon,
+                isSelected: isSelected,
+                activeIcon: item.activeIcon,
+                activeColor: activeTextColor,
+                inactiveColor: inactiveIconColor,
+                size: 25,
+                containerSize: 26,
+                showDot: item.showDot && !isSelected,
               ),
-              // Labels never scale past 1.0 so the capsule height stays fixed.
-              MediaQuery.withClampedTextScaling(
-                maxScaleFactor: 1.0,
-                child: Text(
-                  item.label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 10.5,
-                    height: 1.1,
-                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                    color: isSelected ? Colors.white : inactiveColor,
-                  ),
+              ClipRect(
+                child: AnimatedSize(
+                  duration: const Duration(milliseconds: 240),
+                  curve: Curves.easeOutCubic,
+                  child: isSelected
+                      ? Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Text(
+                            item.label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppFonts.plusJakartaSans(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w700,
+                              color: activeTextColor,
+                              letterSpacing: -0.2,
+                            ),
+                          ),
+                        )
+                      : SizedBox(
+                          width: 0,
+                          height: 0,
+                          child: OverflowBox(
+                            minWidth: 0,
+                            maxWidth: 80,
+                            minHeight: 0,
+                            maxHeight: 20,
+                            child: Opacity(
+                              opacity: 0,
+                              child: Text(
+                                item.label,
+                                style: AppFonts.plusJakartaSans(
+                                  fontSize: 13,
+                                  color: activeTextColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                 ),
               ),
             ],

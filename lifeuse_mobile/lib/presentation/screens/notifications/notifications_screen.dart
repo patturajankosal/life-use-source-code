@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 import '../../state/notification_provider.dart';
 
@@ -20,6 +20,14 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
   String _selectedFilter = 'ALL'; // ALL, REMINDERS, FINANCE, SYSTEM
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<NotificationProvider>().loadNotifications();
+    });
+  }
 
   void _markAllAsRead() {
     context.read<NotificationProvider>().markAllAsRead();
@@ -53,7 +61,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       appBar: AppBar(
         title: Text(
           'Notifications & Alerts',
-          style: GoogleFonts.plusJakartaSans(
+          style: AppFonts.plusJakartaSans(
             fontSize: 18,
             fontWeight: FontWeight.w700,
             color: textPrimary,
@@ -65,7 +73,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               onPressed: _markAllAsRead,
               child: Text(
                 'Mark All Read',
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w600,
                   color: AppColors.primary,
@@ -76,9 +84,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Center(
+        child: RefreshIndicator(
+          onRefresh: () =>
+              context.read<NotificationProvider>().loadNotifications(),
+          color: AppColors.primary,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 680),
               child: Column(
@@ -113,15 +126,30 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       ),
                       child: Column(
                         children: [
-                          Icon(
-                            LucideIcons.bellOff,
-                            size: 44,
-                            color: textSecondary.withValues(alpha: 0.5),
+                          Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                color:
+                                    AppColors.primary.withValues(alpha: 0.25),
+                                width: 1.2,
+                              ),
+                            ),
+                            child: const Center(
+                              child: AppIcon(
+                                AppIcons.alertsOutline,
+                                size: 28,
+                                color: AppColors.primary,
+                              ),
+                            ),
                           ),
                           const SizedBox(height: 12),
                           Text(
                             'No Notifications',
-                            style: GoogleFonts.inter(
+                            style: AppFonts.inter(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                               color: textPrimary,
@@ -131,7 +159,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           Text(
                             'You\'re all caught up! Important reminders and financial alerts will show up here.',
                             textAlign: TextAlign.center,
-                            style: GoogleFonts.inter(
+                            style: AppFonts.inter(
                               fontSize: 12.5,
                               color: textSecondary,
                             ),
@@ -152,13 +180,16 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           decoration: BoxDecoration(
                             color: item.isRead
                                 ? surfaceColor
-                                : AppColors.primary
-                                    .withValues(alpha: isDark ? 0.08 : 0.04),
+                                : (isDark
+                                    ? const Color(0xFF262626)
+                                    : const Color(0xFFF7F7F8)),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
                               color: item.isRead
                                   ? borderColor
-                                  : AppColors.primary.withValues(alpha: 0.3),
+                                  : (isDark
+                                      ? const Color(0xFF383838)
+                                      : const Color(0xFFD4D4D8)),
                               width: item.isRead ? 1 : 1.2,
                             ),
                           ),
@@ -172,20 +203,22 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                 children: [
                                   // Icon Badge
                                   Container(
-                                    width: 40,
-                                    height: 40,
+                                    width: 44,
+                                    height: 44,
                                     decoration: BoxDecoration(
-                                      color: item.color.withValues(alpha: 0.12),
-                                      borderRadius: BorderRadius.circular(12),
+                                      color:
+                                          AppColors.iconBackgroundOf(context),
+                                      borderRadius: BorderRadius.circular(13),
                                       border: Border.all(
-                                        color:
-                                            item.color.withValues(alpha: 0.25),
+                                        color: AppColors.iconBorderOf(context),
                                       ),
                                     ),
-                                    child: Icon(
-                                      item.icon,
-                                      size: 20,
-                                      color: item.color,
+                                    child: Center(
+                                      child: AppIcon(
+                                        item.icon,
+                                        size: 24,
+                                        color: AppColors.brandIconOf(context),
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 14),
@@ -203,7 +236,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                             Expanded(
                                               child: Text(
                                                 item.title,
-                                                style: GoogleFonts.inter(
+                                                style: AppFonts.inter(
                                                   fontSize: 14.5,
                                                   fontWeight: item.isRead
                                                       ? FontWeight.w600
@@ -215,7 +248,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                             const SizedBox(width: 8),
                                             Text(
                                               item.time,
-                                              style: GoogleFonts.inter(
+                                              style: AppFonts.inter(
                                                 fontSize: 11,
                                                 color: textSecondary,
                                               ),
@@ -225,7 +258,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                         const SizedBox(height: 4),
                                         Text(
                                           item.message,
-                                          style: GoogleFonts.inter(
+                                          style: AppFonts.inter(
                                             fontSize: 12.5,
                                             height: 1.4,
                                             color: textSecondary,
@@ -256,6 +289,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ).animate().fadeIn(duration: 250.ms),
         ),
       ),
+      ),
     );
   }
 
@@ -275,7 +309,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ),
         child: Text(
           label,
-          style: GoogleFonts.inter(
+          style: AppFonts.inter(
             fontSize: 12,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
             color:

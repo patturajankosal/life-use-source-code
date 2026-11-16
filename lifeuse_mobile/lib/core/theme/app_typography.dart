@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'app_colors.dart';
+
+export 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 
 /// Global Enterprise Typography System for LifeUse.
 /// File: lib/core/theme/app_typography.dart
@@ -12,11 +14,10 @@ class AppTypography {
   AppTypography._();
 
   /// Primary Display & Headline Font Family: Plus Jakarta Sans
-  static String get headingFontFamily =>
-      GoogleFonts.plusJakartaSans().fontFamily!;
+  static String get headingFontFamily => AppFonts.plusJakartaSansFamily;
 
   /// Primary Body & Tabular Font Family: Inter
-  static String get bodyFontFamily => GoogleFonts.inter().fontFamily!;
+  static String get bodyFontFamily => AppFonts.interFamily;
 
   // ---------------------------------------------------------------------------
   // TEXT THEMES FOR LIGHT & DARK MODES
@@ -30,13 +31,13 @@ class AppTypography {
 
     return TextTheme(
       // Display / Big Metrics (Plus Jakarta Sans)
-      displayLarge: GoogleFonts.plusJakartaSans(
+      displayLarge: AppFonts.plusJakartaSans(
         fontSize: 34,
         fontWeight: FontWeight.w700,
         letterSpacing: -0.8,
         color: primaryColor,
       ),
-      displayMedium: GoogleFonts.plusJakartaSans(
+      displayMedium: AppFonts.plusJakartaSans(
         fontSize: 28,
         fontWeight: FontWeight.w700,
         letterSpacing: -0.5,
@@ -44,19 +45,19 @@ class AppTypography {
       ),
 
       // Headlines (Plus Jakarta Sans)
-      headlineLarge: GoogleFonts.plusJakartaSans(
+      headlineLarge: AppFonts.plusJakartaSans(
         fontSize: 24,
         fontWeight: FontWeight.w700,
         letterSpacing: -0.4,
         color: primaryColor,
       ),
-      headlineMedium: GoogleFonts.plusJakartaSans(
+      headlineMedium: AppFonts.plusJakartaSans(
         fontSize: 20,
         fontWeight: FontWeight.w700,
         letterSpacing: -0.3,
         color: primaryColor,
       ),
-      headlineSmall: GoogleFonts.plusJakartaSans(
+      headlineSmall: AppFonts.plusJakartaSans(
         fontSize: 18,
         fontWeight: FontWeight.w600,
         letterSpacing: -0.2,
@@ -64,38 +65,38 @@ class AppTypography {
       ),
 
       // Titles & Sections (Plus Jakarta Sans)
-      titleLarge: GoogleFonts.plusJakartaSans(
+      titleLarge: AppFonts.plusJakartaSans(
         fontSize: 18,
         fontWeight: FontWeight.w600,
         letterSpacing: -0.2,
         color: primaryColor,
       ),
-      titleMedium: GoogleFonts.plusJakartaSans(
+      titleMedium: AppFonts.plusJakartaSans(
         fontSize: 16,
         fontWeight: FontWeight.w600,
         letterSpacing: -0.1,
         color: primaryColor,
       ),
-      titleSmall: GoogleFonts.inter(
+      titleSmall: AppFonts.inter(
         fontSize: 14,
         fontWeight: FontWeight.w500,
         color: secondaryColor,
       ),
 
       // Body Copy (Inter)
-      bodyLarge: GoogleFonts.inter(
+      bodyLarge: AppFonts.inter(
         fontSize: 15,
         fontWeight: FontWeight.w400,
         color: primaryColor,
         height: 1.45,
       ),
-      bodyMedium: GoogleFonts.inter(
+      bodyMedium: AppFonts.inter(
         fontSize: 13.5,
         fontWeight: FontWeight.w400,
         color: secondaryColor,
         height: 1.4,
       ),
-      bodySmall: GoogleFonts.inter(
+      bodySmall: AppFonts.inter(
         fontSize: 12,
         fontWeight: FontWeight.w400,
         color: secondaryColor,
@@ -103,19 +104,19 @@ class AppTypography {
       ),
 
       // Labels & Buttons (Plus Jakarta Sans)
-      labelLarge: GoogleFonts.plusJakartaSans(
+      labelLarge: AppFonts.plusJakartaSans(
         fontSize: 14,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.2,
         color: primaryColor,
       ),
-      labelMedium: GoogleFonts.plusJakartaSans(
+      labelMedium: AppFonts.plusJakartaSans(
         fontSize: 12,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.1,
         color: primaryColor,
       ),
-      labelSmall: GoogleFonts.plusJakartaSans(
+      labelSmall: AppFonts.plusJakartaSans(
         fontSize: 11,
         fontWeight: FontWeight.w600,
         color: secondaryColor,
@@ -133,7 +134,7 @@ class AppTypography {
     double size = 16,
     FontWeight weight = FontWeight.w600,
   }) {
-    return GoogleFonts.inter(
+    return AppFonts.inter(
       fontSize: size,
       fontWeight: weight,
       letterSpacing: -0.2,
@@ -144,7 +145,7 @@ class AppTypography {
 
   /// Dashboard Main Greeting & Net Worth Metric
   static TextStyle dashboardHero({Color? color}) {
-    return GoogleFonts.plusJakartaSans(
+    return AppFonts.plusJakartaSans(
       fontSize: 26,
       fontWeight: FontWeight.w700,
       letterSpacing: -0.4,
@@ -154,7 +155,7 @@ class AppTypography {
 
   /// Section Headings ("Life Modules", "Recent Activity")
   static TextStyle sectionHeading({Color? color}) {
-    return GoogleFonts.plusJakartaSans(
+    return AppFonts.plusJakartaSans(
       fontSize: 17,
       fontWeight: FontWeight.w600,
       letterSpacing: -0.2,
@@ -164,7 +165,7 @@ class AppTypography {
 
   /// Screen Top App Bar Title
   static TextStyle screenTitle({Color? color}) {
-    return GoogleFonts.plusJakartaSans(
+    return AppFonts.plusJakartaSans(
       fontSize: 20,
       fontWeight: FontWeight.w600,
       letterSpacing: -0.3,
@@ -174,7 +175,7 @@ class AppTypography {
 
   /// Card Titles (Module Name, Task Title)
   static TextStyle cardTitle({Color? color}) {
-    return GoogleFonts.plusJakartaSans(
+    return AppFonts.plusJakartaSans(
       fontSize: 15,
       fontWeight: FontWeight.w600,
       letterSpacing: -0.1,
@@ -187,7 +188,7 @@ class AppTypography {
   // ---------------------------------------------------------------------------
 
   /// .t-display { font-size: 56px; line-height: 62px; font-weight: 700; letter-spacing: -0.02em; }
-  static TextStyle tDisplay({Color? color}) => GoogleFonts.inter(
+  static TextStyle tDisplay({Color? color}) => AppFonts.inter(
         fontSize: 56,
         height: 62 / 56,
         fontWeight: FontWeight.w700,
@@ -196,7 +197,7 @@ class AppTypography {
       );
 
   /// .t-h1 { font-size: 36px; line-height: 42px; font-weight: 700; letter-spacing: -0.015em; }
-  static TextStyle tH1({Color? color}) => GoogleFonts.inter(
+  static TextStyle tH1({Color? color}) => AppFonts.inter(
         fontSize: 36,
         height: 42 / 36,
         fontWeight: FontWeight.w700,
@@ -205,7 +206,7 @@ class AppTypography {
       );
 
   /// .t-h2 { font-size: 28px; line-height: 34px; font-weight: 700; letter-spacing: -0.01em; }
-  static TextStyle tH2({Color? color}) => GoogleFonts.inter(
+  static TextStyle tH2({Color? color}) => AppFonts.inter(
         fontSize: 28,
         height: 34 / 28,
         fontWeight: FontWeight.w700,
@@ -214,7 +215,7 @@ class AppTypography {
       );
 
   /// .t-h3 { font-size: 20px; line-height: 28px; font-weight: 600; letter-spacing: -0.005em; }
-  static TextStyle tH3({Color? color}) => GoogleFonts.inter(
+  static TextStyle tH3({Color? color}) => AppFonts.inter(
         fontSize: 20,
         height: 28 / 20,
         fontWeight: FontWeight.w600,
@@ -223,7 +224,7 @@ class AppTypography {
       );
 
   /// .t-h4 { font-size: 17px; line-height: 24px; font-weight: 600; }
-  static TextStyle tH4({Color? color}) => GoogleFonts.inter(
+  static TextStyle tH4({Color? color}) => AppFonts.inter(
         fontSize: 17,
         height: 24 / 17,
         fontWeight: FontWeight.w600,
@@ -231,7 +232,7 @@ class AppTypography {
       );
 
   /// .t-body { font-size: 15px; line-height: 22px; font-weight: 400; }
-  static TextStyle tBody({Color? color}) => GoogleFonts.inter(
+  static TextStyle tBody({Color? color}) => AppFonts.inter(
         fontSize: 15,
         height: 22 / 15,
         fontWeight: FontWeight.w400,
@@ -239,7 +240,7 @@ class AppTypography {
       );
 
   /// .t-body-sm { font-size: 13px; line-height: 18px; font-weight: 400; }
-  static TextStyle tBodySm({Color? color}) => GoogleFonts.inter(
+  static TextStyle tBodySm({Color? color}) => AppFonts.inter(
         fontSize: 13,
         height: 18 / 13,
         fontWeight: FontWeight.w400,
@@ -247,7 +248,7 @@ class AppTypography {
       );
 
   /// .t-caption { font-size: 12px; line-height: 16px; font-weight: 500; }
-  static TextStyle tCaption({Color? color}) => GoogleFonts.inter(
+  static TextStyle tCaption({Color? color}) => AppFonts.inter(
         fontSize: 12,
         height: 16 / 12,
         fontWeight: FontWeight.w500,
@@ -255,7 +256,7 @@ class AppTypography {
       );
 
   /// .t-overline { font-size: 11px; line-height: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
-  static TextStyle tOverline({Color? color}) => GoogleFonts.inter(
+  static TextStyle tOverline({Color? color}) => AppFonts.inter(
         fontSize: 11,
         height: 14 / 11,
         fontWeight: FontWeight.w600,
@@ -270,7 +271,7 @@ class AppTypography {
   /// Field label matching user's image ("Phone number", Inter, SemiBold 600, 13.5px)
   /// Color: #4D4D4D (Light Mode --Base-base-700) / #E6E6E6 (Dark Mode)
   static TextStyle inputLabel(BuildContext context) {
-    return GoogleFonts.inter(
+    return AppFonts.inter(
       fontSize: 13.5,
       fontWeight: FontWeight.w600,
       letterSpacing: 0.05,
@@ -280,7 +281,7 @@ class AppTypography {
 
   /// Input placeholder/hint text (Inter, Regular 400, 14px)
   static TextStyle inputHint(BuildContext context) {
-    return GoogleFonts.inter(
+    return AppFonts.inter(
       fontSize: 14,
       fontWeight: FontWeight.w400,
       color: AppColors.textSecondaryOf(context).withValues(alpha: 0.65),
@@ -289,7 +290,7 @@ class AppTypography {
 
   /// Input text value (Inter, Regular 400, 15px)
   static TextStyle inputValue(BuildContext context) {
-    return GoogleFonts.inter(
+    return AppFonts.inter(
       fontSize: 15,
       fontWeight: FontWeight.w400,
       color: AppColors.textPrimaryOf(context),
@@ -297,7 +298,7 @@ class AppTypography {
   }
 
   /// Table header cell (Inter 11px Bold 700, #333333 / #CCCCCC)
-  static TextStyle tableHeader({required bool isDark}) => GoogleFonts.inter(
+  static TextStyle tableHeader({required bool isDark}) => AppFonts.inter(
         fontSize: 11,
         fontWeight: FontWeight.w700,
         height: 20 / 11,
@@ -305,7 +306,7 @@ class AppTypography {
       );
 
   /// Table body cell (Inter 12px SemiBold 600, #4D4D4D / #E6E6E6)
-  static TextStyle tableCell({required bool isDark}) => GoogleFonts.inter(
+  static TextStyle tableCell({required bool isDark}) => AppFonts.inter(
         fontSize: 12,
         fontWeight: FontWeight.w600,
         height: 20 / 12,
@@ -314,7 +315,7 @@ class AppTypography {
 
   /// Large Metric Stat Number (e.g., "271", "217")
   static TextStyle metricNumber({Color? color}) {
-    return GoogleFonts.inter(
+    return AppFonts.inter(
       fontSize: 28,
       fontWeight: FontWeight.w700,
       letterSpacing: -0.8,
@@ -324,7 +325,7 @@ class AppTypography {
 
   /// Counter Badge (e.g. "86", "2", "4")
   static TextStyle counterBadge({Color? color}) {
-    return GoogleFonts.inter(
+    return AppFonts.inter(
       fontSize: 11,
       fontWeight: FontWeight.w700,
       color: color ?? Colors.white,

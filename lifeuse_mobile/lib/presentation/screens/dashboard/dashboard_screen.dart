@@ -4,13 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/theme_provider.dart';
 import '../../../core/widgets/lifeuse_floating_navigation.dart';
 import '../../navigation/main_navigation_shell.dart';
 import '../../state/auth_provider.dart';
 import '../../state/money_provider.dart';
 import '../../state/notification_provider.dart';
 import 'models/dashboard_module_item.dart';
+import 'widgets/bento_life_overview.dart';
 import 'widgets/daily_life_overview.dart';
 import 'widgets/dashboard_surface.dart';
 import 'widgets/hero_zone.dart';
@@ -39,8 +39,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  /// How far the Direct Controls panel overlaps the hero.
-  static const double _overlap = 40;
+  static const double _overlap = 0;
 
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -73,15 +72,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _handleRefresh() async {
+    final auth = context.read<AuthProvider>();
     final money = context.read<MoneyProvider>();
-    await money.loadDashboardData(silent: true);
+    final notif = context.read<NotificationProvider>();
+    await Future.wait([
+      if (auth.isAuthenticated) auth.refreshProfile(),
+      money.loadDashboardData(silent: true),
+      notif.loadNotifications(),
+    ]);
   }
 
   void _openHomeManagement() {
     final modules = HardcodedModuleItem.hardcodedModules;
     final home = modules.where((m) => m.id == 'home_management');
     if (home.isEmpty) {
-      MainNavigationShell.switchTab(context, 1);
+      MainNavigationShell.switchTab(context, 2);
       return;
     }
     Navigator.of(context)
@@ -95,9 +100,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final money = context.watch<MoneyProvider>();
     final hasUnread = context.select<NotificationProvider, bool>(
       (p) => p.hasUnread,
-    );
-    final isDarkMode = context.select<ThemeProvider, bool>(
-      (t) => t.isDarkMode,
     );
 
     final user = auth.currentUser;
@@ -113,13 +115,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       backgroundColor: DashboardTokens.pageBackground(isDark),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
-        // The hero is always a deep purple gradient, so status bar icons
-        // stay light regardless of theme.
-        value: SystemUiOverlayStyle.light.copyWith(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.dark,
-        ),
+        value: isDark
+            ? SystemUiOverlayStyle.light.copyWith(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.light,
+                statusBarBrightness: Brightness.dark,
+              )
+            : SystemUiOverlayStyle.dark.copyWith(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.dark,
+                statusBarBrightness: Brightness.light,
+              ),
         child: RefreshIndicator(
           onRefresh: _handleRefresh,
           color: AppColors.primary,
@@ -139,12 +145,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   displayName: displayName,
                   isAuthenticated: auth.isAuthenticated,
                   dateStr: dateStr,
+                  totalBalance: money.financialProfile?.reportedBalance ??
+                      (money.summary.totalIncome - money.summary.totalExpenses),
+                  monthlyExpenses: money.summary.totalExpenses,
+                  upcomingBillsCount: money.upcomingOccurrences.length +
+                      money.plannedExpenses.length,
                   hideBalances: _hideBalances,
                   onToggleHide: () =>
                       setState(() => _hideBalances = !_hideBalances),
-                  isDarkMode: isDarkMode,
-                  onToggleTheme: () =>
-                      context.read<ThemeProvider>().toggleTheme(),
                   hasUnread: hasUnread,
                   onOpenProfile: () =>
                       MainNavigationShell.switchTab(context, 4),
@@ -154,15 +162,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       setState(() => _query = value.trim()),
                   scrollOffset: _scrollOffset,
                   onOpenModules: () =>
-                      MainNavigationShell.switchTab(context, 1),
+                      MainNavigationShell.switchTab(context, 2),
                   onOpenMoney: () =>
                       MainNavigationShell.openMoneyManager(context),
-                  onOpenTasks: () => MainNavigationShell.switchTab(context, 2),
+                  onOpenTasks: () => MainNavigationShell.switchTab(context, 1),
                   onOpenHome: _openHomeManagement,
                   bottomOverlap: _overlap,
+                  onScrollDown: () {
+                    _scrollController.animateTo(
+                      360.0,
+                      duration: const Duration(milliseconds: 550),
+                      curve: Curves.easeInOutCubic,
+                    );
+                  },
                 ),
 
-                // 2+. Everything below pulls up over the hero's lower edge.
+                // 2+. Everything below flows naturally right below the wave curve.
                 Transform.translate(
                   offset: const Offset(0, -_overlap),
                   child: Padding(
@@ -192,30 +207,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildSections(AuthProvider auth, MoneyProvider money) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = DashboardTokens.surface(isDark);
+    final borderColor = DashboardTokens.hairline(isDark);
+    final textPrimary = AppColors.textPrimaryOf(context);
+    final textSecondary = AppColors.textSecondaryOf(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // 1. Direct Controls panel
         const QuickActionsPanel(),
         const SizedBox(height: 20),
-        _RevealOnScroll(
-          offset: _scrollOffset,
-          child: PendingAlertsBanner(
-            isAuthenticated: auth.isAuthenticated,
-            hideBalances: _hideBalances,
-          ),
+
+        // 2. My Modules — Asymmetric Bento Life Matrix
+        BentoLifeOverview(
+          isDark: isDark,
+          surfaceColor: surfaceColor,
+          borderColor: borderColor,
+          textPrimary: textPrimary,
+          textSecondary: textSecondary,
         ),
-        // The banner collapses to nothing when there is nothing to show; its
-        // spacing is handled inside the column so no stray gap appears.
-        _AlertSpacing(isAuthenticated: auth.isAuthenticated),
-        _RevealOnScroll(
-          offset: _scrollOffset,
-          child: RecentActivitySection(
-            money: money,
-            isAuthenticated: auth.isAuthenticated,
-            hideBalances: _hideBalances,
-          ),
+        const SizedBox(height: 20),
+
+        // 3. Pending Alerts & Reminders
+        PendingAlertsBanner(
+          isAuthenticated: auth.isAuthenticated,
+          hideBalances: _hideBalances,
         ),
-        const SizedBox(height: 24),
+
+        // 4. Recent Activity
+        RecentActivitySection(
+          money: money,
+          isAuthenticated: auth.isAuthenticated,
+          hideBalances: _hideBalances,
+        ),
+        const SizedBox(height: 20),
+
+        // 5. Daily Life Overview
         _RevealOnScroll(
           offset: _scrollOffset,
           child: DailyLifeOverview(
@@ -245,32 +274,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         hideBalances: _hideBalances,
       ),
     );
-  }
-}
-
-/// Adds the gap after the alerts banner only when the banner is visible, so
-/// a collapsed banner leaves no empty space.
-class _AlertSpacing extends StatelessWidget {
-  final bool isAuthenticated;
-
-  const _AlertSpacing({required this.isAuthenticated});
-
-  @override
-  Widget build(BuildContext context) {
-    final notifications = context.watch<NotificationProvider>();
-    final money = context.watch<MoneyProvider>();
-
-    final hasUnread = notifications.hasUnread;
-    var hasDue = false;
-    var highPressure = false;
-    if (isAuthenticated) {
-      final horizon = DateTime.now().add(const Duration(days: 7));
-      hasDue = money.upcomingOccurrences
-          .any((o) => o.isPending && o.scheduledDate.isBefore(horizon));
-      highPressure = money.budgetPressure?.isHigh ?? false;
-    }
-    final visible = hasUnread || hasDue || highPressure;
-    return SizedBox(height: visible ? 20 : 0);
   }
 }
 

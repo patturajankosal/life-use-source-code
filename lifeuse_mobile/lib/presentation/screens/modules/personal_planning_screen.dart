@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
 class _LifeGoalItem {
@@ -96,7 +96,7 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
         backgroundColor: AppColors.surfaceOf(ctx),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         title: Text('Create Life Goal',
-            style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
+            style: AppFonts.inter(fontWeight: FontWeight.w700)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -152,7 +152,7 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
     final borderColor = AppColors.borderOf(context);
     final textPrimary = AppColors.textPrimaryOf(context);
     final textSecondary = AppColors.textSecondaryOf(context);
-    const accentColor = Color(0xFF14B8A6);
+    const primaryColor = AppColors.primary;
 
     final completedBucket = _bucketList.where((b) => b.isCompleted).length;
 
@@ -161,12 +161,12 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
       appBar: AppBar(
         title: Text(
           'Personal Planning',
-          style: GoogleFonts.plusJakartaSans(
+          style: AppFonts.plusJakartaSans(
               fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
-            icon: const Icon(LucideIcons.plus, size: 20),
+            icon: const AppIcon(AppIcons.plus, size: 20),
             tooltip: 'Add Goal',
             onPressed: _showAddGoalDialog,
           ),
@@ -190,8 +190,8 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                       border: Border.all(color: borderColor),
                       boxShadow: [
                         BoxShadow(
-                          color: accentColor.withValues(
-                              alpha: isDark ? 0.2 : 0.05),
+                          color: Colors.black
+                              .withValues(alpha: isDark ? 0.20 : 0.04),
                           blurRadius: 16,
                           offset: const Offset(0, 4),
                         ),
@@ -200,13 +200,22 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                     child: Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(12),
+                          width: 48,
+                          height: 48,
                           decoration: BoxDecoration(
-                            color: accentColor.withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(14),
+                            color: AppColors.iconBackgroundOf(context),
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: AppColors.iconBorderOf(context),
+                            ),
                           ),
-                          child: const Icon(LucideIcons.compass,
-                              color: accentColor, size: 24),
+                          child: Center(
+                            child: AppIcon(
+                              AppIcons.personalPlanning,
+                              color: AppColors.brandIconOf(context),
+                              size: 24,
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -215,7 +224,7 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                             children: [
                               Text(
                                 'Yearly Vision & Milestones',
-                                style: GoogleFonts.inter(
+                                style: AppFonts.inter(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                   color: textPrimary,
@@ -224,7 +233,7 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                               const SizedBox(height: 2),
                               Text(
                                 '3 high-priority life goals actively in progress.',
-                                style: GoogleFonts.inter(
+                                style: AppFonts.inter(
                                     fontSize: 12.5, color: textSecondary),
                               ),
                             ],
@@ -241,7 +250,7 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                   // 2. Active Goals List
                   Text(
                     'Annual Milestones & Progress',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: textPrimary),
@@ -271,7 +280,7 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                                 Expanded(
                                   child: Text(
                                     g.title,
-                                    style: GoogleFonts.inter(
+                                    style: AppFonts.inter(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w700,
                                       color: textPrimary,
@@ -282,15 +291,15 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 3),
                                   decoration: BoxDecoration(
-                                    color: accentColor.withValues(alpha: 0.1),
+                                    color: primaryColor.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Text(
                                     g.horizon,
-                                    style: GoogleFonts.inter(
+                                    style: AppFonts.inter(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w700,
-                                      color: accentColor,
+                                      color: primaryColor,
                                     ),
                                   ),
                                 ),
@@ -299,7 +308,7 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                             const SizedBox(height: 6),
                             Text(
                               g.metric,
-                              style: GoogleFonts.inter(
+                              style: AppFonts.inter(
                                   fontSize: 12.5, color: textSecondary),
                             ),
                             const SizedBox(height: 10),
@@ -310,7 +319,7 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                                 minHeight: 8,
                                 backgroundColor: borderColor,
                                 valueColor: const AlwaysStoppedAnimation<Color>(
-                                    accentColor),
+                                    primaryColor),
                               ),
                             ),
                           ],
@@ -326,7 +335,7 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                     children: [
                       Text(
                         'Life Bucket List',
-                        style: GoogleFonts.inter(
+                        style: AppFonts.inter(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
                             color: textPrimary),
@@ -358,7 +367,7 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                           children: [
                             Checkbox(
                               value: item.isCompleted,
-                              activeColor: accentColor,
+                              activeColor: primaryColor,
                               onChanged: (val) {
                                 setState(() => item.isCompleted = val ?? false);
                               },
@@ -367,7 +376,7 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                             Expanded(
                               child: Text(
                                 item.title,
-                                style: GoogleFonts.inter(
+                                style: AppFonts.inter(
                                   fontSize: 13.5,
                                   fontWeight: FontWeight.w600,
                                   color: item.isCompleted

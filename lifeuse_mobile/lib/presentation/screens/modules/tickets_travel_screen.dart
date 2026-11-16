@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
 class _TravelTicket {
@@ -49,50 +50,8 @@ class TicketsTravelScreen extends StatefulWidget {
 }
 
 class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
-  final List<_TravelTicket> _tickets = const [
-    _TravelTicket(
-      id: 't_1',
-      tripName: 'Bengaluru Tech Conference',
-      type: 'Flight',
-      from: 'MAA (Chennai)',
-      to: 'BLR (Bengaluru)',
-      date: 'Nov 02 • 07:15 AM',
-      bookingRef: '6E-482 (PNR: XY89KC)',
-      icon: LucideIcons.plane,
-    ),
-    _TravelTicket(
-      id: 't_2',
-      tripName: 'Bengaluru Tech Conference',
-      type: 'Hotel',
-      from: 'Check-in: Nov 02',
-      to: 'Check-out: Nov 04',
-      date: '2 Nights • Whitefield',
-      bookingRef: 'Marriott Courtyard (Conf: #90812)',
-      icon: LucideIcons.hotel,
-    ),
-    _TravelTicket(
-      id: 't_3',
-      tripName: 'Diwali Home Visit',
-      type: 'Train',
-      from: 'Chennai Central',
-      to: 'Madurai Jn',
-      date: 'Nov 11 • 10:30 PM',
-      bookingRef: 'Tejas Express (PNR: 42189021)',
-      icon: LucideIcons.train,
-    ),
-  ];
-
-  final List<_PackingItem> _packing = [
-    _PackingItem(id: 'p_1', name: 'MacBook Pro & 96W Charger', isPacked: true),
-    _PackingItem(
-        id: 'p_2', name: 'National ID & Conference Passes', isPacked: true),
-    _PackingItem(
-        id: 'p_3', name: 'Noise Cancelling Headphones', isPacked: false),
-    _PackingItem(
-        id: 'p_4', name: 'Emergency Medications & First-Aid', isPacked: false),
-    _PackingItem(
-        id: 'p_5', name: 'Universal Travel Adapter & Cables', isPacked: false),
-  ];
+  final List<_TravelTicket> _tickets = [];
+  final List<_PackingItem> _packing = [];
 
   void _showAddPackingItemDialog() {
     final ctrl = TextEditingController();
@@ -102,7 +61,7 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
         backgroundColor: AppColors.surfaceOf(ctx),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         title: Text('Add Packing Item',
-            style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
+            style: AppFonts.inter(fontWeight: FontWeight.w700)),
         content: TextField(
           controller: ctrl,
           decoration: InputDecoration(
@@ -143,7 +102,7 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
     final borderColor = AppColors.borderOf(context);
     final textPrimary = AppColors.textPrimaryOf(context);
     final textSecondary = AppColors.textSecondaryOf(context);
-    const accentColor = Color(0xFF06B6D4);
+    const accentColor = AppColors.primary;
 
     final packedCount = _packing.where((p) => p.isPacked).length;
 
@@ -152,12 +111,12 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
       appBar: AppBar(
         title: Text(
           'Tickets & Travel',
-          style: GoogleFonts.plusJakartaSans(
+          style: AppFonts.plusJakartaSans(
               fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
-            icon: const Icon(LucideIcons.plus, size: 20),
+            icon: const AppIcon(AppIcons.plus, size: 20),
             tooltip: 'Add Packing Item',
             onPressed: _showAddPackingItemDialog,
           ),
@@ -191,13 +150,22 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                     child: Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(12),
+                          width: 48,
+                          height: 48,
                           decoration: BoxDecoration(
-                            color: accentColor.withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(14),
+                            color: AppColors.iconBackgroundOf(context),
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: AppColors.iconBorderOf(context),
+                            ),
                           ),
-                          child: const Icon(LucideIcons.plane,
-                              color: accentColor, size: 24),
+                          child: Center(
+                            child: AppIcon(
+                              AppIcons.ticketsTravel,
+                              color: AppColors.brandIconOf(context),
+                              size: 24,
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -206,13 +174,13 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                             children: [
                               Text(
                                 'Upcoming Travel Itinerary',
-                                style: GoogleFonts.inter(
+                                style: AppFonts.inter(
                                     fontSize: 12.5, color: textSecondary),
                               ),
                               const SizedBox(height: 2),
                               Text(
                                 'Bengaluru Tech Summit',
-                                style: GoogleFonts.inter(
+                                style: AppFonts.inter(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
                                   color: textPrimary,
@@ -220,7 +188,7 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                               ),
                               Text(
                                 'Starts in 16 days • Nov 02, 2026',
-                                style: GoogleFonts.inter(
+                                style: AppFonts.inter(
                                     fontSize: 12,
                                     color: accentColor,
                                     fontWeight: FontWeight.w600),
@@ -239,14 +207,66 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                   // 2. Tickets List
                   Text(
                     'Travel Bookings & Wallet',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: textPrimary),
                   ),
                   const SizedBox(height: 12),
 
-                  ListView.separated(
+                  if (_tickets.isEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 36),
+                      decoration: BoxDecoration(
+                        color: surfaceColor,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: borderColor),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              color: AppColors.iconBackgroundOf(context),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: AppColors.iconBorderOf(context),
+                                width: 1.2,
+                              ),
+                            ),
+                            child: Center(
+                              child: AppIcon(
+                                AppIcons.ticketsTravel,
+                                size: 26,
+                                color: AppColors.brandIconOf(context),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'No Travel Itineraries',
+                            style: AppFonts.inter(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'No upcoming flights, trains, or hotels planned.\nAdd booking confirmations to keep your trips organized.',
+                            textAlign: TextAlign.center,
+                            style: AppFonts.inter(
+                              fontSize: 12,
+                              color: textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: _tickets.length,
@@ -263,12 +283,20 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                         child: Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(10),
+                              width: 44,
+                              height: 44,
                               decoration: BoxDecoration(
-                                color: accentColor.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(12),
+                                color: AppColors.iconBackgroundOf(context),
+                                borderRadius: BorderRadius.circular(13),
+                                border: Border.all(
+                                  color: AppColors.iconBorderOf(context),
+                                ),
                               ),
-                              child: Icon(t.icon, color: accentColor, size: 22),
+                              child: Center(
+                                child: AppIcon(t.icon,
+                                    color: AppColors.brandIconOf(context),
+                                    size: 21),
+                              ),
                             ),
                             const SizedBox(width: 14),
                             Expanded(
@@ -279,7 +307,7 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                                     children: [
                                       Text(
                                         '${t.from} → ${t.to}',
-                                        style: GoogleFonts.inter(
+                                        style: AppFonts.inter(
                                           fontSize: 14.5,
                                           fontWeight: FontWeight.w700,
                                           color: textPrimary,
@@ -290,13 +318,13 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                                   const SizedBox(height: 2),
                                   Text(
                                     t.date,
-                                    style: GoogleFonts.inter(
+                                    style: AppFonts.inter(
                                         fontSize: 12, color: textSecondary),
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
                                     t.bookingRef,
-                                    style: GoogleFonts.inter(
+                                    style: AppFonts.inter(
                                       fontSize: 11.5,
                                       fontWeight: FontWeight.w600,
                                       color: accentColor,
@@ -320,7 +348,7 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                         children: [
                           Text(
                             'Packing Checklist',
-                            style: GoogleFonts.inter(
+                            style: AppFonts.inter(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                                 color: textPrimary),
@@ -335,7 +363,7 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                         ],
                       ),
                       IconButton(
-                        icon: const Icon(Icons.add_circle_outline, size: 20),
+                        icon: const Icon(LucideIcons.plusCircle, size: 20),
                         tooltip: 'Add Packing Item',
                         onPressed: _showAddPackingItemDialog,
                       ),
@@ -343,7 +371,59 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                   ),
                   const SizedBox(height: 10),
 
-                  ListView.separated(
+                  if (_packing.isEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 36),
+                      decoration: BoxDecoration(
+                        color: surfaceColor,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: borderColor),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              color: AppColors.iconBackgroundOf(context),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: AppColors.iconBorderOf(context),
+                                width: 1.2,
+                              ),
+                            ),
+                            child: Center(
+                              child: AppIcon(
+                                AppIcons.ticketsTravel,
+                                size: 26,
+                                color: AppColors.brandIconOf(context),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Packing List Empty',
+                            style: AppFonts.inter(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Add luggage essentials, devices, and passes before heading out.',
+                            textAlign: TextAlign.center,
+                            style: AppFonts.inter(
+                              fontSize: 12,
+                              color: textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: _packing.length,
@@ -371,7 +451,7 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                             Expanded(
                               child: Text(
                                 p.name,
-                                style: GoogleFonts.inter(
+                                style: AppFonts.inter(
                                   fontSize: 13.5,
                                   fontWeight: FontWeight.w600,
                                   color:

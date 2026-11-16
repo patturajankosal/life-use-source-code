@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import '../theme/app_colors.dart';
 
 /// Standardized Section Title with optional subtitle and action widget.
@@ -32,7 +32,7 @@ class AppSectionTitle extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 17,
                   fontWeight: FontWeight.w700,
                   color: textPrimary,
@@ -43,7 +43,7 @@ class AppSectionTitle extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   subtitle!,
-                  style: GoogleFonts.inter(
+                  style: AppFonts.inter(
                     fontSize: 12.5,
                     color: textSecondary,
                   ),

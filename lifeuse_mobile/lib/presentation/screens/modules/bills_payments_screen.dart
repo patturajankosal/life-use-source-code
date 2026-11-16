@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
+import '../../../data/models/money/recurring_schedule_models.dart';
+import '../../state/money_provider.dart';
 
 class _BillItem {
   final String id;
@@ -45,49 +48,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
   );
 
   String _filter = 'ALL'; // ALL, DUE, PAID
-
-  final List<_BillItem> _bills = [
-    _BillItem(
-      id: 'bill_1',
-      title: 'Electricity Utility',
-      provider: 'TNEB Power Distribution',
-      amount: 1840.00,
-      dueDate: 'Due Oct 19 (in 3 days)',
-      icon: LucideIcons.zap,
-      isPaid: false,
-      isAutoPay: false,
-    ),
-    _BillItem(
-      id: 'bill_2',
-      title: 'Fiber Internet (300 Mbps)',
-      provider: 'Airtel Broadband',
-      amount: 1179.00,
-      dueDate: 'Due Oct 22 (in 6 days)',
-      icon: LucideIcons.wifi,
-      isPaid: false,
-      isAutoPay: true,
-    ),
-    _BillItem(
-      id: 'bill_3',
-      title: 'Piped Natural Gas',
-      provider: 'City Gas Networks',
-      amount: 480.00,
-      dueDate: 'Paid Oct 12',
-      icon: LucideIcons.flame,
-      isPaid: true,
-      isAutoPay: false,
-    ),
-    _BillItem(
-      id: 'bill_4',
-      title: 'Mobile Postpaid Plan',
-      provider: 'Jio 5G Family Plan',
-      amount: 699.00,
-      dueDate: 'Paid Oct 10',
-      icon: LucideIcons.smartphone,
-      isPaid: true,
-      isAutoPay: true,
-    ),
-  ];
+  final List<_BillItem> _localBills = [];
 
   void _showAddBillDialog() {
     final titleCtrl = TextEditingController();
@@ -102,7 +63,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         title: Text(
           'Add Upcoming Bill',
-          style: GoogleFonts.inter(fontWeight: FontWeight.w700),
+          style: AppFonts.inter(fontWeight: FontWeight.w700),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -156,29 +117,58 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFF59E0B),
+              backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
             ),
             onPressed: () {
-              if (titleCtrl.text.trim().isNotEmpty) {
-                setState(() {
-                  _bills.insert(
-                    0,
-                    _BillItem(
-                      id: 'bill_${DateTime.now().millisecondsSinceEpoch}',
-                      title: titleCtrl.text.trim(),
-                      provider: provCtrl.text.trim().isEmpty
-                          ? 'Direct Provider'
-                          : provCtrl.text.trim(),
-                      amount: double.tryParse(amountCtrl.text) ?? 500.0,
-                      dueDate: dateCtrl.text.trim().isEmpty
-                          ? 'Due this month'
-                          : dateCtrl.text.trim(),
-                      icon: LucideIcons.receipt,
-                      isPaid: false,
-                    ),
+              final title = titleCtrl.text.trim();
+              if (title.isNotEmpty) {
+                final amount = double.tryParse(amountCtrl.text) ?? 500.0;
+                final providerName = provCtrl.text.trim().isEmpty
+                    ? 'Direct Provider'
+                    : provCtrl.text.trim();
+                final dueStr = dateCtrl.text.trim().isEmpty
+                    ? 'Due this month'
+                    : dateCtrl.text.trim();
+
+                final money = context.read<MoneyProvider>();
+                money.addRecurringSchedule(RecurringScheduleRequest(
+                  title: title,
+                  transactionType: 'EXPENSE',
+                  categoryName: 'Bills & Utilities',
+                  amount: amount,
+                  frequency: 'MONTHLY',
+                  startDate: DateTime.now(),
+                )).catchError((_) {
+                  setState(() {
+                    _localBills.insert(
+                      0,
+                      _BillItem(
+                        id: 'bill_${DateTime.now().millisecondsSinceEpoch}',
+                        title: title,
+                        provider: providerName,
+                        amount: amount,
+                        dueDate: dueStr,
+                        icon: AppIcons.billsPayments,
+                        isPaid: false,
+                      ),
+                    );
+                  });
+                  return RecurringScheduleModel(
+                    id: 0,
+                    userId: 0,
+                    title: title,
+                    transactionType: 'EXPENSE',
+                    categoryName: 'Bills & Utilities',
+                    amount: amount,
+                    frequency: 'MONTHLY',
+                    startDate: DateTime.now(),
+                    essential: true,
+                    paymentMethod: 'UPI',
+                    active: true,
                   );
                 });
+
                 Navigator.pop(ctx);
               }
             },
@@ -196,26 +186,60 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
     final borderColor = AppColors.borderOf(context);
     final textPrimary = AppColors.textPrimaryOf(context);
     final textSecondary = AppColors.textSecondaryOf(context);
-    const accentColor = Color(0xFFF59E0B);
 
-    final dueBills = _bills.where((b) => !b.isPaid).toList();
-    final paidBills = _bills.where((b) => b.isPaid).toList();
+    final money = context.watch<MoneyProvider>();
+
+    // Build unified list from real backend occurrences + recurring schedules + user added bills
+    final List<_BillItem> allBills = [..._localBills];
+
+    for (final oc in money.upcomingOccurrences) {
+      allBills.add(_BillItem(
+        id: 'oc_${oc.id}',
+        title: oc.scheduleTitle,
+        provider: 'Scheduled Occurrence',
+        amount: oc.amount,
+        dueDate: 'Due ${DateFormat('MMM d').format(oc.scheduledDate)}',
+        icon: AppIcons.billsPayments,
+        isPaid: oc.isProcessed,
+        isAutoPay: true,
+      ));
+    }
+
+    for (final rs in money.recurringSchedules) {
+      if (!allBills.any((b) => b.title.toLowerCase() == rs.title.toLowerCase())) {
+        allBills.add(_BillItem(
+          id: 'rs_${rs.id}',
+          title: rs.title,
+          provider: rs.categoryName,
+          amount: rs.amount,
+          dueDate: rs.nextOccurrenceDate != null
+              ? 'Due ${DateFormat('MMM d').format(rs.nextOccurrenceDate!)}'
+              : rs.frequency,
+          icon: AppIcons.billsPayments,
+          isPaid: false,
+          isAutoPay: true,
+        ));
+      }
+    }
+
+    final dueBills = allBills.where((b) => !b.isPaid).toList();
+    final paidBills = allBills.where((b) => b.isPaid).toList();
     final totalDue = dueBills.fold(0.0, (sum, b) => sum + b.amount);
 
     final filtered =
-        _filter == 'DUE' ? dueBills : (_filter == 'PAID' ? paidBills : _bills);
+        _filter == 'DUE' ? dueBills : (_filter == 'PAID' ? paidBills : allBills);
 
     return Scaffold(
       backgroundColor: AppColors.backgroundOf(context),
       appBar: AppBar(
         title: Text(
           'Bills & Payments',
-          style: GoogleFonts.plusJakartaSans(
+          style: AppFonts.plusJakartaSans(
               fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
-            icon: const Icon(LucideIcons.plus, size: 20),
+            icon: const AppIcon(AppIcons.plus, size: 22),
             tooltip: 'Add Bill',
             onPressed: _showAddBillDialog,
           ),
@@ -223,7 +247,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 1040),
@@ -239,8 +263,8 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                       border: Border.all(color: borderColor),
                       boxShadow: [
                         BoxShadow(
-                          color: accentColor.withValues(
-                              alpha: isDark ? 0.2 : 0.05),
+                          color: Colors.black
+                              .withValues(alpha: isDark ? 0.20 : 0.04),
                           blurRadius: 16,
                           offset: const Offset(0, 4),
                         ),
@@ -249,13 +273,22 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                     child: Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(12),
+                          width: 48,
+                          height: 48,
                           decoration: BoxDecoration(
-                            color: accentColor.withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(14),
+                            color: AppColors.iconBackgroundOf(context),
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: AppColors.iconBorderOf(context),
+                            ),
                           ),
-                          child: const Icon(LucideIcons.receipt,
-                              color: accentColor, size: 24),
+                          child: Center(
+                            child: AppIcon(
+                              AppIcons.billsPayments,
+                              color: AppColors.brandIconOf(context),
+                              size: 24,
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -264,18 +297,16 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                             children: [
                               Text(
                                 'Pending Outflow Due',
-                                style: GoogleFonts.inter(
+                                style: AppFonts.inter(
                                     fontSize: 12.5, color: textSecondary),
                               ),
                               const SizedBox(height: 2),
                               Text(
                                 _currencyFormat.format(totalDue),
-                                style: GoogleFonts.inter(
+                                style: AppFonts.inter(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w800,
-                                  color: totalDue > 0
-                                      ? accentColor
-                                      : AppColors.success,
+                                  color: textPrimary,
                                 ),
                               ),
                             ],
@@ -295,7 +326,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                   // 2. Filter Pills
                   Row(
                     children: [
-                      _buildFilterChip('ALL', 'All (${_bills.length})'),
+                      _buildFilterChip('ALL', 'All (${allBills.length})'),
                       const SizedBox(width: 8),
                       _buildFilterChip('DUE', 'Due (${dueBills.length})'),
                       const SizedBox(width: 8),
@@ -304,127 +335,189 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // 3. Bills List
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: filtered.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
-                    itemBuilder: (ctx, i) {
-                      final b = filtered[i];
-                      return Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: surfaceColor,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: borderColor),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: b.isPaid
-                                    ? AppColors.success.withValues(alpha: 0.12)
-                                    : accentColor.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Icon(
-                                b.icon,
-                                color:
-                                    b.isPaid ? AppColors.success : accentColor,
-                                size: 22,
+                  // 3. Bills List or Empty State
+                  if (filtered.isEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 40),
+                      decoration: BoxDecoration(
+                        color: surfaceColor,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: borderColor),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 56,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              color: AppColors.iconBackgroundOf(context),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: AppColors.iconBorderOf(context),
+                                width: 1.2,
                               ),
                             ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          b.title,
-                                          style: GoogleFonts.inter(
-                                            fontSize: 14.5,
-                                            fontWeight: FontWeight.w700,
-                                            color: textPrimary,
-                                          ),
-                                        ),
-                                      ),
-                                      if (b.isAutoPay) ...[
-                                        const SizedBox(width: 6),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 6, vertical: 2),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.primary
-                                                .withValues(alpha: 0.1),
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                          ),
+                            child: Center(
+                              child: AppIcon(
+                                AppIcons.billsPayments,
+                                size: 28,
+                                color: AppColors.brandIconOf(context),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'No Upcoming Bills',
+                            style: AppFonts.inter(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'You have no pending bills or active recurring subscriptions.\nTap \'+\' in the header to add your utility bills or recharge reminders.',
+                            textAlign: TextAlign.center,
+                            style: AppFonts.inter(
+                              fontSize: 12.5,
+                              color: textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: filtered.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      itemBuilder: (ctx, i) {
+                        final b = filtered[i];
+                        return Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: surfaceColor,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: borderColor),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 46,
+                                height: 46,
+                                decoration: BoxDecoration(
+                                  color: AppColors.iconBackgroundOf(context),
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                    color: AppColors.iconBorderOf(context),
+                                    width: 1.0,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: AppIcon(
+                                    b.icon,
+                                    color: AppColors.brandIconOf(context),
+                                    size: 24,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Expanded(
                                           child: Text(
-                                            'AUTO-PAY',
-                                            style: GoogleFonts.inter(
-                                              fontSize: 9,
+                                            b.title,
+                                            style: AppFonts.inter(
+                                              fontSize: 14.5,
                                               fontWeight: FontWeight.w700,
-                                              color: AppColors.primary,
+                                              color: textPrimary,
                                             ),
                                           ),
                                         ),
+                                        if (b.isAutoPay) ...[
+                                          const SizedBox(width: 6),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 6, vertical: 2),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.primary
+                                                  .withValues(alpha: 0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            child: Text(
+                                              'AUTO-PAY',
+                                              style: AppFonts.inter(
+                                                fontSize: 9,
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColors.primary,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ],
-                                    ],
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    '${b.provider} • ${b.dueDate}',
-                                    style: GoogleFonts.inter(
-                                        fontSize: 12, color: textSecondary),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  _currencyFormat.format(b.amount),
-                                  style: GoogleFonts.inter(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w800,
-                                    color: textPrimary,
-                                  ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      '${b.provider} • ${b.dueDate}',
+                                      style: AppFonts.inter(
+                                          fontSize: 12, color: textSecondary),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 4),
-                                InkWell(
-                                  onTap: () {
-                                    setState(() => b.isPaid = !b.isPaid);
-                                  },
-                                  borderRadius: BorderRadius.circular(6),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 6, vertical: 2),
-                                    child: Text(
-                                      b.isPaid ? 'Mark Due' : 'Mark Paid',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 11.5,
-                                        fontWeight: FontWeight.w700,
-                                        color: b.isPaid
-                                            ? textSecondary
-                                            : AppColors.primary,
+                              ),
+                              const SizedBox(width: 12),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    _currencyFormat.format(b.amount),
+                                    style: AppFonts.inter(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w800,
+                                      color: textPrimary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  InkWell(
+                                    onTap: () {
+                                      if (b.id.startsWith('oc_')) {
+                                        final ocId = int.tryParse(b.id.substring(3));
+                                        if (ocId != null) {
+                                          context.read<MoneyProvider>().processOccurrence(ocId);
+                                        }
+                                      }
+                                      setState(() => b.isPaid = !b.isPaid);
+                                    },
+                                    borderRadius: BorderRadius.circular(6),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 6, vertical: 2),
+                                      child: Text(
+                                        b.isPaid ? 'Mark Due' : 'Mark Paid',
+                                        style: AppFonts.inter(
+                                          fontSize: 11.5,
+                                          fontWeight: FontWeight.w700,
+                                          color: b.isPaid
+                                              ? textSecondary
+                                              : AppColors.primary,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                 ],
               ),
             ),
@@ -434,34 +527,27 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
     );
   }
 
-  Widget _buildFilterChip(String value, String label) {
-    final isSelected = _filter == value;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return InkWell(
-      onTap: () => setState(() => _filter = value),
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
+  Widget _buildFilterChip(String filterKey, String label) {
+    final isSelected = _filter == filterKey;
+    return GestureDetector(
+      onTap: () => setState(() => _filter = filterKey),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected
-              ? const Color(0xFFF59E0B).withValues(alpha: isDark ? 0.2 : 0.12)
-              : AppColors.surfaceOf(context),
+          color: isSelected ? AppColors.primary : AppColors.surfaceOf(context),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected
-                ? const Color(0xFFF59E0B)
-                : AppColors.borderOf(context),
+            color: isSelected ? AppColors.primary : AppColors.borderOf(context),
           ),
         ),
         child: Text(
           label,
-          style: GoogleFonts.inter(
-            fontSize: 12.5,
+          style: AppFonts.inter(
+            fontSize: 12,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-            color: isSelected
-                ? const Color(0xFFF59E0B)
-                : AppColors.textSecondaryOf(context),
+            color:
+                isSelected ? Colors.white : AppColors.textSecondaryOf(context),
           ),
         ),
       ),

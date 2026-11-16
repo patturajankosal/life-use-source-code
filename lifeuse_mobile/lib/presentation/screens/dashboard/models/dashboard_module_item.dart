@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import '../../../../core/theme/app_icons.dart';
 import '../../activity/activity_screen.dart';
 import '../../modules/bills_payments_screen.dart';
 import '../../modules/documents_vault_screen.dart';
@@ -73,8 +73,8 @@ class HardcodedModuleItem {
           subtitle: 'Budgets, income & expenses',
           description:
               'Manage personal finances, budgets, transactions, and cash flow.',
-          icon: LucideIcons.wallet,
-          navIcon: LucideIcons.wallet,
+          icon: AppIcons.moneyManager,
+          navIcon: AppIcons.moneyManagerFilled,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Finance',
           badgeText: 'Live API',
@@ -88,8 +88,8 @@ class HardcodedModuleItem {
           subtitle: 'Appliances, inventory & utilities',
           description:
               'Control smart devices, track home supplies, and equipment warranties.',
-          icon: LucideIcons.home,
-          navIcon: LucideIcons.home,
+          icon: AppIcons.homeManagement,
+          navIcon: AppIcons.homeManagementFilled,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Lifestyle',
           badgeText: 'Active',
@@ -103,8 +103,8 @@ class HardcodedModuleItem {
           subtitle: 'To-dos, routines & checklists',
           description:
               'Organize tasks, recurring habits, and daily priorities.',
-          icon: LucideIcons.checkSquare,
-          navIcon: LucideIcons.checkSquare,
+          icon: AppIcons.dailyTasks,
+          navIcon: AppIcons.dailyTasksFilled,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Productivity',
           badgeText: 'Active',
@@ -117,8 +117,8 @@ class HardcodedModuleItem {
           title: 'Health & Wellness',
           subtitle: 'Vitals, water intake & workouts',
           description: 'Track daily water intake, vitals, workouts, and sleep.',
-          icon: LucideIcons.heartPulse,
-          navIcon: LucideIcons.activity,
+          icon: AppIcons.healthWellness,
+          navIcon: AppIcons.healthWellnessFilled,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Lifestyle',
           badgeText: 'Active',
@@ -132,8 +132,8 @@ class HardcodedModuleItem {
           subtitle: 'Upcoming dues & subscriptions',
           description:
               'Monitor recurring bills, due dates, and auto-pay services.',
-          icon: LucideIcons.receipt,
-          navIcon: LucideIcons.receipt,
+          icon: AppIcons.billsPayments,
+          navIcon: AppIcons.billsPaymentsFilled,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Finance',
           badgeText: 'Active',
@@ -147,8 +147,8 @@ class HardcodedModuleItem {
           subtitle: 'Timely alerts & deadlines',
           description:
               'Stay on top of critical reminders, notifications, and alarms.',
-          icon: LucideIcons.bellRing,
-          navIcon: LucideIcons.bell,
+          icon: AppIcons.remindersAlerts,
+          navIcon: AppIcons.remindersAlertsFilled,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Productivity',
           badgeText: 'Active',
@@ -160,8 +160,8 @@ class HardcodedModuleItem {
           id: 'tickets_travel',
           title: 'Tickets & Travel',
           subtitle: 'Passes, itineraries & packing',
-          icon: LucideIcons.plane,
-          navIcon: LucideIcons.plane,
+          icon: AppIcons.ticketsTravel,
+          navIcon: AppIcons.ticketsTravelFilled,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Lifestyle',
           badgeText: 'Active',
@@ -173,8 +173,8 @@ class HardcodedModuleItem {
           id: 'exams_learning',
           title: 'Exams & Learning',
           subtitle: 'Courses, tests & flashcards',
-          icon: LucideIcons.graduationCap,
-          navIcon: LucideIcons.bookOpen,
+          icon: AppIcons.examsLearning,
+          navIcon: AppIcons.examsLearningFilled,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Education',
           badgeText: 'Active',
@@ -188,8 +188,8 @@ class HardcodedModuleItem {
           subtitle: 'Encrypted IDs & policies',
           description:
               'Secure hardware-encrypted document storage for important IDs and certificates.',
-          icon: LucideIcons.shieldCheck,
-          navIcon: LucideIcons.shield,
+          icon: AppIcons.documentsVault,
+          navIcon: AppIcons.documentsVaultFilled,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Security',
           badgeText: 'Encrypted',
@@ -203,8 +203,8 @@ class HardcodedModuleItem {
           subtitle: 'Milestones, vision & goals',
           description:
               'Life roadmap, yearly milestones, and personal bucket list.',
-          icon: LucideIcons.compass,
-          navIcon: LucideIcons.target,
+          icon: AppIcons.personalPlanning,
+          navIcon: AppIcons.personalPlanningFilled,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
           category: 'Planning',
           badgeText: 'Active',

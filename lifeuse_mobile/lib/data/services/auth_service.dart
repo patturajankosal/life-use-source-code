@@ -48,7 +48,69 @@ class AuthService {
     return loginData;
   }
 
-  /// Register new user via POST /api/lifeUse/auth/register
+  /// Request initial OTP for pre-registration via POST /api/lifeUse/auth/verify/send
+  Future<Map<String, dynamic>> sendRegistrationOtp({
+    required String identifier,
+    required String type,
+  }) async {
+    final response = await _apiClient.post<Map<String, dynamic>>(
+      url: ApiConfig.sendOtp,
+      body: {
+        'identifier': identifier.trim(),
+        'type': type.toUpperCase(),
+      },
+      fromJson: (json) => json is Map<String, dynamic> ? json : {},
+    );
+    return response.data ?? {};
+  }
+
+  /// Verify 6-digit email OTP via POST /api/lifeUse/auth/verify/email
+  Future<String?> verifyEmailOtp({
+    required String email,
+    required String otpCode,
+  }) async {
+    final response = await _apiClient.post<Map<String, dynamic>>(
+      url: ApiConfig.verifyEmail,
+      body: {
+        'email': email.trim().toLowerCase(),
+        'otpCode': otpCode.trim(),
+      },
+      fromJson: (json) => json is Map<String, dynamic> ? json : {},
+    );
+    return response.data?['verificationToken']?.toString();
+  }
+
+  /// Verify 6-digit phone OTP via POST /api/lifeUse/auth/verify/phone
+  Future<String?> verifyPhoneOtp({
+    required String phoneNumber,
+    required String otpCode,
+  }) async {
+    final response = await _apiClient.post<Map<String, dynamic>>(
+      url: ApiConfig.verifyPhone,
+      body: {
+        'phoneNumber': phoneNumber.trim(),
+        'otpCode': otpCode.trim(),
+      },
+      fromJson: (json) => json is Map<String, dynamic> ? json : {},
+    );
+    return response.data?['verificationToken']?.toString();
+  }
+
+  /// Resend OTP code via POST /api/lifeUse/auth/verify/resend
+  Future<void> resendOtp({
+    required String identifier,
+    required String type,
+  }) async {
+    await _apiClient.post(
+      url: ApiConfig.resendOtp,
+      body: {
+        'identifier': identifier.trim(),
+        'type': type.toUpperCase(),
+      },
+    );
+  }
+
+  /// Complete registration and persist session if tokens returned
   Future<RegisterResponse> register(RegisterRequest request) async {
     final response = await _apiClient.post<RegisterResponse>(
       url: ApiConfig.register,
@@ -66,14 +128,71 @@ class AuthService {
       );
     }
 
-    return response.data!;
+    final regData = response.data!;
+
+    // If backend issued session tokens upon registration, persist session immediately
+    if (regData.hasSession) {
+      final userModel = regData.toUserModel();
+      await _saveSession(
+        accessToken: regData.accessToken!,
+        refreshToken: regData.refreshToken!,
+        user: userModel,
+      );
+      _apiClient.setAccessToken(regData.accessToken!);
+    }
+
+    return regData;
   }
 
   /// Request password reset via POST /api/lifeUse/auth/password/forgot
-  Future<void> forgotPassword(String email) async {
+  Future<void> forgotPassword(String identifier) async {
+    final trimmed = identifier.trim();
     await _apiClient.post(
       url: ApiConfig.forgotPassword,
-      body: {'email': email.trim().toLowerCase()},
+      body: {
+        'identifier': trimmed,
+        'email': trimmed.contains('@') ? trimmed.toLowerCase() : trimmed,
+      },
+    );
+  }
+
+  /// Verify password reset OTP via POST /api/lifeUse/auth/password/verify
+  Future<String> verifyForgotPasswordOtp({
+    required String identifier,
+    required String otpCode,
+  }) async {
+    final response = await _apiClient.post<Map<String, dynamic>>(
+      url: ApiConfig.verifyPasswordOtp,
+      body: {
+        'email': identifier.trim(),
+        'otpCode': otpCode.trim(),
+      },
+      fromJson: (json) => json is Map<String, dynamic> ? json : {},
+    );
+
+    final token = response.data?['token']?.toString();
+    if (token == null || token.isEmpty) {
+      throw ApiException(
+        message: 'Password reset token not received',
+        statusCode: 500,
+      );
+    }
+    return token;
+  }
+
+  /// Reset password via POST /api/lifeUse/auth/password/reset
+  Future<void> resetPassword({
+    required String token,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    await _apiClient.post(
+      url: ApiConfig.resetPassword,
+      body: {
+        'token': token.trim(),
+        'newPassword': newPassword,
+        'confirmPassword': confirmPassword,
+      },
     );
   }
 

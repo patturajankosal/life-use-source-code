@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
 
 /// Visual variants for LifeUse alerts matching shadcn alertVariants:
@@ -109,7 +110,7 @@ class LifeUseAlert extends StatelessWidget {
                 if (title != null && title!.isNotEmpty) ...[
                   Text(
                     title!,
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: config.titleColor,
@@ -120,7 +121,7 @@ class LifeUseAlert extends StatelessWidget {
                 ],
                 Text(
                   description,
-                  style: GoogleFonts.inter(
+                  style: AppFonts.inter(
                     fontSize: 13,
                     fontWeight: FontWeight.w400,
                     color: config.descColor,
@@ -144,7 +145,7 @@ class LifeUseAlert extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(2),
                 child: Icon(
-                  Icons.close_rounded,
+                  LucideIcons.x,
                   size: 16,
                   color: config.descColor.withValues(alpha: 0.8),
                 ),
@@ -221,15 +222,15 @@ class LifeUseAlert extends StatelessWidget {
   static IconData _getDefaultIcon(LifeUseAlertVariant variant) {
     switch (variant) {
       case LifeUseAlertVariant.defaultVariant:
-        return Icons.info_outline_rounded;
+        return LucideIcons.info;
       case LifeUseAlertVariant.destructive:
-        return Icons.error_outline_rounded;
+        return LucideIcons.alertCircle;
       case LifeUseAlertVariant.success:
-        return Icons.check_circle_outline_rounded;
+        return LucideIcons.checkCircle2;
       case LifeUseAlertVariant.warning:
-        return Icons.warning_amber_rounded;
+        return LucideIcons.alertTriangle;
       case LifeUseAlertVariant.info:
-        return Icons.info_outline_rounded;
+        return LucideIcons.info;
     }
   }
 }

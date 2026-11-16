@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
 
 /// Item model for LifeUseSelect
@@ -65,7 +66,7 @@ class LifeUseSelect<T> extends StatelessWidget {
         if (label != null) ...[
           Text(
             label!,
-            style: GoogleFonts.inter(
+            style: AppFonts.inter(
               fontSize: 13.5,
               fontWeight: FontWeight.w600,
               color: AppColors.inputLabelOf(context),
@@ -106,7 +107,7 @@ class LifeUseSelect<T> extends StatelessWidget {
                   Expanded(
                     child: Text(
                       selectedItem != null ? selectedItem.label : placeholder,
-                      style: GoogleFonts.inter(
+                      style: AppFonts.inter(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                         color: selectedItem != null
@@ -120,7 +121,7 @@ class LifeUseSelect<T> extends StatelessWidget {
                     ),
                   ),
                   Icon(
-                    Icons.keyboard_arrow_down_rounded,
+                    LucideIcons.chevronDown,
                     size: 18,
                     color: isDark
                         ? const Color(0xFFA3A3A3)
@@ -189,7 +190,7 @@ class LifeUseSelect<T> extends StatelessWidget {
                     children: [
                       Text(
                         label ?? placeholder,
-                        style: GoogleFonts.inter(
+                        style: AppFonts.inter(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
                           color:
@@ -197,7 +198,7 @@ class LifeUseSelect<T> extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close_rounded, size: 20),
+                        icon: const Icon(LucideIcons.x, size: 20),
                         onPressed: () => Navigator.pop(ctx),
                         color: isDark
                             ? const Color(0xFFA3A3A3)
@@ -258,7 +259,7 @@ class LifeUseSelect<T> extends StatelessWidget {
                                   children: [
                                     Text(
                                       item.label,
-                                      style: GoogleFonts.inter(
+                                      style: AppFonts.inter(
                                         fontSize: 13.5,
                                         fontWeight: isSelected
                                             ? FontWeight.w600
@@ -274,7 +275,7 @@ class LifeUseSelect<T> extends StatelessWidget {
                                       const SizedBox(height: 2),
                                       Text(
                                         item.subtitle!,
-                                        style: GoogleFonts.inter(
+                                        style: AppFonts.inter(
                                           fontSize: 11.5,
                                           color: isDark
                                               ? Colors.grey
@@ -287,7 +288,7 @@ class LifeUseSelect<T> extends StatelessWidget {
                               ),
                               if (isSelected)
                                 const Icon(
-                                  Icons.check_rounded,
+                                  LucideIcons.check,
                                   size: 18,
                                   color: AppColors.primary,
                                 ),

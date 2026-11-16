@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 
 /// Semantic Badge Variant for LifeUse platform:
 /// active, pending, invited, suspended, terminated, cyan, defaultVariant
@@ -52,7 +52,7 @@ class LifeUseBadge extends StatelessWidget {
           ],
           Text(
             text,
-            style: GoogleFonts.inter(
+            style: AppFonts.inter(
               fontSize: 11.5,
               fontWeight: FontWeight.w600,
               color: config.textColor,

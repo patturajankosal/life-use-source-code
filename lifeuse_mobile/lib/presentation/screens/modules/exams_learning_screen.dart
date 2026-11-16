@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
 class _CourseItem {
@@ -44,52 +44,9 @@ class ExamsLearningScreen extends StatefulWidget {
 }
 
 class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
-  final List<_CourseItem> _courses = const [
-    _CourseItem(
-      id: 'c_1',
-      title: 'AWS Certified Solutions Architect (SAA-C03)',
-      platform: 'Cloud Certification',
-      progress: 0.75,
-      targetExamDate: 'Nov 04, 2026',
-      daysLeft: 18,
-    ),
-    _CourseItem(
-      id: 'c_2',
-      title: 'Advanced Flutter Architecture & Clean Code',
-      platform: 'Mobile Engineering',
-      progress: 0.90,
-      targetExamDate: 'Oct 28, 2026',
-      daysLeft: 11,
-    ),
-    _CourseItem(
-      id: 'c_3',
-      title: 'Distributed System Design & High Scale',
-      platform: 'Backend Systems',
-      progress: 0.45,
-      targetExamDate: 'Dec 15, 2026',
-      daysLeft: 59,
-    ),
-  ];
-
+  final List<_CourseItem> _courses = [];
   int _currentCardIdx = 0;
-  final List<_Flashcard> _flashcards = [
-    _Flashcard(
-      question:
-          'What is the primary difference between SQS Standard and SQS FIFO?',
-      answer:
-          'SQS FIFO guarantees exactly-once processing and strict first-in-first-out delivery ordering.',
-    ),
-    _Flashcard(
-      question: 'In Flutter, what is the role of InheritedWidget?',
-      answer:
-          'It enables efficient data propagation down the widget tree, allowing descendants to subscribe to changes without rebuilding intermediate widgets.',
-    ),
-    _Flashcard(
-      question: 'Explain CAP Theorem in Distributed Databases.',
-      answer:
-          'A distributed system can guarantee at most two out of Consistency, Availability, and Partition Tolerance.',
-    ),
-  ];
+  final List<_Flashcard> _flashcards = [];
 
   @override
   Widget build(BuildContext context) {
@@ -98,16 +55,18 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
     final borderColor = AppColors.borderOf(context);
     final textPrimary = AppColors.textPrimaryOf(context);
     final textSecondary = AppColors.textSecondaryOf(context);
-    const accentColor = Color(0xFFEC4899);
+    const primaryColor = AppColors.primary;
 
-    final card = _flashcards[_currentCardIdx];
+    final card = _flashcards.isNotEmpty
+        ? _flashcards[_currentCardIdx.clamp(0, _flashcards.length - 1)]
+        : null;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundOf(context),
       appBar: AppBar(
         title: Text(
           'Exams & Learning',
-          style: GoogleFonts.plusJakartaSans(
+          style: AppFonts.plusJakartaSans(
               fontSize: 18, fontWeight: FontWeight.w700),
         ),
       ),
@@ -129,8 +88,8 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                       border: Border.all(color: borderColor),
                       boxShadow: [
                         BoxShadow(
-                          color: accentColor.withValues(
-                              alpha: isDark ? 0.2 : 0.05),
+                          color: Colors.black
+                              .withValues(alpha: isDark ? 0.20 : 0.04),
                           blurRadius: 16,
                           offset: const Offset(0, 4),
                         ),
@@ -144,12 +103,12 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                           children: [
                             Row(
                               children: [
-                                const Icon(LucideIcons.bookOpen,
-                                    color: accentColor, size: 18),
+                                AppIcon(AppIcons.examsLearning,
+                                    color: AppColors.iconOf(context), size: 18),
                                 const SizedBox(width: 8),
                                 Text(
                                   'Daily Revision Flashcard',
-                                  style: GoogleFonts.inter(
+                                  style: AppFonts.inter(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w700,
                                     color: textPrimary,
@@ -176,15 +135,16 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
                               color: card.isFlipped
-                                  ? accentColor.withValues(
-                                      alpha: isDark ? 0.15 : 0.08)
+                                  ? (isDark
+                                      ? const Color(0xFF262626)
+                                      : const Color(0xFFF7F7F8))
                                   : (isDark
-                                      ? Colors.white10
-                                      : Colors.black.withValues(alpha: 0.03)),
+                                      ? const Color(0xFF1E1E1E)
+                                      : const Color(0xFFFAFAFA)),
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
                                 color: card.isFlipped
-                                    ? accentColor.withValues(alpha: 0.3)
+                                    ? AppColors.primary.withValues(alpha: 0.3)
                                     : borderColor,
                               ),
                             ),
@@ -195,11 +155,11 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                                   card.isFlipped
                                       ? 'ANSWER'
                                       : 'QUESTION (Tap to flip)',
-                                  style: GoogleFonts.inter(
+                                  style: AppFonts.inter(
                                     fontSize: 10.5,
                                     fontWeight: FontWeight.w700,
                                     color: card.isFlipped
-                                        ? accentColor
+                                        ? primaryColor
                                         : textSecondary,
                                     letterSpacing: 0.5,
                                   ),
@@ -207,7 +167,7 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                                 const SizedBox(height: 8),
                                 Text(
                                   card.isFlipped ? card.answer : card.question,
-                                  style: GoogleFonts.inter(
+                                  style: AppFonts.inter(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w600,
                                     height: 1.45,
@@ -225,7 +185,7 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             TextButton.icon(
-                              icon: const Icon(LucideIcons.refreshCw, size: 14),
+                              icon: const AppIcon(AppIcons.refresh, size: 14),
                               label: Text(card.isFlipped
                                   ? 'Show Question'
                                   : 'Reveal Answer'),
@@ -236,11 +196,11 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                             ),
                             ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: accentColor,
+                                backgroundColor: primaryColor,
                                 foregroundColor: Colors.white,
                               ),
-                              icon:
-                                  const Icon(LucideIcons.arrowRight, size: 14),
+                              icon: const AppIcon(AppIcons.arrowRight,
+                                  size: 14, color: Colors.white),
                               label: const Text('Next Card'),
                               onPressed: () {
                                 setState(() {
@@ -260,7 +220,7 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                   // 2. Courses & Exam Countdowns
                   Text(
                     'Active Study Plans & Exam Countdowns',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: textPrimary),
@@ -290,7 +250,7 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                                 Expanded(
                                   child: Text(
                                     c.title,
-                                    style: GoogleFonts.inter(
+                                    style: AppFonts.inter(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w700,
                                       color: textPrimary,
@@ -301,15 +261,15 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: accentColor.withValues(alpha: 0.12),
+                                    color: primaryColor.withValues(alpha: 0.12),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
                                     '${c.daysLeft}d LEFT',
-                                    style: GoogleFonts.inter(
+                                    style: AppFonts.inter(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w800,
-                                      color: accentColor,
+                                      color: primaryColor,
                                     ),
                                   ),
                                 ),
@@ -318,7 +278,7 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                             const SizedBox(height: 4),
                             Text(
                               '${c.platform} • Target: ${c.targetExamDate}',
-                              style: GoogleFonts.inter(
+                              style: AppFonts.inter(
                                   fontSize: 12, color: textSecondary),
                             ),
                             const SizedBox(height: 12),
@@ -335,17 +295,17 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                                       backgroundColor: borderColor,
                                       valueColor:
                                           const AlwaysStoppedAnimation<Color>(
-                                              accentColor),
+                                              primaryColor),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(width: 12),
                                 Text(
                                   '${(c.progress * 100).toInt()}%',
-                                  style: GoogleFonts.inter(
+                                  style: AppFonts.inter(
                                     fontSize: 12.5,
                                     fontWeight: FontWeight.w700,
-                                    color: accentColor,
+                                    color: primaryColor,
                                   ),
                                 ),
                               ],
