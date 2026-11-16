@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/widgets/lifeuse_floating_navigation.dart';
 import '../screens/activity/activity_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
@@ -35,7 +35,8 @@ class MainNavigationShell extends StatefulWidget {
   }
 
   /// Static helper to open full Money Manager micro-app with back navigation
-  static void openMoneyManager(BuildContext context, {int initialTabIndex = 0}) {
+  static void openMoneyManager(BuildContext context,
+      {int initialTabIndex = 0}) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => MoneyManagerScreen(initialTabIndex: initialTabIndex),
@@ -97,24 +98,29 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
           items: [
             const LifeUseNavigationItemData(
               label: 'Home',
-              icon: LucideIcons.home,
+              icon: AppIcons.homeOutline,
+              activeIcon: AppIcons.homeFilled,
             ),
             const LifeUseNavigationItemData(
               label: 'Modules',
-              icon: LucideIcons.layoutGrid,
+              icon: AppIcons.modulesOutline,
+              activeIcon: AppIcons.modulesFilled,
             ),
             const LifeUseNavigationItemData(
               label: 'Activity',
-              icon: LucideIcons.activity,
+              icon: AppIcons.activityOutline,
+              activeIcon: AppIcons.activityFilled,
             ),
             LifeUseNavigationItemData(
               label: 'Alerts',
-              icon: LucideIcons.bell,
+              icon: AppIcons.alertsOutline,
+              activeIcon: AppIcons.alertsFilled,
               showDot: hasUnreadAlerts,
             ),
             const LifeUseNavigationItemData(
               label: 'Profile',
-              icon: LucideIcons.user,
+              icon: AppIcons.profileOutline,
+              activeIcon: AppIcons.profileFilled,
             ),
           ],
         ),

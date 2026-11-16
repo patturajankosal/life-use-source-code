@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
+import 'icons/lifeuse_icon.dart';
 
 /// Data descriptor for each item in the LifeUse Floating Capsule Navigation.
 class LifeUseNavigationItemData {
@@ -137,15 +138,19 @@ class LifeUseNavigationItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              LifeUseFloatingNavIcon(
-                icon: (isSelected && item.activeIcon != null)
-                    ? item.activeIcon!
-                    : item.icon,
-                isSelected: isSelected,
-                activeColor: activeColor,
-                inactiveColor: inactiveColor,
-                showDot: item.showDot,
-                size: 22,
+              SizedBox(
+                height: 36,
+                child: Center(
+                  child: LifeUseFloatingNavIcon(
+                    icon: item.icon,
+                    activeIcon: item.activeIcon,
+                    isSelected: isSelected,
+                    activeColor: activeColor,
+                    inactiveColor: inactiveColor,
+                    showDot: item.showDot,
+                    size: 19,
+                  ),
+                ),
               ),
               const SizedBox(height: 2),
               Text(
@@ -153,7 +158,7 @@ class LifeUseNavigationItem extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.plusJakartaSans(
-                  fontSize: 11,
+                  fontSize: 10.5,
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                   color: isSelected ? activeColor : inactiveColor,
                   letterSpacing: isSelected ? 0.2 : 0.0,
@@ -167,7 +172,7 @@ class LifeUseNavigationItem extends StatelessWidget {
   }
 }
 
-/// The animated pill indicator wrapping the selected item inside the capsule.
+/// The animated indicator wrapping the selected item inside the capsule.
 class LifeUseSelectedIndicator extends StatelessWidget {
   final bool isSelected;
   final Widget child;
@@ -180,36 +185,23 @@ class LifeUseSelectedIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    // Active pill background: Tonal purple from Amethyst Light & OLED True Black tokens
-    final activeBg = isDark
-        ? const Color(0xFF2A1838)
-        : const Color(0xFFF5ECFA);
-    final activeBorder = isDark
-        ? const Color(0xFF3D2550)
-        : const Color(0xFFEBE3F0);
-
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeOutCubic,
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: isSelected ? activeBg : Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isSelected ? activeBorder : Colors.transparent,
-          width: 1,
-        ),
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(18),
       ),
       child: child,
     );
   }
 }
 
-/// Floating navigation icon with smooth scale transitions and reactive notification badge.
+/// Floating navigation icon with Soft 3D active pod and smooth scale transitions.
 class LifeUseFloatingNavIcon extends StatelessWidget {
   final IconData icon;
+  final IconData? activeIcon;
   final bool isSelected;
   final Color activeColor;
   final Color inactiveColor;
@@ -222,45 +214,27 @@ class LifeUseFloatingNavIcon extends StatelessWidget {
     required this.isSelected,
     required this.activeColor,
     required this.inactiveColor,
+    this.activeIcon,
     this.showDot = false,
-    this.size = 22,
+    this.size = 19,
   });
 
   @override
   Widget build(BuildContext context) {
-    final color = isSelected ? activeColor : inactiveColor;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return AnimatedScale(
-      scale: isSelected ? 1.06 : 1.0,
-      duration: const Duration(milliseconds: 180),
+      scale: isSelected ? 1.05 : 1.0,
+      duration: const Duration(milliseconds: 200),
       curve: Curves.easeOutCubic,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Icon(
-            icon,
-            size: size,
-            color: color,
-          ),
-          if (showDot)
-            Positioned(
-              top: -1,
-              right: -3,
-              child: Container(
-                width: 7.5,
-                height: 7.5,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEF4444),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: isDark ? const Color(0xFF111827) : Colors.white,
-                    width: 1.2,
-                  ),
-                ),
-              ),
-            ),
-        ],
+      child: LifeUseIcon.nav(
+        icon,
+        activeIcon: activeIcon,
+        isSelected: isSelected,
+        activeColor: activeColor,
+        inactiveColor: inactiveColor,
+        size: size,
+        containerSize: 36,
+        radius: 12,
+        showDot: showDot,
       ),
     );
   }

@@ -55,15 +55,17 @@ class ModuleCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    LifeUseDashboardIcon(
-                      icon: module.icon,
+                    LifeUseIcon.duotone(
+                      module.icon,
                       accentColor: module.accentColor,
-                      size: 21,
-                      containerSize: 42,
-                      radius: 12,
+                      customSize: 21,
+                      customContainerSize: 42,
+                      customRadius: 12,
+                      semanticLabel: module.title,
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 7, vertical: 3),
                       decoration: BoxDecoration(
                         color: AppColors.badgeBgOf(context),
                         borderRadius: BorderRadius.circular(6),
@@ -122,6 +124,9 @@ class ModuleCard extends StatelessWidget {
           ),
         ),
       ),
-    ).animate().fadeIn(duration: 250.ms).slideY(begin: 0.04, end: 0, duration: 250.ms);
+    )
+        .animate()
+        .fadeIn(duration: 250.ms)
+        .slideY(begin: 0.04, end: 0, duration: 250.ms);
   }
 }

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../theme/app_colors.dart';
+import 'lifeuse_icon.dart';
+
+export 'lifeuse_icon.dart';
 
 /// Reusable Icon-First Component Suite for LifeUse Mobile.
 /// Implements the approved dual-tier iconography system:
@@ -31,65 +34,15 @@ class LifeUseDashboardIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    final containerBg = isDark
-        ? const Color(0xFF2A1838)
-        : AppColors.softLavender;
-    final containerBorder = isDark
-        ? const Color(0xFF3D2550)
-        : const Color(0xFFEBE3F0);
-
-    Widget iconWidget = Container(
-      width: containerSize,
-      height: containerSize,
-      decoration: BoxDecoration(
-        color: containerBg,
-        borderRadius: BorderRadius.circular(radius),
-        border: Border.all(
-          color: containerBorder,
-          width: 1.2,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Center(
-        child: Icon(
-          icon,
-          size: size,
-          color: accentColor,
-        ),
-      ),
+    return LifeUseIcon.duotone(
+      icon,
+      accentColor: accentColor,
+      customSize: size,
+      customContainerSize: containerSize,
+      customRadius: radius,
+      badge: badge,
+      onTap: onTap,
     );
-
-    if (badge != null) {
-      iconWidget = Stack(
-        clipBehavior: Clip.none,
-        children: [
-          iconWidget,
-          Positioned(
-            top: -3,
-            right: -3,
-            child: badge!,
-          ),
-        ],
-      );
-    }
-
-    if (onTap != null) {
-      return InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(radius),
-        child: iconWidget,
-      );
-    }
-
-    return iconWidget;
   }
 }
 
@@ -177,7 +130,8 @@ class LifeUseActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final btnBg = isDark ? const Color(0xFF2A1838) : AppColors.softLavender;
-    final btnBorder = isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0);
+    final btnBorder =
+        isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0);
 
     return InkWell(
       onTap: onTap,
@@ -234,8 +188,10 @@ class LifeUseFlowIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final color = isIncome ? AppColors.financialPositive : AppColors.financialNegative;
-    final icon = isIncome ? LucideIcons.arrowDownLeft : LucideIcons.arrowUpRight;
+    final color =
+        isIncome ? AppColors.financialPositive : AppColors.financialNegative;
+    final icon =
+        isIncome ? LucideIcons.arrowDownLeft : LucideIcons.arrowUpRight;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -291,7 +247,8 @@ class LifeUsePersonaEmblem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final ringColor = isAuthenticated ? AppColors.primary : const Color(0xFF64748B);
+    final ringColor =
+        isAuthenticated ? AppColors.primary : const Color(0xFF64748B);
 
     final avatar = Container(
       width: size,

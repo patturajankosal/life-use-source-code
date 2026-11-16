@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_icons.dart';
 import '../../../core/theme/theme_provider.dart';
 import '../../../core/widgets/auth_guard_dialog.dart';
 import '../../../core/widgets/icons/lifeuse_icons.dart';
@@ -16,6 +17,8 @@ import '../../state/notification_provider.dart';
 import '../modules/bills_payments_screen.dart';
 import '../money/dialogs/add_transaction_dialog.dart';
 import 'models/dashboard_module_item.dart';
+import 'widgets/animated_hero_banner.dart';
+import 'widgets/bento_life_overview.dart';
 import 'widgets/module_card.dart';
 
 /// Premium White & Purple Mobile Application Home Dashboard for LifeUse.
@@ -127,108 +130,228 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 physics: const AlwaysScrollableScrollPhysics(
                   parent: BouncingScrollPhysics(),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // --- 1. Ambient White & Purple Header ---
-                    _buildHeader(
-                      context: context,
-                      user: user,
-                      dateStr: dateStr,
-                      textPrimary: textPrimary,
-                      textSecondary: textSecondary,
-                      surfaceColor: surfaceColor,
-                      borderColor: borderColor,
-                      isDark: isDark,
+                    // =========================================================
+                    // LAYER 1: LIGHT TOP HEADER (Amethyst Pastel Wash)
+                    // =========================================================
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(18, 16, 18, 20),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: isDark
+                              ? [
+                                  const Color(0xFF160E21),
+                                  const Color(0xFF110B1A)
+                                ]
+                              : [
+                                  const Color(0xFFFAF7FD),
+                                  const Color(0xFFF3EEF8)
+                                ],
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildHeader(
+                            context: context,
+                            user: user,
+                            dateStr: dateStr,
+                            textPrimary: textPrimary,
+                            textSecondary: textSecondary,
+                            surfaceColor: surfaceColor,
+                            borderColor: borderColor,
+                            isDark: isDark,
+                          ),
+                          const SizedBox(height: 14),
+                          _buildSearchBar(
+                            context: context,
+                            surfaceColor: surfaceColor,
+                            borderColor: borderColor,
+                            textPrimary: textPrimary,
+                            textSecondary: textSecondary,
+                            isDark: isDark,
+                          ),
+                          const SizedBox(height: 16),
+                          AnimatedHeroBanner(
+                            isDark: isDark,
+                            onMoneyManagerTap: () =>
+                                MainNavigationShell.openMoneyManager(context),
+                            dailyPaceLabel: (auth.isAuthenticated &&
+                                    money.dailyLimit != null &&
+                                    !_hideBalances)
+                                ? '₹${NumberFormat('#,##,###').format(money.dailyLimit!.remainingTodayAllowance)} left today'
+                                : '₹1,200/day safe',
+                            financialSubtext: (auth.isAuthenticated &&
+                                    !_hideBalances)
+                                ? 'Monthly outflow: ${NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 0).format(money.summary.totalExpenses)} (${money.summary.transactionCount} transactions)'
+                                : null,
+                          ),
+                        ],
+                      ),
                     ),
 
-                    const SizedBox(height: 16),
-
-                    // --- 2. Google-Inspired Quick Search Bar ---
-                    _buildSearchBar(
-                      context: context,
-                      surfaceColor: surfaceColor,
-                      borderColor: borderColor,
-                      textPrimary: textPrimary,
-                      textSecondary: textSecondary,
-                      isDark: isDark,
+                    // =========================================================
+                    // LAYER 2: DARK CONTRAST ACTION SECTION (Midnight Amethyst)
+                    // =========================================================
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(18, 22, 18, 44),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF1B1326),
+                        gradient: RadialGradient(
+                          center: Alignment(0, -0.6),
+                          radius: 1.2,
+                          colors: [
+                            Color(0xFF351C52),
+                            Color(0xFF1B1326),
+                          ],
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'DIRECT CONTROLS',
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.8,
+                                  color: const Color(0xFFD4B2FC),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () =>
+                                    MainNavigationShell.openMoneyManager(
+                                        context),
+                                child: Text(
+                                  'Manage',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: const Color(0xFFB399D4),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 14),
+                          _buildQuickActionRow(context),
+                        ],
+                      ),
                     ),
 
-                    const SizedBox(height: 18),
+                    // =========================================================
+                    // LAYER 3: LOWER FLOATING WHITE CONTENT SHEET (-22px overlap)
+                    // =========================================================
+                    Transform.translate(
+                      offset: const Offset(0, -22),
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(18, 14, 18, 24),
+                        decoration: BoxDecoration(
+                          color: surfaceColor,
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(28)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black
+                                  .withValues(alpha: isDark ? 0.40 : 0.08),
+                              blurRadius: 24,
+                              offset: const Offset(0, -6),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Pill Grab Handle
+                            Center(
+                              child: Container(
+                                width: 36,
+                                height: 4,
+                                margin: const EdgeInsets.only(bottom: 18),
+                                decoration: BoxDecoration(
+                                  color: isDark
+                                      ? const Color(0xFF2E223D)
+                                      : const Color(0xFFE2E8F0),
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                              ),
+                            ),
 
-                    // --- 3. The "Life Horizon" Hero Financial Card (White + Purple) ---
-                    _buildHeroOverviewCard(
-                      context: context,
-                      auth: auth,
-                      money: money,
-                      surfaceColor: surfaceColor,
-                      borderColor: borderColor,
-                      textPrimary: textPrimary,
-                      textSecondary: textSecondary,
-                      isDark: isDark,
-                    ),
+                            // 1. Live Recent Activity (Real Transactions Timeline)
+                            _buildRecentActivitySection(
+                              context: context,
+                              money: money,
+                              isAuthenticated: auth.isAuthenticated,
+                              textPrimary: textPrimary,
+                              textSecondary: textSecondary,
+                              surfaceColor: surfaceColor,
+                              borderColor: borderColor,
+                              isDark: isDark,
+                            ),
 
-                    const SizedBox(height: 22),
+                            const SizedBox(height: 20),
 
-                    // --- 4. Google Pay Signature Action Carousel (Consistent Purple) ---
-                    _buildQuickActionRow(context),
+                            // 2. Google Gemini Ambient Life Intelligence Capsule
+                            _buildSmartInsightsCard(
+                              context: context,
+                              money: money,
+                              surfaceColor: surfaceColor,
+                              borderColor: borderColor,
+                              textPrimary: textPrimary,
+                              textSecondary: textSecondary,
+                              isDark: isDark,
+                            ),
 
-                    const SizedBox(height: 22),
+                            const SizedBox(height: 22),
 
-                    // --- 5. Google Gemini Ambient Life Intelligence Capsule ---
-                    _buildSmartInsightsCard(
-                      context: context,
-                      money: money,
-                      surfaceColor: surfaceColor,
-                      borderColor: borderColor,
-                      textPrimary: textPrimary,
-                      textSecondary: textSecondary,
-                      isDark: isDark,
-                    ),
+                            // 3. 2026 Modern Bento Life Overview (Health, Bills, Home, Habits)
+                            BentoLifeOverview(
+                              isDark: isDark,
+                              surfaceColor: surfaceColor,
+                              borderColor: borderColor,
+                              textPrimary: textPrimary,
+                              textSecondary: textSecondary,
+                            ),
 
-                    const SizedBox(height: 24),
+                            const SizedBox(height: 24),
 
-                    // --- 6. Contextual Life Modules Hub (PhonePe Categorization) ---
-                    _buildModulesHubSection(
-                      context: context,
-                      allModules: allModules,
-                      filteredModules: filteredModules,
-                      textPrimary: textPrimary,
-                      textSecondary: textSecondary,
-                      surfaceColor: surfaceColor,
-                      borderColor: borderColor,
-                      isDark: isDark,
-                    ),
+                            // 4. Contextual Life Modules Hub (PhonePe Categorization)
+                            _buildModulesHubSection(
+                              context: context,
+                              allModules: allModules,
+                              filteredModules: filteredModules,
+                              textPrimary: textPrimary,
+                              textSecondary: textSecondary,
+                              surfaceColor: surfaceColor,
+                              borderColor: borderColor,
+                              isDark: isDark,
+                            ),
 
-                    const SizedBox(height: 24),
+                            const SizedBox(height: 22),
 
-                    // --- 7. Live Recent Activity (Real Transactions) ---
-                    _buildRecentActivitySection(
-                      context: context,
-                      money: money,
-                      isAuthenticated: auth.isAuthenticated,
-                      textPrimary: textPrimary,
-                      textSecondary: textSecondary,
-                      surfaceColor: surfaceColor,
-                      borderColor: borderColor,
-                      isDark: isDark,
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // --- 8. Today's Rhythm & Priorities Checklist ---
-                    _buildTasksPreview(
-                      context: context,
-                      textPrimary: textPrimary,
-                      textSecondary: textSecondary,
-                      surfaceColor: surfaceColor,
-                      borderColor: borderColor,
-                      isDark: isDark,
+                            // 5. Today's Rhythm & Priorities Checklist
+                            _buildTasksPreview(
+                              context: context,
+                              textPrimary: textPrimary,
+                              textSecondary: textSecondary,
+                              surfaceColor: surfaceColor,
+                              borderColor: borderColor,
+                              isDark: isDark,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
 
                     // Bottom spacing allowing comfortable scrolling above floating navigation bar
-                    const SizedBox(height: 100),
+                    const SizedBox(height: 80),
                   ],
                 ),
               ).animate().fadeIn(duration: 250.ms),
@@ -311,7 +434,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     if (!isAuthenticated) ...[
                       const SizedBox(width: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 1.5),
                         decoration: BoxDecoration(
                           color: AppColors.badgeBgOf(context),
                           borderRadius: BorderRadius.circular(6),
@@ -447,348 +571,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 )
               : null,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        ),
-      ),
-    );
-  }
-
-  // --- 3. The "Life Horizon" Hero Financial Card (White + Purple) ---
-  Widget _buildHeroOverviewCard({
-    required BuildContext context,
-    required AuthProvider auth,
-    required MoneyProvider money,
-    required Color surfaceColor,
-    required Color borderColor,
-    required Color textPrimary,
-    required Color textSecondary,
-    required bool isDark,
-  }) {
-    final currencyFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 0);
-    final isAuthenticated = auth.isAuthenticated;
-
-    final double totalExpenses = money.summary.totalExpenses;
-    final double totalIncome = money.summary.totalIncome;
-    final double netSavings = money.summary.netCashFlow;
-    final dailyLimit = money.dailyLimit;
-
-    // Display strings honoring privacy mode
-    final displayExpense = _hideBalances ? '₹••••••' : currencyFormat.format(totalExpenses);
-    final displayIncome = _hideBalances ? '₹••••' : currencyFormat.format(totalIncome);
-    final displaySavings = _hideBalances ? '₹••••' : currencyFormat.format(netSavings);
-
-    return InkWell(
-      onTap: () => MainNavigationShell.openMoneyManager(context),
-      borderRadius: BorderRadius.circular(22),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: surfaceColor,
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(
-            color: isDark ? const Color(0xFF2A2233) : borderColor,
-            width: 1.2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withValues(alpha: isDark ? 0.08 : 0.03),
-              blurRadius: 18,
-              offset: const Offset(0, 6),
-            ),
-            BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.30 : 0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Top Indicator Row: Distinctive Dashboard Grid Symbol + Status Label
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    // Distinctive dashboard grid icon in Soft Lavender container
-                    const LifeUseDashboardIcon(
-                      icon: LucideIcons.layoutDashboard,
-                      accentColor: AppColors.primary,
-                      size: 18,
-                      containerSize: 34,
-                      radius: 10,
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'FINANCIAL & LIFE OVERVIEW',
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.8,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text(
-                      'Money Manager',
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    const Icon(
-                      LucideIcons.chevronRight,
-                      size: 14,
-                      color: AppColors.primary,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 18),
-
-            // Big Metric Display
-            if (isAuthenticated) ...[
-              Text(
-                'Monthly Expenses Outflow',
-                style: GoogleFonts.inter(
-                  fontSize: 12.5,
-                  color: textSecondary,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 5),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(
-                    displayExpense,
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w800,
-                      color: textPrimary,
-                      letterSpacing: -0.8,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    '(${money.summary.transactionCount} transactions)',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      color: textSecondary,
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-
-              // Inflow vs Net Savings Row (White & Purple styling)
-              Row(
-                children: [
-                  // Income Inflow
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
-                      decoration: BoxDecoration(
-                        color: isDark
-                            ? const Color(0xFF2A1838)
-                            : AppColors.softLavender,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: isDark
-                              ? const Color(0xFF3D2550)
-                              : const Color(0xFFEBE3F0),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(LucideIcons.arrowDownLeft, size: 13, color: AppColors.primary),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Total Inflow',
-                                style: GoogleFonts.inter(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: textSecondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            displayIncome,
-                            style: GoogleFonts.inter(
-                              fontSize: 14.5,
-                              fontWeight: FontWeight.w700,
-                              color: textPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  // Net Savings
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
-                      decoration: BoxDecoration(
-                        color: isDark
-                            ? const Color(0xFF2A1838)
-                            : AppColors.softLavender,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: isDark
-                              ? const Color(0xFF3D2550)
-                              : const Color(0xFFEBE3F0),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(LucideIcons.trendingUp, size: 13, color: AppColors.primary),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Net Cash Flow',
-                                style: GoogleFonts.inter(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: textSecondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            displaySavings,
-                            style: GoogleFonts.inter(
-                              fontSize: 14.5,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              if (dailyLimit != null && dailyLimit.recommendedDailyLimit > 0) ...[
-                const SizedBox(height: 14),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: LinearProgressIndicator(
-                    value: (dailyLimit.spentToday / dailyLimit.recommendedDailyLimit).clamp(0.0, 1.0),
-                    backgroundColor: isDark ? const Color(0xFF2A1838) : const Color(0xFFEBE3F0),
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      (dailyLimit.spentToday > dailyLimit.recommendedDailyLimit)
-                          ? AppColors.error
-                          : AppColors.primary,
-                    ),
-                    minHeight: 5,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      _hideBalances
-                          ? 'Daily Pace: Allowance protected'
-                          : 'Daily Pace: ${currencyFormat.format(dailyLimit.remainingTodayAllowance)} left today',
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        color: textSecondary,
-                      ),
-                    ),
-                    Text(
-                      (dailyLimit.spentToday > dailyLimit.recommendedDailyLimit)
-                          ? 'Over Pace'
-                          : 'Spending Safe',
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        color: (dailyLimit.spentToday > dailyLimit.recommendedDailyLimit)
-                            ? AppColors.error
-                            : AppColors.primary,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ] else ...[
-              // Guest Mode Preview
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(
-                    '₹0.00',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w800,
-                      color: textPrimary,
-                      letterSpacing: -0.6,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    '• Offline Guest Access',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      color: textSecondary,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Live Spring Boot backend active. Sign in to synchronize financial profiles, bank transactions, and active budget plans across all devices.',
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  color: textSecondary,
-                  height: 1.35,
-                ),
-              ),
-              const SizedBox(height: 14),
-              OutlinedButton.icon(
-                onPressed: () {
-                  AuthGuardDialog.protect(
-                    context,
-                    title: 'Sign In to Sync Finances',
-                    message:
-                        'Access all financial tools, live budgets, and cloud records on your personal account.',
-                    onAuthenticated: () {},
-                  );
-                },
-                icon: const Icon(LucideIcons.logIn, size: 16),
-                label: const Text('Sign In to Unlock Cloud Sync'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.primary,
-                  side: const BorderSide(color: AppColors.primary),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                ),
-              ),
-            ],
-          ],
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         ),
       ),
     );
@@ -805,7 +589,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _buildActionPill(
             context: context,
             label: 'Record',
-            icon: LucideIcons.plusCircle,
+            icon: AppIcons.addExpense,
+            accentColor: AppColors.primary,
             onTap: () {
               AuthGuardDialog.protect(
                 context,
@@ -827,7 +612,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _buildActionPill(
             context: context,
             label: 'Money Manager',
-            icon: LucideIcons.wallet,
+            icon: AppIcons.moneyManager,
+            accentColor: const Color(0xFF059669),
             onTap: () => MainNavigationShell.openMoneyManager(context),
           ),
           const SizedBox(width: 14),
@@ -836,7 +622,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _buildActionPill(
             context: context,
             label: 'Add Task',
-            icon: LucideIcons.checkSquare,
+            icon: AppIcons.dailyTasks,
+            accentColor: const Color(0xFF2563EB),
             onTap: () => MainNavigationShell.switchTab(context, 2),
           ),
           const SizedBox(width: 14),
@@ -845,7 +632,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _buildActionPill(
             context: context,
             label: 'Set Alert',
-            icon: LucideIcons.bellPlus,
+            icon: AppIcons.remindersAlerts,
+            accentColor: const Color(0xFFD97706),
             onTap: () => MainNavigationShell.switchTab(context, 3),
           ),
           const SizedBox(width: 14),
@@ -854,7 +642,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _buildActionPill(
             context: context,
             label: 'Pay Bills',
-            icon: LucideIcons.receipt,
+            icon: AppIcons.billsPayments,
+            accentColor: const Color(0xFFE11D48),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const BillsPaymentsScreen()),
@@ -871,10 +660,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     required String label,
     required IconData icon,
     required VoidCallback onTap,
+    Color? accentColor,
   }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final containerBg = isDark ? const Color(0xFF2A1838) : AppColors.softLavender;
-    final containerBorder = isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0);
+    final accent = accentColor ?? AppColors.primary;
 
     return InkWell(
       onTap: onTap,
@@ -885,25 +673,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 52,
-              height: 52,
               decoration: BoxDecoration(
-                color: containerBg,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: containerBorder,
-                  width: 1.2,
-                ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.03),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+                    color: accent.withValues(alpha: 0.28),
+                    blurRadius: 12,
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
-              child: Center(
-                child: Icon(icon, size: 22, color: AppColors.primary),
+              child: LifeUseIcon.duotone(
+                icon,
+                accentColor: accent,
+                customSize: 22,
+                customContainerSize: 52,
+                customRadius: 16,
+                semanticLabel: label,
               ),
             ),
             const SizedBox(height: 7),
@@ -912,7 +698,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 11.5,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimaryOf(context),
+                color: const Color(0xFFE6DEF0),
                 letterSpacing: -0.1,
               ),
             ),
@@ -955,7 +741,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       insightMessage =
           'Spending in certain categories is exceeding safe threshold pacing.';
       actionText = 'Review Plan';
-      onAction = () => MainNavigationShell.openMoneyManager(context, initialTabIndex: 2);
+      onAction = () =>
+          MainNavigationShell.openMoneyManager(context, initialTabIndex: 2);
     } else {
       insightIcon = LucideIcons.sparkles;
       insightTitle = 'Pace & Wellness On Track';
@@ -966,7 +753,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     final cardBg = isDark ? const Color(0xFF2A1838) : AppColors.softLavender;
-    final cardBorder = isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0);
+    final cardBorder =
+        isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -987,7 +775,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               color: isDark ? const Color(0xFF181220) : Colors.white,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0),
+                color:
+                    isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0),
                 width: 1,
               ),
             ),
@@ -1086,7 +875,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 color: AppColors.badgeBgOf(context),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0),
+                  color: isDark
+                      ? const Color(0xFF3D2550)
+                      : const Color(0xFFEBE3F0),
                 ),
               ),
               child: Text(
@@ -1131,7 +922,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             if (filteredModules.isEmpty) {
               return Container(
-                padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: surfaceColor,
@@ -1199,7 +991,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           style: GoogleFonts.inter(
             fontSize: 11.5,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-            color: isSelected ? Colors.white : AppColors.textSecondaryOf(context),
+            color:
+                isSelected ? Colors.white : AppColors.textSecondaryOf(context),
           ),
         ),
       ),
@@ -1217,7 +1010,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     required Color borderColor,
     required bool isDark,
   }) {
-    final currencyFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
+    final currencyFormat =
+        NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
     final transactions = money.transactions.take(3).toList();
 
     return Container(
@@ -1245,18 +1039,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               Row(
                 children: [
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF2A1838) : AppColors.softLavender,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      LucideIcons.receipt,
-                      size: 16,
-                      color: AppColors.primary,
-                    ),
+                  LifeUseIcon.duotone(
+                    AppIcons.salarySlip,
+                    accentColor: AppColors.primary,
+                    customSize: 16,
+                    customContainerSize: 32,
+                    customRadius: 9,
                   ),
                   const SizedBox(width: 10),
                   Text(
@@ -1270,7 +1058,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ],
               ),
               TextButton(
-                onPressed: () => MainNavigationShell.openMoneyManager(context, initialTabIndex: 1),
+                onPressed: () => MainNavigationShell.openMoneyManager(context,
+                    initialTabIndex: 1),
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                   minimumSize: Size.zero,
@@ -1287,9 +1076,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ],
           ),
-
           const SizedBox(height: 12),
-
           if (isAuthenticated && transactions.isNotEmpty) ...[
             ...transactions.map((tx) {
               final isIncome = tx.isIncome;
@@ -1303,26 +1090,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: InkWell(
-                  onTap: () => MainNavigationShell.openMoneyManager(context, initialTabIndex: 1),
+                  onTap: () => MainNavigationShell.openMoneyManager(context,
+                      initialTabIndex: 1),
                   borderRadius: BorderRadius.circular(10),
                   child: Row(
                     children: [
-                      Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF2A1838) : AppColors.softLavender,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0),
-                            width: 0.8,
-                          ),
-                        ),
-                        child: Icon(
-                          isIncome ? LucideIcons.arrowDownLeft : LucideIcons.arrowUpRight,
-                          size: 16,
-                          color: AppColors.primary,
-                        ),
+                      LifeUseIcon.duotone(
+                        isIncome ? AppIcons.incomeFlow : AppIcons.expenseFlow,
+                        accentColor: isIncome
+                            ? const Color(0xFF10B981)
+                            : AppColors.primary,
+                        customSize: 16,
+                        customContainerSize: 36,
+                        customRadius: 10,
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -1354,7 +1134,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         style: GoogleFonts.inter(
                           fontSize: 13.5,
                           fontWeight: FontWeight.w700,
-                          color: isIncome ? AppColors.financialPositive : textPrimary,
+                          color: isIncome
+                              ? AppColors.financialPositive
+                              : textPrimary,
                         ),
                       ),
                     ],
@@ -1368,12 +1150,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Row(
                 children: [
-                  Icon(
-                    LucideIcons.inbox,
-                    size: 20,
-                    color: textSecondary.withValues(alpha: 0.6),
+                  LifeUseIcon.duotone(
+                    AppIcons.documentsVault,
+                    accentColor: AppColors.primary,
+                    customSize: 18,
+                    customContainerSize: 36,
+                    customRadius: 10,
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       isAuthenticated
@@ -1405,7 +1189,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }) {
     final completedCount = _quickTasks.where((t) => t['isDone'] == true).length;
     final totalCount = _quickTasks.length;
-    final progressFraction = totalCount > 0 ? (completedCount / totalCount) : 0.0;
+    final progressFraction =
+        totalCount > 0 ? (completedCount / totalCount) : 0.0;
 
     return Container(
       padding: const EdgeInsets.all(18),
@@ -1432,18 +1217,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               Row(
                 children: [
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF2A1838) : AppColors.softLavender,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      LucideIcons.checkSquare,
-                      size: 16,
-                      color: AppColors.primary,
-                    ),
+                  LifeUseIcon.duotone(
+                    AppIcons.dailyTasks,
+                    accentColor: AppColors.primary,
+                    customSize: 16,
+                    customContainerSize: 32,
+                    customRadius: 9,
                   ),
                   const SizedBox(width: 10),
                   Text(
@@ -1485,8 +1264,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
                     value: progressFraction,
-                    backgroundColor: isDark ? const Color(0xFF2A1838) : const Color(0xFFEBE3F0),
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                    backgroundColor: isDark
+                        ? const Color(0xFF2A1838)
+                        : const Color(0xFFEBE3F0),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(AppColors.primary),
                     minHeight: 4,
                   ),
                 ),
@@ -1533,17 +1315,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                           color: isDone ? textSecondary : textPrimary,
-                          decoration: isDone ? TextDecoration.lineThrough : null,
+                          decoration:
+                              isDone ? TextDecoration.lineThrough : null,
                         ),
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2.5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2.5),
                       decoration: BoxDecoration(
                         color: AppColors.badgeBgOf(context),
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(
-                          color: isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0),
+                          color: isDark
+                              ? const Color(0xFF3D2550)
+                              : const Color(0xFFEBE3F0),
                           width: 0.8,
                         ),
                       ),
