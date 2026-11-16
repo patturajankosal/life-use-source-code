@@ -9,6 +9,8 @@ public interface IPasswordResetService {
 
     void initiateForgotPassword(ForgotPasswordRequest request);
 
+    String verifyForgotPasswordOtp(String identifier, String otpCode);
+
     void resetPassword(ResetPasswordRequest request);
 
     void changePassword(User user, ChangePasswordRequest request);

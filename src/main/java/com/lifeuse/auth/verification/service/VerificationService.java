@@ -80,74 +80,175 @@ public class VerificationService implements IVerificationService {
     @Override
     @Transactional
     public VerificationResponse verifyEmail(EmailVerificationRequest request) {
-        User user = userRepository.findByEmail(request.getEmail().trim().toLowerCase())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "email", request.getEmail()));
+        String email = request.getEmail().trim().toLowerCase();
+        java.util.Optional<User> optionalUser = userRepository.findByEmail(email);
 
-        if (user.isEmailVerified()) {
-            return new VerificationResponse(user.getEmail(), "EMAIL", true, "Email is already verified");
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.isEmailVerified()) {
+                return new VerificationResponse(user.getEmail(), "EMAIL", true, "Email is already verified");
+            }
+
+            OtpVerification otp = otpRepository.findTopByUserAndTypeAndVerifiedFalseOrderByCreatedAtDesc(user, OtpType.EMAIL)
+                    .orElseGet(() -> otpRepository.findTopByIdentifierAndTypeAndVerifiedFalseOrderByCreatedAtDesc(email, OtpType.EMAIL)
+                            .orElseThrow(() -> new BusinessException(com.lifeuse.common.ApiResponse.ErrorCode.RESOURCE_NOT_FOUND, "No active OTP found. Please request a new verification code.")));
+
+            validateOtp(otp, request.getOtpCode());
+
+            String token = java.util.UUID.randomUUID().toString();
+            otp.setVerified(true);
+            otp.setToken(token);
+            otpRepository.save(otp);
+
+            user.setEmailVerified(true);
+            userRepository.save(user);
+
+            return new VerificationResponse(user.getEmail(), "EMAIL", true, "Email verified successfully", token);
         }
 
-        OtpVerification otp = otpRepository.findTopByUserAndTypeAndVerifiedFalseOrderByCreatedAtDesc(user, OtpType.EMAIL)
+        // New User Pre-Registration Flow
+        OtpVerification otp = otpRepository.findTopByIdentifierAndTypeAndVerifiedFalseOrderByCreatedAtDesc(email, OtpType.EMAIL)
                 .orElseThrow(() -> new BusinessException(com.lifeuse.common.ApiResponse.ErrorCode.RESOURCE_NOT_FOUND, "No active OTP found. Please request a new verification code."));
 
         validateOtp(otp, request.getOtpCode());
 
+        String token = java.util.UUID.randomUUID().toString();
         otp.setVerified(true);
+        otp.setToken(token);
         otpRepository.save(otp);
 
-        user.setEmailVerified(true);
-        userRepository.save(user);
-
-        return new VerificationResponse(user.getEmail(), "EMAIL", true, "Email verified successfully");
+        return new VerificationResponse(email, "EMAIL", true, "Email verified successfully", token);
     }
 
     @Override
     @Transactional
     public VerificationResponse verifyPhone(PhoneVerificationRequest request) {
-        User user = userRepository.findByPhoneNumber(request.getPhoneNumber().trim())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "phoneNumber", request.getPhoneNumber()));
+        String phone = request.getPhoneNumber().trim();
+        java.util.Optional<User> optionalUser = userRepository.findByPhoneNumber(phone);
 
-        if (user.isPhoneVerified()) {
-            return new VerificationResponse(user.getPhoneNumber(), "PHONE", true, "Phone number is already verified");
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.isPhoneVerified()) {
+                return new VerificationResponse(user.getPhoneNumber(), "PHONE", true, "Phone number is already verified");
+            }
+
+            OtpVerification otp = otpRepository.findTopByUserAndTypeAndVerifiedFalseOrderByCreatedAtDesc(user, OtpType.PHONE)
+                    .orElseGet(() -> otpRepository.findTopByIdentifierAndTypeAndVerifiedFalseOrderByCreatedAtDesc(phone, OtpType.PHONE)
+                            .orElseThrow(() -> new BusinessException(com.lifeuse.common.ApiResponse.ErrorCode.RESOURCE_NOT_FOUND, "No active OTP found. Please request a new verification code.")));
+
+            validateOtp(otp, request.getOtpCode());
+
+            String token = java.util.UUID.randomUUID().toString();
+            otp.setVerified(true);
+            otp.setToken(token);
+            otpRepository.save(otp);
+
+            user.setPhoneVerified(true);
+            userRepository.save(user);
+
+            return new VerificationResponse(user.getPhoneNumber(), "PHONE", true, "Phone number verified successfully", token);
         }
 
-        OtpVerification otp = otpRepository.findTopByUserAndTypeAndVerifiedFalseOrderByCreatedAtDesc(user, OtpType.PHONE)
+        // New User Pre-Registration Flow
+        OtpVerification otp = otpRepository.findTopByIdentifierAndTypeAndVerifiedFalseOrderByCreatedAtDesc(phone, OtpType.PHONE)
                 .orElseThrow(() -> new BusinessException(com.lifeuse.common.ApiResponse.ErrorCode.RESOURCE_NOT_FOUND, "No active OTP found. Please request a new verification code."));
 
         validateOtp(otp, request.getOtpCode());
 
+        String token = java.util.UUID.randomUUID().toString();
         otp.setVerified(true);
+        otp.setToken(token);
         otpRepository.save(otp);
 
-        user.setPhoneVerified(true);
-        userRepository.save(user);
-
-        return new VerificationResponse(user.getPhoneNumber(), "PHONE", true, "Phone number verified successfully");
+        return new VerificationResponse(phone, "PHONE", true, "Phone number verified successfully", token);
     }
 
     @Override
     @Transactional
     public VerificationResponse resendOtp(ResendOtpRequest request) {
         String identifier = request.getIdentifier().trim();
-        User user;
 
         if (request.getType() == OtpType.EMAIL) {
-            user = userRepository.findByEmail(identifier.toLowerCase())
-                    .orElseThrow(() -> new ResourceNotFoundException("User", "email", identifier));
-            if (user.isEmailVerified()) {
-                throw new BusinessException(com.lifeuse.common.ApiResponse.ErrorCode.BAD_REQUEST, "Email is already verified");
+            String email = identifier.toLowerCase();
+            java.util.Optional<User> optionalUser = userRepository.findByEmail(email);
+
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                if (user.isEmailVerified()) {
+                    throw new BusinessException(com.lifeuse.common.ApiResponse.ErrorCode.BAD_REQUEST, "Email is already verified");
+                }
+                createAndSendEmailOtp(user);
+            } else {
+                // New user registration Step 1 / Resend
+                String code = OtpGenerator.generateOtp();
+                Instant expiresAt = Instant.now().plus(otpExpirationMinutes, ChronoUnit.MINUTES);
+                OtpVerification otp = new OtpVerification(email, code, OtpType.EMAIL, expiresAt);
+                otpRepository.save(otp);
+                emailService.sendVerificationEmail(email, code);
             }
-            createAndSendEmailOtp(user);
         } else {
-            user = userRepository.findByPhoneNumber(identifier)
-                    .orElseThrow(() -> new ResourceNotFoundException("User", "phoneNumber", identifier));
-            if (user.isPhoneVerified()) {
-                throw new BusinessException(com.lifeuse.common.ApiResponse.ErrorCode.BAD_REQUEST, "Phone number is already verified");
+            java.util.Optional<User> optionalUser = userRepository.findByPhoneNumber(identifier);
+
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                if (user.isPhoneVerified()) {
+                    throw new BusinessException(com.lifeuse.common.ApiResponse.ErrorCode.BAD_REQUEST, "Phone number is already verified");
+                }
+                createAndSendPhoneOtp(user);
+            } else {
+                // New user registration Step 1 / Resend
+                String code = OtpGenerator.generateOtp();
+                Instant expiresAt = Instant.now().plus(otpExpirationMinutes, ChronoUnit.MINUTES);
+                OtpVerification otp = new OtpVerification(identifier, code, OtpType.PHONE, expiresAt);
+                otpRepository.save(otp);
+                smsService.sendOtpSms(identifier, code);
             }
-            createAndSendPhoneOtp(user);
         }
 
         return new VerificationResponse(identifier, request.getType().name(), false, "Verification code sent successfully");
+    }
+
+    @Override
+    @Transactional
+    public VerificationResponse sendRegistrationOtp(String identifier, OtpType type) {
+        String trimmedIdentifier = identifier.trim();
+        if (type == OtpType.EMAIL) {
+            String email = trimmedIdentifier.toLowerCase();
+            if (userRepository.existsByEmail(email)) {
+                throw new com.lifeuse.common.DuplicateResourceException("An account with this email already exists.");
+            }
+        } else if (type == OtpType.PHONE) {
+            if (userRepository.existsByPhoneNumber(trimmedIdentifier)) {
+                throw new com.lifeuse.common.DuplicateResourceException("An account with this phone number already exists.");
+            }
+        }
+        return resendOtp(new ResendOtpRequest(trimmedIdentifier, type));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isContactVerified(String identifier, String verificationToken) {
+        if (verificationToken == null || verificationToken.isBlank() || identifier == null) {
+            return false;
+        }
+        return otpRepository.findTopByTokenAndVerifiedTrue(verificationToken.trim())
+                .map(otp -> {
+                    String storedIdentifier = otp.getIdentifier();
+                    if (storedIdentifier == null && otp.getUser() != null) {
+                        storedIdentifier = otp.getType() == OtpType.EMAIL
+                                ? otp.getUser().getEmail()
+                                : otp.getUser().getPhoneNumber();
+                    }
+                    if (storedIdentifier == null) {
+                        return false;
+                    }
+                    boolean matches = otp.getType() == OtpType.EMAIL
+                            ? storedIdentifier.equalsIgnoreCase(identifier.trim())
+                            : storedIdentifier.equals(identifier.trim());
+                    boolean notExpired = otp.getCreatedAt().plus(30, ChronoUnit.MINUTES).isAfter(Instant.now());
+                    return matches && notExpired;
+                })
+                .orElse(false);
     }
 
     private void validateOtp(OtpVerification otp, String providedCode) {

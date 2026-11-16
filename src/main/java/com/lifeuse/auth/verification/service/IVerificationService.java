@@ -1,6 +1,7 @@
 package com.lifeuse.auth.verification.service;
 
 import com.lifeuse.auth.verification.models.EmailVerificationRequest;
+import com.lifeuse.auth.verification.models.OtpType;
 import com.lifeuse.auth.verification.models.PhoneVerificationRequest;
 import com.lifeuse.auth.verification.models.ResendOtpRequest;
 import com.lifeuse.auth.verification.models.VerificationResponse;
@@ -13,6 +14,10 @@ public interface IVerificationService {
     VerificationResponse verifyPhone(PhoneVerificationRequest request);
 
     VerificationResponse resendOtp(ResendOtpRequest request);
+
+    VerificationResponse sendRegistrationOtp(String identifier, OtpType type);
+
+    boolean isContactVerified(String identifier, String verificationToken);
 
     void createAndSendEmailOtp(User user);
 

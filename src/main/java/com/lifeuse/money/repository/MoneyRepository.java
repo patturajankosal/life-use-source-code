@@ -698,6 +698,8 @@ public class MoneyRepository implements IMoneyRepository {
                     .addValue("notes", transaction.getNotes())
                     .addValue("plannedExpenseId", transaction.getPlannedExpenseId())
                     .addValue("recurringOccurrenceId", transaction.getRecurringOccurrenceId())
+                    .addValue("groupId", transaction.getGroupId())
+                    .addValue("isShared", transaction.isShared())
                     .addValue("createdAt", Timestamp.from(now))
                     .addValue("updatedAt", Timestamp.from(now));
             KeyHolder keyHolder = new GeneratedKeyHolder();

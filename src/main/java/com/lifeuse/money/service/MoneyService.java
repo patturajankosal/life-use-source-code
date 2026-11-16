@@ -295,6 +295,10 @@ public class MoneyService implements IMoneyService {
             tx.setIdempotencyKey(request.getIdempotencyKey());
             tx.setNotes(request.getNotes());
             tx.setPlannedExpenseId(request.getPlannedExpenseId());
+            if (request.getGroupId() != null) {
+                tx.setGroupId(request.getGroupId());
+                tx.setShared(Boolean.TRUE.equals(request.getIsShared()) || request.getGroupId() != null);
+            }
 
             FinancialTransaction saved = moneyRepository.saveTransaction(tx);
 
@@ -303,17 +307,19 @@ public class MoneyService implements IMoneyService {
                 moneyRepository.markPlannedExpenseExecuted(request.getPlannedExpenseId(), userId, saved.getId());
             }
 
-            // Update profile reported balance if profile exists
-            Optional<FinancialProfile> profileOpt = moneyRepository.findProfileByUserId(userId);
-            if (profileOpt.isPresent()) {
-                FinancialProfile p = profileOpt.get();
-                BigDecimal currentBal = p.getReportedBalance() != null ? p.getReportedBalance() : BigDecimal.ZERO;
-                if (tx.getTransactionType() == TransactionType.INCOME || tx.getTransactionType() == TransactionType.REFUND) {
-                    p.setReportedBalance(currentBal.add(tx.getAmount()));
-                } else if (tx.getTransactionType() == TransactionType.EXPENSE) {
-                    p.setReportedBalance(currentBal.subtract(tx.getAmount()).max(BigDecimal.ZERO));
+            // Update profile reported balance ONLY if this is a personal transaction (not a shared group transaction)
+            if (!saved.isShared() && saved.getGroupId() == null) {
+                Optional<FinancialProfile> profileOpt = moneyRepository.findProfileByUserId(userId);
+                if (profileOpt.isPresent()) {
+                    FinancialProfile p = profileOpt.get();
+                    BigDecimal currentBal = p.getReportedBalance() != null ? p.getReportedBalance() : BigDecimal.ZERO;
+                    if (tx.getTransactionType() == TransactionType.INCOME || tx.getTransactionType() == TransactionType.REFUND) {
+                        p.setReportedBalance(currentBal.add(tx.getAmount()));
+                    } else if (tx.getTransactionType() == TransactionType.EXPENSE) {
+                        p.setReportedBalance(currentBal.subtract(tx.getAmount()).max(BigDecimal.ZERO));
+                    }
+                    moneyRepository.saveProfile(p);
                 }
-                moneyRepository.saveProfile(p);
             }
 
             return MoneyDtoMapper.toTransactionResponse(saved);

@@ -22,6 +22,9 @@ public class TransactionResponse {
     private String notes;
     private Long plannedExpenseId;
     private Long recurringOccurrenceId;
+    private Long groupId;
+    private boolean isShared;
+    private String memberName;
     private Instant createdAt;
 
     public TransactionResponse() {}
@@ -67,6 +70,15 @@ public class TransactionResponse {
 
     public Long getRecurringOccurrenceId() { return recurringOccurrenceId; }
     public void setRecurringOccurrenceId(Long recurringOccurrenceId) { this.recurringOccurrenceId = recurringOccurrenceId; }
+
+    public Long getGroupId() { return groupId; }
+    public void setGroupId(Long groupId) { this.groupId = groupId; }
+
+    public boolean isShared() { return isShared; }
+    public void setShared(boolean shared) { isShared = shared; }
+
+    public String getMemberName() { return memberName; }
+    public void setMemberName(String memberName) { this.memberName = memberName; }
 
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }

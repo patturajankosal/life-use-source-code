@@ -102,6 +102,9 @@ public final class AppRoutes {
         public static final String POST_RESEND_OTP            = BASE + "/verify/resend";
         public static final String RESEND_OTP                 = POST_RESEND_OTP; // alias
 
+        public static final String POST_SEND_OTP              = BASE + "/verify/send";
+        public static final String SEND_OTP                   = POST_SEND_OTP; // alias
+
         // -------------------------------------------------------------------------------------------------------------
         // HTTP: POST | Route: /api/v1/auth/password/forgot
         // Target: PasswordResetController.forgotPassword(ForgotPasswordRequest)
@@ -117,6 +120,9 @@ public final class AppRoutes {
         // -------------------------------------------------------------------------------------------------------------
         public static final String POST_RESET_PASSWORD        = BASE + "/password/reset";
         public static final String RESET_PASSWORD             = POST_RESET_PASSWORD; // alias
+
+        public static final String POST_VERIFY_PASSWORD_OTP   = BASE + "/password/verify";
+        public static final String VERIFY_PASSWORD_OTP        = POST_VERIFY_PASSWORD_OTP; // alias
 
         // -------------------------------------------------------------------------------------------------------------
         // HTTP: POST | Route: /api/v1/auth/password/change
@@ -301,6 +307,50 @@ public final class AppRoutes {
         public static final String PUT_REMINDER_PREFS           = BASE + "/reminders/preferences";
         public static final String GET_NOTIFICATIONS            = BASE + "/reminders/notifications";
         public static final String PUT_MARK_NOTIFICATION_READ   = BASE + "/reminders/notifications/{id}/read";
+
+        // Family & Shared Finance Groups
+        public static final String GET_GROUPS                   = BASE + "/groups";
+        public static final String POST_GROUP                   = BASE + "/groups";
+        public static final String GET_GROUP_BY_ID              = BASE + "/groups/{groupId}";
+        public static final String PUT_GROUP                    = BASE + "/groups/{groupId}";
+        public static final String DELETE_GROUP                 = BASE + "/groups/{groupId}";
+        public static final String POST_LEAVE_GROUP             = BASE + "/groups/{groupId}/leave";
+        public static final String POST_TRANSFER_GROUP_OWNER    = BASE + "/groups/{groupId}/transfer-owner";
+
+        // Group Invitations
+        public static final String POST_GROUP_INVITATION        = BASE + "/groups/{groupId}/invitations";
+        public static final String GET_GROUP_INVITATIONS        = BASE + "/groups/{groupId}/invitations";
+        public static final String GET_MY_GROUP_INVITATIONS     = BASE + "/groups/invitations/my";
+        public static final String POST_ACCEPT_GROUP_INVITATION = BASE + "/groups/invitations/{invitationId}/accept";
+        public static final String POST_REJECT_GROUP_INVITATION = BASE + "/groups/invitations/{invitationId}/reject";
+        public static final String DELETE_GROUP_INVITATION      = BASE + "/groups/{groupId}/invitations/{invitationId}";
+
+        // Group Members & Roles
+        public static final String GET_GROUP_MEMBERS            = BASE + "/groups/{groupId}/members";
+        public static final String PUT_GROUP_MEMBER_ROLE        = BASE + "/groups/{groupId}/members/{memberId}/role";
+        public static final String DELETE_GROUP_MEMBER          = BASE + "/groups/{groupId}/members/{memberId}";
+
+        // Group Financial Privacy Settings
+        public static final String GET_GROUP_PRIVACY            = BASE + "/groups/{groupId}/privacy";
+        public static final String PUT_GROUP_PRIVACY            = BASE + "/groups/{groupId}/privacy";
+        public static final String GET_GROUP_PRIVACY_AUDIT      = BASE + "/groups/{groupId}/privacy/audit";
+
+        // Shared Group Budgets
+        public static final String POST_GROUP_BUDGET            = BASE + "/groups/{groupId}/budgets";
+        public static final String GET_GROUP_BUDGETS            = BASE + "/groups/{groupId}/budgets";
+        public static final String GET_ACTIVE_GROUP_BUDGET      = BASE + "/groups/{groupId}/budgets/active";
+        public static final String PUT_GROUP_BUDGET             = BASE + "/groups/{groupId}/budgets/{budgetId}";
+        public static final String DELETE_GROUP_BUDGET          = BASE + "/groups/{groupId}/budgets/{budgetId}";
+
+        // Shared Group Transactions
+        public static final String POST_GROUP_TRANSACTION       = BASE + "/groups/{groupId}/transactions";
+        public static final String GET_GROUP_TRANSACTIONS       = BASE + "/groups/{groupId}/transactions";
+        public static final String GET_GROUP_TX_SUMMARY         = BASE + "/groups/{groupId}/transactions/summary";
+
+        // Group Financial Dashboard & Reports
+        public static final String GET_GROUP_DASHBOARD          = BASE + "/groups/{groupId}/dashboard";
+        public static final String GET_GROUP_MEMBER_REPORT      = BASE + "/groups/{groupId}/reports/member-wise";
+        public static final String GET_GROUP_CATEGORY_REPORT    = BASE + "/groups/{groupId}/reports/category-wise";
     }
 
     // =================================================================================================================
@@ -312,8 +362,10 @@ public final class AppRoutes {
             Auth.POST_VERIFY_EMAIL,
             Auth.POST_VERIFY_PHONE,
             Auth.POST_RESEND_OTP,
+            Auth.POST_SEND_OTP,
             Auth.POST_FORGOT_PASSWORD,
             Auth.POST_RESET_PASSWORD,
+            Auth.POST_VERIFY_PASSWORD_OTP,
             Auth.POST_REFRESH_TOKEN,
             "/v3/api-docs/**",
             "/swagger-ui/**",
@@ -338,9 +390,11 @@ public final class AppRoutes {
                 new RouteMetadata("POST", Auth.POST_VERIFY_EMAIL,    "VerificationController",  "verifyEmail",         true),
                 new RouteMetadata("POST", Auth.POST_VERIFY_PHONE,    "VerificationController",  "verifyPhone",         true),
                 new RouteMetadata("POST", Auth.POST_RESEND_OTP,      "VerificationController",  "resendOtp",           true),
-                new RouteMetadata("POST", Auth.POST_FORGOT_PASSWORD, "PasswordResetController", "forgotPassword",     true),
-                new RouteMetadata("POST", Auth.POST_RESET_PASSWORD,  "PasswordResetController", "resetPassword",      true),
-                new RouteMetadata("POST", Auth.POST_CHANGE_PASSWORD, "PasswordResetController", "changePassword",     false),
+                new RouteMetadata("POST", Auth.POST_SEND_OTP,        "VerificationController",  "sendOtp",             true),
+                new RouteMetadata("POST", Auth.POST_FORGOT_PASSWORD,       "PasswordResetController", "forgotPassword",            true),
+                new RouteMetadata("POST", Auth.POST_RESET_PASSWORD,        "PasswordResetController", "resetPassword",             true),
+                new RouteMetadata("POST", Auth.POST_VERIFY_PASSWORD_OTP,   "PasswordResetController", "verifyForgotPasswordOtp",   true),
+                new RouteMetadata("POST", Auth.POST_CHANGE_PASSWORD,       "PasswordResetController", "changePassword",            false),
                 new RouteMetadata("POST", Auth.POST_REFRESH_TOKEN,   "TokenController",         "refreshToken",        true),
                 new RouteMetadata("POST", Auth.POST_LOGOUT,          "TokenController",         "logout",              false),
                 new RouteMetadata("GET",  User.GET_ME,               "UserController",          "getCurrentUser",      false),
@@ -390,7 +444,45 @@ public final class AppRoutes {
                 new RouteMetadata("GET",  Money.GET_REMINDER_PREFS,           "ReminderController",          "getReminderPreferences",   false),
                 new RouteMetadata("PUT",  Money.PUT_REMINDER_PREFS,           "ReminderController",          "updateReminderPreferences",false),
                 new RouteMetadata("GET",  Money.GET_NOTIFICATIONS,            "ReminderController",          "getUserNotifications",     false),
-                new RouteMetadata("PUT",  Money.PUT_MARK_NOTIFICATION_READ,   "ReminderController",          "markNotificationAsRead",   false)
+                new RouteMetadata("PUT",  Money.PUT_MARK_NOTIFICATION_READ,   "ReminderController",          "markNotificationAsRead",   false),
+
+                // Family Finance Routes
+                new RouteMetadata("GET",    Money.GET_GROUPS,                   "FamilyFinanceController",     "getGroups",                false),
+                new RouteMetadata("POST",   Money.POST_GROUP,                   "FamilyFinanceController",     "createGroup",              false),
+                new RouteMetadata("GET",    Money.GET_GROUP_BY_ID,              "FamilyFinanceController",     "getGroupById",             false),
+                new RouteMetadata("PUT",    Money.PUT_GROUP,                    "FamilyFinanceController",     "updateGroup",              false),
+                new RouteMetadata("DELETE", Money.DELETE_GROUP,                 "FamilyFinanceController",     "deleteGroup",              false),
+                new RouteMetadata("POST",   Money.POST_LEAVE_GROUP,             "FamilyFinanceController",     "leaveGroup",               false),
+                new RouteMetadata("POST",   Money.POST_TRANSFER_GROUP_OWNER,    "FamilyFinanceController",     "transferOwnership",        false),
+
+                new RouteMetadata("POST",   Money.POST_GROUP_INVITATION,        "FamilyFinanceController",     "inviteMember",             false),
+                new RouteMetadata("GET",    Money.GET_GROUP_INVITATIONS,        "FamilyFinanceController",     "getGroupInvitations",      false),
+                new RouteMetadata("GET",    Money.GET_MY_GROUP_INVITATIONS,     "FamilyFinanceController",     "getMyInvitations",         false),
+                new RouteMetadata("POST",   Money.POST_ACCEPT_GROUP_INVITATION, "FamilyFinanceController",     "acceptInvitation",         false),
+                new RouteMetadata("POST",   Money.POST_REJECT_GROUP_INVITATION, "FamilyFinanceController",     "rejectInvitation",         false),
+                new RouteMetadata("DELETE", Money.DELETE_GROUP_INVITATION,      "FamilyFinanceController",     "cancelInvitation",         false),
+
+                new RouteMetadata("GET",    Money.GET_GROUP_MEMBERS,            "FamilyFinanceController",     "getGroupMembers",          false),
+                new RouteMetadata("PUT",    Money.PUT_GROUP_MEMBER_ROLE,        "FamilyFinanceController",     "updateMemberRole",         false),
+                new RouteMetadata("DELETE", Money.DELETE_GROUP_MEMBER,          "FamilyFinanceController",     "removeMember",             false),
+
+                new RouteMetadata("GET",    Money.GET_GROUP_PRIVACY,            "FamilyFinanceController",     "getPrivacySettings",       false),
+                new RouteMetadata("PUT",    Money.PUT_GROUP_PRIVACY,            "FamilyFinanceController",     "updatePrivacySettings",    false),
+                new RouteMetadata("GET",    Money.GET_GROUP_PRIVACY_AUDIT,      "FamilyFinanceController",     "getPrivacyAuditLogs",      false),
+
+                new RouteMetadata("POST",   Money.POST_GROUP_BUDGET,            "FamilyFinanceController",     "createGroupBudget",        false),
+                new RouteMetadata("GET",    Money.GET_GROUP_BUDGETS,            "FamilyFinanceController",     "getGroupBudgets",          false),
+                new RouteMetadata("GET",    Money.GET_ACTIVE_GROUP_BUDGET,      "FamilyFinanceController",     "getActiveGroupBudget",     false),
+                new RouteMetadata("PUT",    Money.PUT_GROUP_BUDGET,             "FamilyFinanceController",     "updateGroupBudget",        false),
+                new RouteMetadata("DELETE", Money.DELETE_GROUP_BUDGET,          "FamilyFinanceController",     "deleteGroupBudget",        false),
+
+                new RouteMetadata("POST",   Money.POST_GROUP_TRANSACTION,       "FamilyFinanceController",     "createGroupTransaction",   false),
+                new RouteMetadata("GET",    Money.GET_GROUP_TRANSACTIONS,       "FamilyFinanceController",     "getGroupTransactions",     false),
+                new RouteMetadata("GET",    Money.GET_GROUP_TX_SUMMARY,         "FamilyFinanceController",     "getGroupTransactionSummary", false),
+
+                new RouteMetadata("GET",    Money.GET_GROUP_DASHBOARD,          "FamilyFinanceController",     "getGroupDashboard",        false),
+                new RouteMetadata("GET",    Money.GET_GROUP_MEMBER_REPORT,      "FamilyFinanceController",     "getMemberReport",          false),
+                new RouteMetadata("GET",    Money.GET_GROUP_CATEGORY_REPORT,    "FamilyFinanceController",     "getCategoryReport",        false)
         );
     }
 }

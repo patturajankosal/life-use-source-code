@@ -47,6 +47,12 @@ class PasswordResetServiceTest {
     @Mock
     private ITokenService tokenService;
 
+    @Mock
+    private com.lifeuse.auth.verification.repository.IVerificationRepository otpRepository;
+
+    @Mock
+    private com.lifeuse.notification.delivery.IOtpDeliveryService otpDeliveryService;
+
     @InjectMocks
     private PasswordResetService passwordResetService;
 
@@ -65,7 +71,7 @@ class PasswordResetServiceTest {
     @DisplayName("Should initiate forgot password by generating token and sending email")
     void shouldInitiateForgotPassword() {
         ForgotPasswordRequest request = new ForgotPasswordRequest("bob@example.com");
-        when(userRepository.findByEmail("bob@example.com")).thenReturn(Optional.of(testUser));
+        when(userRepository.findByLoginIdentifier("bob@example.com")).thenReturn(Optional.of(testUser));
 
         passwordResetService.initiateForgotPassword(request);
 

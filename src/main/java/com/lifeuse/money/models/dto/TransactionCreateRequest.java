@@ -37,10 +37,15 @@ public class TransactionCreateRequest {
 
     private Long plannedExpenseId;
 
+    private Long groupId;
+
+    private Boolean isShared;
+
     public TransactionCreateRequest() {
         this.currency = "INR";
         this.paymentMethod = PaymentMethod.UPI;
         this.essential = false;
+        this.isShared = false;
         this.transactionDate = Instant.now();
     }
 
@@ -76,4 +81,10 @@ public class TransactionCreateRequest {
 
     public Long getPlannedExpenseId() { return plannedExpenseId; }
     public void setPlannedExpenseId(Long plannedExpenseId) { this.plannedExpenseId = plannedExpenseId; }
+
+    public Long getGroupId() { return groupId; }
+    public void setGroupId(Long groupId) { this.groupId = groupId; }
+
+    public Boolean getIsShared() { return isShared; }
+    public void setIsShared(Boolean shared) { isShared = shared; }
 }

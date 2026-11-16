@@ -29,16 +29,16 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 
-    @Column(name = "first_name", nullable = false, length = 50)
+    @Column(name = "first_name", length = 50)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 50)
+    @Column(name = "last_name", length = 50)
     private String lastName;
 
-    @Column(nullable = false, unique = true, length = 150)
+    @Column(unique = true, length = 150)
     private String email;
 
-    @Column(name = "phone_number", nullable = false, unique = true, length = 25)
+    @Column(name = "phone_number", unique = true, length = 25)
     private String phoneNumber;
 
     @Column(nullable = false)
@@ -79,6 +79,10 @@ public class User implements UserDetails {
 
     public User(String firstName, String lastName, String email, String phoneNumber, String password, Role role) {
         this(email != null && email.contains("@") ? email.split("@")[0] : email, firstName, lastName, email, phoneNumber, password, role);
+    }
+
+    public User(String username, String email, String phoneNumber, String password, Role role) {
+        this(username, "", "", email, phoneNumber, password, role);
     }
 
     @PrePersist

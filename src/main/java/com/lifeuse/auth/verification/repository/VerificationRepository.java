@@ -31,8 +31,18 @@ public class VerificationRepository implements IVerificationRepository {
         Instant now = Instant.now();
         try {
             if (otpVerification.getId() == null) {
+                Long userId = otpVerification.getUser() != null ? otpVerification.getUser().getId() : null;
+                String identifier = otpVerification.getIdentifier();
+                if (identifier == null && otpVerification.getUser() != null) {
+                    identifier = otpVerification.getType() == OtpType.EMAIL
+                            ? otpVerification.getUser().getEmail()
+                            : otpVerification.getUser().getPhoneNumber();
+                }
+
                 MapSqlParameterSource params = new MapSqlParameterSource()
-                        .addValue("userId", otpVerification.getUser().getId())
+                        .addValue("userId", userId)
+                        .addValue("identifier", identifier)
+                        .addValue("token", otpVerification.getToken())
                         .addValue("otpCode", otpVerification.getOtpCode())
                         .addValue("type", otpVerification.getType().name())
                         .addValue("expiresAt", Timestamp.from(otpVerification.getExpiresAt()))
@@ -51,7 +61,13 @@ public class VerificationRepository implements IVerificationRepository {
                 }
                 return otpVerification;
             } else {
-                updateVerified(otpVerification.getId(), otpVerification.isVerified());
+                MapSqlParameterSource params = new MapSqlParameterSource()
+                        .addValue("id", otpVerification.getId())
+                        .addValue("verified", otpVerification.isVerified())
+                        .addValue("token", otpVerification.getToken())
+                        .addValue("attempts", otpVerification.getAttempts())
+                        .addValue("expiresAt", Timestamp.from(otpVerification.getExpiresAt()));
+                jdbcTemplate.update(VerificationQueries.UPDATE_OTP_STATUS, params);
                 return otpVerification;
             }
         } catch (DataAccessException ex) {
@@ -73,6 +89,8 @@ public class VerificationRepository implements IVerificationRepository {
                 OtpVerification otp = new OtpVerification();
                 otp.setId(rs.getLong("id"));
                 otp.setUser(user);
+                otp.setIdentifier(rs.getString("identifier"));
+                otp.setToken(rs.getString("token"));
                 otp.setOtpCode(rs.getString("otp_code"));
                 otp.setType(OtpType.valueOf(rs.getString("type")));
                 otp.setExpiresAt(rs.getTimestamp("expires_at").toInstant());
@@ -85,6 +103,79 @@ public class VerificationRepository implements IVerificationRepository {
             return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
         } catch (DataAccessException ex) {
             throw new DatabaseOperationException("Failed to find active OTP verification", ex);
+        }
+    }
+
+    @Override
+    public Optional<OtpVerification> findTopByIdentifierAndTypeAndVerifiedFalseOrderByCreatedAtDesc(String identifier, OtpType type) {
+        if (identifier == null || identifier.isBlank()) {
+            return Optional.empty();
+        }
+        try {
+            MapSqlParameterSource params = new MapSqlParameterSource()
+                    .addValue("identifier", identifier.trim())
+                    .addValue("type", type.name());
+
+            List<OtpVerification> list = jdbcTemplate.query(VerificationQueries.FIND_ACTIVE_OTP_BY_IDENTIFIER, params, (rs, rowNum) -> {
+                OtpVerification otp = new OtpVerification();
+                otp.setId(rs.getLong("id"));
+                otp.setIdentifier(rs.getString("identifier"));
+                otp.setToken(rs.getString("token"));
+                otp.setOtpCode(rs.getString("otp_code"));
+                otp.setType(OtpType.valueOf(rs.getString("type")));
+                otp.setExpiresAt(rs.getTimestamp("expires_at").toInstant());
+                otp.setVerified(rs.getBoolean("verified"));
+                otp.setAttempts(rs.getInt("attempts"));
+                otp.setCreatedAt(rs.getTimestamp("created_at").toInstant());
+                return otp;
+            });
+
+            return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to find active OTP verification by identifier", ex);
+        }
+    }
+
+    @Override
+    public Optional<OtpVerification> findTopByTokenAndVerifiedTrue(String token) {
+        if (token == null || token.isBlank()) {
+            return Optional.empty();
+        }
+        try {
+            MapSqlParameterSource params = new MapSqlParameterSource("token", token.trim());
+            List<OtpVerification> list = jdbcTemplate.query(VerificationQueries.FIND_VERIFIED_OTP_BY_TOKEN, params, (rs, rowNum) -> {
+                OtpVerification otp = new OtpVerification();
+                otp.setId(rs.getLong("id"));
+                otp.setIdentifier(rs.getString("identifier"));
+                otp.setToken(rs.getString("token"));
+                otp.setOtpCode(rs.getString("otp_code"));
+                otp.setType(OtpType.valueOf(rs.getString("type")));
+                otp.setExpiresAt(rs.getTimestamp("expires_at").toInstant());
+                otp.setVerified(rs.getBoolean("verified"));
+                otp.setAttempts(rs.getInt("attempts"));
+                otp.setCreatedAt(rs.getTimestamp("created_at").toInstant());
+                return otp;
+            });
+
+            return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to find verified OTP by token", ex);
+        }
+    }
+
+    @Override
+    public void updateVerifiedAndToken(Long id, boolean verified, String token) {
+        if (id == null) {
+            return;
+        }
+        try {
+            MapSqlParameterSource params = new MapSqlParameterSource()
+                    .addValue("id", id)
+                    .addValue("verified", verified)
+                    .addValue("token", token);
+            jdbcTemplate.update(VerificationQueries.UPDATE_OTP_VERIFIED_AND_TOKEN, params);
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to update OTP verified status and token", ex);
         }
     }
 

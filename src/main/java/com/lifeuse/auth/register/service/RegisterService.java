@@ -24,15 +24,21 @@ public class RegisterService implements IRegisterService {
     private final RegisterMapper registerMapper;
     private final PasswordEncoder passwordEncoder;
     private final IVerificationService verificationService;
+    private final com.lifeuse.security.JwtService jwtService;
+    private final com.lifeuse.auth.token.service.ITokenService tokenService;
 
     public RegisterService(IRegisterRepository registerRepository,
                            RegisterMapper registerMapper,
                            PasswordEncoder passwordEncoder,
-                           IVerificationService verificationService) {
+                           IVerificationService verificationService,
+                           com.lifeuse.security.JwtService jwtService,
+                           com.lifeuse.auth.token.service.ITokenService tokenService) {
         this.registerRepository = registerRepository;
         this.registerMapper = registerMapper;
         this.passwordEncoder = passwordEncoder;
         this.verificationService = verificationService;
+        this.jwtService = jwtService;
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -44,18 +50,24 @@ public class RegisterService implements IRegisterService {
         }
 
         // 2. Normalize inputs
-        String normalizedEmail = request.getEmail().trim().toLowerCase();
         String normalizedUsername = request.getUsername().trim();
-        String normalizedPhone = request.getPhoneNumber().trim();
+        String normalizedEmail = (request.getEmail() != null && !request.getEmail().isBlank())
+                ? request.getEmail().trim().toLowerCase() : null;
+        String normalizedPhone = (request.getPhoneNumber() != null && !request.getPhoneNumber().isBlank())
+                ? request.getPhoneNumber().trim() : null;
 
-        // 3. Pre-check uniqueness across all three unique identifiers
-        if (registerRepository.existsByEmail(normalizedEmail)) {
+        if (normalizedEmail == null && normalizedPhone == null) {
+            throw new BusinessException("At least one contact method (email or phone number) is required.");
+        }
+
+        // 3. Pre-check uniqueness across unique identifiers
+        if (normalizedEmail != null && registerRepository.existsByEmail(normalizedEmail)) {
             throw new DuplicateResourceException(String.format("An account with email '%s' already exists.", normalizedEmail));
         }
         if (registerRepository.existsByUsername(normalizedUsername)) {
             throw new DuplicateResourceException(String.format("An account with username '%s' already exists.", normalizedUsername));
         }
-        if (registerRepository.existsByPhoneNumber(normalizedPhone)) {
+        if (normalizedPhone != null && registerRepository.existsByPhoneNumber(normalizedPhone)) {
             throw new DuplicateResourceException(String.format("An account with phone number '%s' already exists.", normalizedPhone));
         }
 
@@ -64,6 +76,20 @@ public class RegisterService implements IRegisterService {
 
         // 5. Map request to domain entity
         User user = registerMapper.toEntity(request, encodedPassword);
+
+        // Check if pre-registration verification token is valid
+        boolean emailPreVerified = false;
+        boolean phonePreVerified = false;
+        if (request.getVerificationToken() != null && !request.getVerificationToken().isBlank()) {
+            if (normalizedEmail != null && verificationService.isContactVerified(normalizedEmail, request.getVerificationToken())) {
+                emailPreVerified = true;
+                user.setEmailVerified(true);
+            }
+            if (normalizedPhone != null && verificationService.isContactVerified(normalizedPhone, request.getVerificationToken())) {
+                phonePreVerified = true;
+                user.setPhoneVerified(true);
+            }
+        }
 
         // 6. Persist user with database constraint safety
         User savedUser;
@@ -76,14 +102,23 @@ public class RegisterService implements IRegisterService {
 
         log.info("New user registered successfully with ID: {}, Username: {}", savedUser.getId(), savedUser.getUsername());
 
-        // 7. Trigger OTP verification generation
+        // 7. Trigger OTP verification generation only if not pre-verified
         try {
-            verificationService.sendEmailVerificationOtp(savedUser);
-            verificationService.sendPhoneVerificationOtp(savedUser);
+            if (!emailPreVerified && savedUser.getEmail() != null && !savedUser.getEmail().isBlank()) {
+                verificationService.sendEmailVerificationOtp(savedUser);
+            }
+            if (!phonePreVerified && savedUser.getPhoneNumber() != null && !savedUser.getPhoneNumber().isBlank()) {
+                verificationService.sendPhoneVerificationOtp(savedUser);
+            }
         } catch (Exception ex) {
             log.error("Failed to send initial verification OTPs for user {}: {}", savedUser.getId(), ex.getMessage());
         }
 
-        return registerMapper.toResponse(savedUser);
+        // 8. Generate authenticated JWT and refresh token for immediate dashboard access
+        String accessToken = jwtService.generateToken(savedUser);
+        com.lifeuse.auth.token.models.RefreshToken refreshToken = tokenService.createRefreshToken(savedUser);
+        long expiresIn = jwtService.getJwtExpirationMs() / 1000;
+
+        return registerMapper.toResponse(savedUser, accessToken, refreshToken.getToken(), expiresIn);
     }
 }

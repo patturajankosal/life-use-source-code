@@ -12,7 +12,13 @@ public interface IVerificationRepository {
 
     Optional<OtpVerification> findTopByUserAndTypeAndVerifiedFalseOrderByCreatedAtDesc(User user, OtpType type);
 
+    Optional<OtpVerification> findTopByIdentifierAndTypeAndVerifiedFalseOrderByCreatedAtDesc(String identifier, OtpType type);
+
+    Optional<OtpVerification> findTopByTokenAndVerifiedTrue(String token);
+
     void updateVerified(Long id, boolean verified);
+
+    void updateVerifiedAndToken(Long id, boolean verified, String token);
 
     void incrementAttempts(Long id, int attempts);
 }

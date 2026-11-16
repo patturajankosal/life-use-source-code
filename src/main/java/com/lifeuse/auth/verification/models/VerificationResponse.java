@@ -6,22 +6,25 @@ public class VerificationResponse {
     private String type;
     private boolean verified;
     private String message;
+    private String verificationToken;
 
     public VerificationResponse() {
     }
 
     public VerificationResponse(String identifier, String type, boolean verified, String message) {
+        this(identifier, type, verified, message, null);
+    }
+
+    public VerificationResponse(String identifier, String type, boolean verified, String message, String verificationToken) {
         this.identifier = identifier;
         this.type = type;
         this.verified = verified;
         this.message = message;
+        this.verificationToken = verificationToken;
     }
 
     public VerificationResponse(boolean verified, String message, String identifier, OtpType otpType) {
-        this.identifier = identifier;
-        this.type = otpType != null ? otpType.name() : null;
-        this.verified = verified;
-        this.message = message;
+        this(identifier, otpType != null ? otpType.name() : null, verified, message, null);
     }
 
     public String getIdentifier() {
@@ -54,5 +57,13 @@ public class VerificationResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
     }
 }
