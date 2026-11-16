@@ -10,6 +10,8 @@ import '../../../core/widgets/lifeuse_badge.dart';
 import '../../../core/widgets/lifeuse_stat_card.dart';
 import '../../navigation/main_navigation_shell.dart';
 import '../../state/auth_provider.dart';
+import '../../state/money_provider.dart';
+import '../../state/notification_provider.dart';
 import '../login_screen.dart';
 import '../register_screen.dart';
 
@@ -51,17 +53,26 @@ class ProfileScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 580),
-              child: user != null
-                  ? _buildAuthenticatedContent(context, user)
-                  : _buildGuestContent(context),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            if (auth.isAuthenticated) {
+              await auth.refreshProfile();
+            }
+          },
+          color: AppColors.primary,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 580),
+                child: user != null
+                    ? _buildAuthenticatedContent(context, user)
+                    : _buildGuestContent(context),
+              ),
             ),
-          ),
-        ).animate().fadeIn(duration: 250.ms),
+          ).animate().fadeIn(duration: 250.ms),
+        ),
       ),
     );
   }
@@ -610,6 +621,8 @@ class ProfileScreen extends StatelessWidget {
             ),
             onPressed: () async {
               Navigator.pop(ctx);
+              context.read<MoneyProvider>().clear();
+              context.read<NotificationProvider>().clear();
               await context.read<AuthProvider>().logout();
               if (context.mounted) {
                 MainNavigationShell.switchTab(context, 0);

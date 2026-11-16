@@ -31,12 +31,11 @@ class _TravelTicket {
 class _PackingItem {
   final String id;
   final String name;
-  bool isPacked;
+  bool isPacked = false;
 
   _PackingItem({
     required this.id,
     required this.name,
-    this.isPacked = false,
   });
 }
 

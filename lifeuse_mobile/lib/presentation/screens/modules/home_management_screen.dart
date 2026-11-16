@@ -48,7 +48,7 @@ class _MaintenanceItem {
   final String task;
   final String dueDate;
   final String warrantyPeriod;
-  bool isCompleted;
+  bool isCompleted = false;
 
   _MaintenanceItem({
     required this.id,
@@ -56,7 +56,6 @@ class _MaintenanceItem {
     required this.task,
     required this.dueDate,
     required this.warrantyPeriod,
-    this.isCompleted = false,
   });
 }
 

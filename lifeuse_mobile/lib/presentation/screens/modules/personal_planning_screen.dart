@@ -24,12 +24,11 @@ class _LifeGoalItem {
 class _BucketListItem {
   final String id;
   final String title;
-  bool isCompleted;
+  bool isCompleted = false;
 
   _BucketListItem({
     required this.id,
     required this.title,
-    this.isCompleted = false,
   });
 }
 
@@ -43,48 +42,8 @@ class PersonalPlanningScreen extends StatefulWidget {
 }
 
 class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
-  final List<_LifeGoalItem> _goals = const [
-    _LifeGoalItem(
-      id: 'g_1',
-      title: 'Build 6-Month Emergency Cash Reserve',
-      horizon: '2026 Goal',
-      progress: 0.85,
-      metric: '₹4.25L / ₹5.00L',
-    ),
-    _LifeGoalItem(
-      id: 'g_2',
-      title: 'Run First Half Marathon (21 km)',
-      horizon: 'Q4 2026',
-      progress: 0.65,
-      metric: '14 km Longest Run',
-    ),
-    _LifeGoalItem(
-      id: 'g_3',
-      title: 'Deploy Production Multi-Platform App (LifeUse)',
-      horizon: 'Core Milestone',
-      progress: 0.95,
-      metric: 'Phase 2 Architecture Ready',
-    ),
-  ];
-
-  final List<_BucketListItem> _bucketList = [
-    _BucketListItem(
-        id: 'b_1',
-        title: 'Trek the Annapurna Circuit in Himalayas',
-        isCompleted: false),
-    _BucketListItem(
-        id: 'b_2',
-        title: 'Scuba dive in Andaman coral reefs',
-        isCompleted: true),
-    _BucketListItem(
-        id: 'b_3',
-        title: 'Own a sustainable solar-powered modern home',
-        isCompleted: false),
-    _BucketListItem(
-        id: 'b_4',
-        title: 'Mentor 50 young engineering graduates',
-        isCompleted: true),
-  ];
+  final List<_LifeGoalItem> _goals = [];
+  final List<_BucketListItem> _bucketList = [];
 
   void _showAddGoalDialog() {
     final titleCtrl = TextEditingController();
@@ -130,6 +89,22 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
               foregroundColor: Colors.white,
             ),
             onPressed: () {
+              final title = titleCtrl.text.trim();
+              if (title.isNotEmpty) {
+                setState(() {
+                  _goals.add(
+                    _LifeGoalItem(
+                      id: 'g_${DateTime.now().millisecondsSinceEpoch}',
+                      title: title,
+                      horizon: horizCtrl.text.trim().isEmpty
+                          ? '2026 Milestone'
+                          : horizCtrl.text.trim(),
+                      progress: 0.0,
+                      metric: 'Target Set',
+                    ),
+                  );
+                });
+              }
               Navigator.pop(ctx);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -232,15 +207,15 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                '3 high-priority life goals actively in progress.',
+                                '${_goals.length} high-priority life goals actively in progress.',
                                 style: AppFonts.inter(
                                     fontSize: 12.5, color: textSecondary),
                               ),
                             ],
                           ),
                         ),
-                        const LifeUseBadge(
-                            text: 'ON TRACK',
+                        LifeUseBadge(
+                            text: _goals.isNotEmpty ? 'ON TRACK' : 'PLANNING',
                             variant: LifeUseBadgeVariant.active),
                       ],
                     ),
@@ -257,7 +232,59 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  ListView.separated(
+                  if (_goals.isEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 36),
+                      decoration: BoxDecoration(
+                        color: surfaceColor,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: borderColor),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              color: AppColors.iconBackgroundOf(context),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: AppColors.iconBorderOf(context),
+                                width: 1.2,
+                              ),
+                            ),
+                            child: Center(
+                              child: AppIcon(
+                                AppIcons.personalPlanning,
+                                size: 26,
+                                color: AppColors.brandIconOf(context),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'No Goals Created Yet',
+                            style: AppFonts.inter(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Set long-term targets, milestones, and habit horizons to visualize your vision.\nTap \'+\' in the header to create a goal.',
+                            textAlign: TextAlign.center,
+                            style: AppFonts.inter(
+                              fontSize: 12,
+                              color: textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: _goals.length,
@@ -348,7 +375,59 @@ class _PersonalPlanningScreenState extends State<PersonalPlanningScreen> {
                   ),
                   const SizedBox(height: 10),
 
-                  ListView.separated(
+                  if (_bucketList.isEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 36),
+                      decoration: BoxDecoration(
+                        color: surfaceColor,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: borderColor),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              color: AppColors.iconBackgroundOf(context),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: AppColors.iconBorderOf(context),
+                                width: 1.2,
+                              ),
+                            ),
+                            child: Center(
+                              child: AppIcon(
+                                AppIcons.personalPlanning,
+                                size: 26,
+                                color: AppColors.brandIconOf(context),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Bucket List Empty',
+                            style: AppFonts.inter(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Add dream experiences, adventures, and lifetime aspirations.',
+                            textAlign: TextAlign.center,
+                            style: AppFonts.inter(
+                              fontSize: 12,
+                              color: textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: _bucketList.length,
