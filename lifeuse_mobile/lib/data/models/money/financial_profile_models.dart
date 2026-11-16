@@ -33,7 +33,8 @@ class FinancialProfileModel {
       currency: json['currency']?.toString() ?? 'INR',
       reportedBalance: (json['reportedBalance'] as num?)?.toDouble() ?? 0.0,
       emergencyReserve: (json['emergencyReserve'] as num?)?.toDouble() ?? 0.0,
-      minimumCashReserve: (json['minimumCashReserve'] as num?)?.toDouble() ?? 0.0,
+      minimumCashReserve:
+          (json['minimumCashReserve'] as num?)?.toDouble() ?? 0.0,
       weekStartDay: json['weekStartDay']?.toString() ?? 'MONDAY',
       timezone: json['timezone']?.toString() ?? 'Asia/Kolkata',
       defaultCarryForward: json['defaultCarryForward']?.toString() ?? 'RESET',
@@ -185,7 +186,8 @@ class SavingsGoalModel {
       title: json['title']?.toString() ?? '',
       targetAmount: (json['targetAmount'] as num?)?.toDouble() ?? 0.0,
       currentAmount: (json['currentAmount'] as num?)?.toDouble() ?? 0.0,
-      monthlyContribution: (json['monthlyContribution'] as num?)?.toDouble() ?? 0.0,
+      monthlyContribution:
+          (json['monthlyContribution'] as num?)?.toDouble() ?? 0.0,
       targetDate: json['targetDate'] != null
           ? DateTime.tryParse(json['targetDate'].toString())
           : null,

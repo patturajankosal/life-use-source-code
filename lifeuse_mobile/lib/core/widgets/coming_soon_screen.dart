@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
 import 'app_button.dart';
@@ -33,7 +33,7 @@ class ComingSoonScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           moduleTitle,
-          style: GoogleFonts.inter(
+          style: AppFonts.inter(
             fontSize: 18,
             fontWeight: FontWeight.w700,
             color: textPrimary,
@@ -54,7 +54,8 @@ class ComingSoonScreen extends StatelessWidget {
                   border: Border.all(color: borderColor),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.05),
+                      color:
+                          Colors.black.withValues(alpha: isDark ? 0.35 : 0.05),
                       blurRadius: 20,
                       offset: const Offset(0, 6),
                     ),
@@ -68,7 +69,8 @@ class ComingSoonScreen extends StatelessWidget {
                       height: 76,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: accentColor.withValues(alpha: isDark ? 0.20 : 0.10),
+                        color:
+                            accentColor.withValues(alpha: isDark ? 0.20 : 0.10),
                         border: Border.all(
                           color: accentColor.withValues(alpha: 0.35),
                           width: 2,
@@ -80,14 +82,15 @@ class ComingSoonScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 5),
                       decoration: BoxDecoration(
                         color: accentColor.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
                         'COMING SOON',
-                        style: GoogleFonts.inter(
+                        style: AppFonts.inter(
                           fontSize: 11,
                           fontWeight: FontWeight.w800,
                           color: accentColor,
@@ -99,7 +102,7 @@ class ComingSoonScreen extends StatelessWidget {
                     Text(
                       moduleTitle,
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
+                      style: AppFonts.inter(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
                         color: textPrimary,
@@ -110,7 +113,7 @@ class ComingSoonScreen extends StatelessWidget {
                     Text(
                       moduleDescription,
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
+                      style: AppFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: textSecondary,

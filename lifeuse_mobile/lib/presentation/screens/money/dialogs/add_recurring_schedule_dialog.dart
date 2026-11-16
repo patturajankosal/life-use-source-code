@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../../core/widgets/sweet_alert.dart';
 import '../../../../data/models/money/recurring_schedule_models.dart';
 import '../../../state/money_provider.dart';
@@ -23,10 +24,12 @@ class AddRecurringScheduleDialog extends StatefulWidget {
   }
 
   @override
-  State<AddRecurringScheduleDialog> createState() => _AddRecurringScheduleDialogState();
+  State<AddRecurringScheduleDialog> createState() =>
+      _AddRecurringScheduleDialogState();
 }
 
-class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog> {
+class _AddRecurringScheduleDialogState
+    extends State<AddRecurringScheduleDialog> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
@@ -40,7 +43,13 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
   bool _isEssential = true;
   bool _isSubmitting = false;
 
-  final List<String> _frequencies = ['DAILY', 'WEEKLY', 'MONTHLY', 'QUARTERLY', 'YEARLY'];
+  final List<String> _frequencies = [
+    'DAILY',
+    'WEEKLY',
+    'MONTHLY',
+    'QUARTERLY',
+    'YEARLY'
+  ];
   final List<String> _paymentMethods = ['UPI', 'CASH', 'CARD', 'NET_BANKING'];
   final List<String> _defaultCategories = [
     'Rent & Utilities',
@@ -96,7 +105,8 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
         SweetAlert.showSuccess(
           context,
           title: 'Schedule Created',
-          message: '"${_titleController.text.trim()}" ($_frequency) has been scheduled.',
+          message:
+              '"${_titleController.text.trim()}" ($_frequency) has been scheduled.',
         );
       }
     } catch (e) {
@@ -169,14 +179,14 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                 children: [
                   Text(
                     'Recurring Schedule',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 19,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(LucideIcons.x, size: 20),
+                    icon: const AppIcon(AppIcons.close, size: 20),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -186,9 +196,11 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
               // Transaction Type Selector
               Row(
                 children: [
-                  _buildTypeChoice('EXPENSE', 'Expense Schedule', AppColors.error),
+                  _buildTypeChoice(
+                      'EXPENSE', 'Expense Schedule', AppColors.error),
                   const SizedBox(width: 10),
-                  _buildTypeChoice('INCOME', 'Income Schedule', AppColors.success),
+                  _buildTypeChoice(
+                      'INCOME', 'Income Schedule', AppColors.success),
                 ],
               ),
               const SizedBox(height: 16),
@@ -198,8 +210,9 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                 label: 'Title',
                 hint: 'e.g., Netflix subscription, Home rent, Gym membership',
                 controller: _titleController,
-                prefixIcon: LucideIcons.repeat,
-                validator: (val) => val == null || val.trim().isEmpty ? 'Enter title' : null,
+                prefixIcon: AppIcons.recurring,
+                validator: (val) =>
+                    val == null || val.trim().isEmpty ? 'Enter title' : null,
               ),
               const SizedBox(height: 16),
 
@@ -212,11 +225,16 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                       label: 'Amount (₹)',
                       hint: '0.00',
                       controller: _amountController,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      prefixIcon: Icons.currency_rupee_rounded,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      prefixIcon: LucideIcons.indianRupee,
                       validator: (val) {
-                        if (val == null || val.trim().isEmpty) return 'Required';
-                        if (double.tryParse(val.trim()) == null) return 'Invalid';
+                        if (val == null || val.trim().isEmpty) {
+                          return 'Required';
+                        }
+                        if (double.tryParse(val.trim()) == null) {
+                          return 'Invalid';
+                        }
                         return null;
                       },
                     ),
@@ -229,7 +247,7 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                       dropdownColor: surfaceColor,
                       decoration: InputDecoration(
                         labelText: 'Frequency',
-                        labelStyle: GoogleFonts.inter(color: textSecondary),
+                        labelStyle: AppFonts.inter(color: textSecondary),
                         filled: true,
                         fillColor: isDark
                             ? Colors.white.withValues(alpha: 0.04)
@@ -243,7 +261,7 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                           borderSide: BorderSide(color: borderColor),
                         ),
                       ),
-                      style: GoogleFonts.inter(fontSize: 13, color: textPrimary),
+                      style: AppFonts.inter(fontSize: 13, color: textPrimary),
                       items: _frequencies.map((f) {
                         return DropdownMenuItem(value: f, child: Text(f));
                       }).toList(),
@@ -265,7 +283,7 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                       dropdownColor: surfaceColor,
                       decoration: InputDecoration(
                         labelText: 'Category',
-                        labelStyle: GoogleFonts.inter(color: textSecondary),
+                        labelStyle: AppFonts.inter(color: textSecondary),
                         filled: true,
                         fillColor: isDark
                             ? Colors.white.withValues(alpha: 0.04)
@@ -279,12 +297,14 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                           borderSide: BorderSide(color: borderColor),
                         ),
                       ),
-                      style: GoogleFonts.inter(fontSize: 13, color: textPrimary),
+                      style: AppFonts.inter(fontSize: 13, color: textPrimary),
                       items: categories.map((cat) {
                         return DropdownMenuItem(value: cat, child: Text(cat));
                       }).toList(),
                       onChanged: (val) {
-                        if (val != null) setState(() => _selectedCategory = val);
+                        if (val != null) {
+                          setState(() => _selectedCategory = val);
+                        }
                       },
                     ),
                   ),
@@ -295,7 +315,7 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                       dropdownColor: surfaceColor,
                       decoration: InputDecoration(
                         labelText: 'Payment Method',
-                        labelStyle: GoogleFonts.inter(color: textSecondary),
+                        labelStyle: AppFonts.inter(color: textSecondary),
                         filled: true,
                         fillColor: isDark
                             ? Colors.white.withValues(alpha: 0.04)
@@ -309,7 +329,7 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                           borderSide: BorderSide(color: borderColor),
                         ),
                       ),
-                      style: GoogleFonts.inter(fontSize: 13, color: textPrimary),
+                      style: AppFonts.inter(fontSize: 13, color: textPrimary),
                       items: _paymentMethods.map((pm) {
                         return DropdownMenuItem(value: pm, child: Text(pm));
                       }).toList(),
@@ -323,23 +343,26 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
               const SizedBox(height: 14),
 
               // Essential Switch
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(
-                  'Essential Schedule',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: textPrimary,
+              Material(
+                color: Colors.transparent,
+                child: SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(
+                    'Essential Schedule',
+                    style: AppFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: textPrimary,
+                    ),
                   ),
+                  subtitle: Text(
+                    'Marks commitment as non-negotiable obligation',
+                    style: AppFonts.inter(fontSize: 12, color: textSecondary),
+                  ),
+                  value: _isEssential,
+                  activeThumbColor: AppColors.primary,
+                  onChanged: (val) => setState(() => _isEssential = val),
                 ),
-                subtitle: Text(
-                  'Marks commitment as non-negotiable obligation',
-                  style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
-                ),
-                value: _isEssential,
-                activeThumbColor: AppColors.primary,
-                onChanged: (val) => setState(() => _isEssential = val),
               ),
               const SizedBox(height: 20),
 
@@ -347,7 +370,7 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
               AppButton(
                 title: 'Save Schedule',
                 isLoading: _isSubmitting,
-                icon: LucideIcons.checkCircle2,
+                icon: AppIcons.checkCircle,
                 onPressed: _submit,
               ),
             ],
@@ -365,7 +388,8 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 11),
           decoration: BoxDecoration(
-            color: isSelected ? color.withValues(alpha: 0.15) : Colors.transparent,
+            color:
+                isSelected ? color.withValues(alpha: 0.15) : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected ? color : AppColors.borderOf(context),
@@ -375,7 +399,7 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
           child: Center(
             child: Text(
               label,
-              style: GoogleFonts.inter(
+              style: AppFonts.inter(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: isSelected ? color : AppColors.textSecondaryOf(context),

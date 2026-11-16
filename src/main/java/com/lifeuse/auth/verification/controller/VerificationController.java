@@ -74,4 +74,20 @@ public class VerificationController {
             throw ex;
         }
     }
+
+    /**
+     * POST /api/lifeUse/auth/verify/send -> VerificationController.sendOtp()
+     */
+    @PostMapping(AppRoutes.Auth.POST_SEND_OTP)
+    @Operation(summary = "Send initial OTP code for registration")
+    public ResponseEntity<ApiResponse<VerificationResponse>> sendOtp(@Valid @RequestBody ResendOtpRequest request) {
+        try {
+            VerificationResponse response = verificationService.sendRegistrationOtp(request.getIdentifier(), request.getType());
+            log.info("Verification", "Registration OTP sent for identifier '{}'", request.getIdentifier());
+            return ApiResponse.ok("Verification code sent successfully", response);
+        } catch (Exception ex) {
+            log.error("Verification", "Send registration OTP failed for identifier '{}': {}", request.getIdentifier(), ex.getMessage());
+            throw ex;
+        }
+    }
 }

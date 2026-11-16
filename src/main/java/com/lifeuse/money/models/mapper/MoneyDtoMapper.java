@@ -114,6 +114,8 @@ public final class MoneyDtoMapper {
         r.setNotes(t.getNotes());
         r.setPlannedExpenseId(t.getPlannedExpenseId());
         r.setRecurringOccurrenceId(t.getRecurringOccurrenceId());
+        r.setGroupId(t.getGroupId());
+        r.setShared(t.isShared());
         r.setCreatedAt(t.getCreatedAt());
         return r;
     }

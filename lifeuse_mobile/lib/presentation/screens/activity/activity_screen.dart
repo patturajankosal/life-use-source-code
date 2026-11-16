@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
 class DailyTaskItem {
@@ -35,56 +35,7 @@ class ActivityScreen extends StatefulWidget {
 class _ActivityScreenState extends State<ActivityScreen> {
   String _selectedFilter = 'ALL'; // ALL, PENDING, COMPLETED
 
-  final List<DailyTaskItem> _tasks = [
-    DailyTaskItem(
-      id: 'task_1',
-      title: 'Morning financial check-in & review spending',
-      category: 'Finance',
-      time: '08:30 AM',
-      priority: 'High',
-      isCompleted: true,
-    ),
-    DailyTaskItem(
-      id: 'task_2',
-      title: 'Take daily hydration & multivitamin supplements',
-      category: 'Health',
-      time: '09:00 AM',
-      priority: 'Normal',
-      isCompleted: true,
-    ),
-    DailyTaskItem(
-      id: 'task_3',
-      title: 'Review home electricity & utility bill before due date',
-      category: 'Bills',
-      time: '11:30 AM',
-      priority: 'Urgent',
-      isCompleted: false,
-    ),
-    DailyTaskItem(
-      id: 'task_4',
-      title: 'Flutter UI architecture sprint & responsive testing',
-      category: 'Learning',
-      time: '02:00 PM',
-      priority: 'High',
-      isCompleted: false,
-    ),
-    DailyTaskItem(
-      id: 'task_5',
-      title: 'Evening 30-minute cardio & stretch workout',
-      category: 'Health',
-      time: '06:00 PM',
-      priority: 'Normal',
-      isCompleted: false,
-    ),
-    DailyTaskItem(
-      id: 'task_6',
-      title: 'Weekly budget reconciliation in Money Manager',
-      category: 'Finance',
-      time: '08:30 PM',
-      priority: 'Normal',
-      isCompleted: false,
-    ),
-  ];
+  final List<DailyTaskItem> _tasks = [];
 
   int get _completedCount => _tasks.where((t) => t.isCompleted).length;
   double get _completionRatio =>
@@ -136,14 +87,14 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         children: [
                           Text(
                             'Add Daily Task',
-                            style: GoogleFonts.inter(
+                            style: AppFonts.inter(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
                               color: textPrimary,
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(LucideIcons.x, size: 20),
+                            icon: const AppIcon(AppIcons.close, size: 22),
                             onPressed: () => Navigator.pop(dialogCtx),
                           ),
                         ],
@@ -154,7 +105,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         autofocus: true,
                         decoration: InputDecoration(
                           hintText: 'What needs to be done today?',
-                          hintStyle: GoogleFonts.inter(fontSize: 14),
+                          hintStyle: AppFonts.inter(fontSize: 14),
                           filled: true,
                           fillColor: AppColors.backgroundOf(dialogCtx),
                           border: OutlineInputBorder(
@@ -275,7 +226,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         },
                         child: Text(
                           'Save Task',
-                          style: GoogleFonts.inter(
+                          style: AppFonts.inter(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
                           ),
@@ -323,7 +274,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
       appBar: AppBar(
         title: Text(
           'Daily Activity',
-          style: GoogleFonts.plusJakartaSans(
+          style: AppFonts.plusJakartaSans(
             fontSize: 18,
             fontWeight: FontWeight.w700,
             color: textPrimary,
@@ -346,16 +297,16 @@ class _ActivityScreenState extends State<ActivityScreen> {
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
-        icon: const Icon(LucideIcons.plus, size: 18),
+        icon: const AppIcon(AppIcons.plus, size: 20, color: Colors.white),
         label: Text(
           'Add Task',
-          style: GoogleFonts.inter(fontSize: 13.5, fontWeight: FontWeight.w700),
+          style: AppFonts.inter(fontSize: 13.5, fontWeight: FontWeight.w700),
         ),
         onPressed: () => _showAddTaskDialog(context),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 680),
@@ -386,7 +337,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                           children: [
                             Text(
                               'Today\'s Goal Progress',
-                              style: GoogleFonts.plusJakartaSans(
+                              style: AppFonts.plusJakartaSans(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
                                 color: textPrimary,
@@ -394,7 +345,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                             ),
                             Text(
                               '${(_completionRatio * 100).toInt()}%',
-                              style: GoogleFonts.inter(
+                              style: AppFonts.inter(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
                                 color: AppColors.primary,
@@ -408,8 +359,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                           child: LinearProgressIndicator(
                             value: _completionRatio,
                             minHeight: 8,
-                            backgroundColor:
-                                borderColor.withValues(alpha: 0.5),
+                            backgroundColor: borderColor.withValues(alpha: 0.5),
                             valueColor: const AlwaysStoppedAnimation<Color>(
                               AppColors.primary,
                             ),
@@ -418,7 +368,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         const SizedBox(height: 10),
                         Text(
                           '${_tasks.length - _completedCount} remaining daily tasks to stay on track today.',
-                          style: GoogleFonts.inter(
+                          style: AppFonts.inter(
                             fontSize: 12,
                             color: textSecondary,
                           ),
@@ -454,15 +404,29 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       ),
                       child: Column(
                         children: [
-                          Icon(
-                            LucideIcons.checkCircle2,
-                            size: 44,
-                            color: AppColors.success.withValues(alpha: 0.6),
+                          Container(
+                            width: 56,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              color: AppColors.iconBackgroundOf(context),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: AppColors.iconBorderOf(context),
+                                width: 1.2,
+                              ),
+                            ),
+                            child: Center(
+                              child: AppIcon(
+                                AppIcons.checkCircle,
+                                size: 28,
+                                color: AppColors.brandIconOf(context),
+                              ),
+                            ),
                           ),
                           const SizedBox(height: 12),
                           Text(
                             'No Tasks Here!',
-                            style: GoogleFonts.inter(
+                            style: AppFonts.inter(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                               color: textPrimary,
@@ -472,7 +436,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                           Text(
                             'You have no tasks matching this filter. Tap "+ Add Task" to schedule a new one.',
                             textAlign: TextAlign.center,
-                            style: GoogleFonts.inter(
+                            style: AppFonts.inter(
                               fontSize: 12.5,
                               color: textSecondary,
                             ),
@@ -528,10 +492,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                       ),
                                     ),
                                     child: task.isCompleted
-                                        ? const Icon(
-                                            LucideIcons.check,
-                                            size: 15,
-                                            color: Colors.white,
+                                        ? const Center(
+                                            child: AppIcon(
+                                              AppIcons.check,
+                                              size: 16,
+                                              color: Colors.white,
+                                            ),
                                           )
                                         : null,
                                   ),
@@ -545,7 +511,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                       children: [
                                         Text(
                                           task.title,
-                                          style: GoogleFonts.inter(
+                                          style: AppFonts.inter(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w600,
                                             color: task.isCompleted
@@ -561,7 +527,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                           children: [
                                             Text(
                                               task.category,
-                                              style: GoogleFonts.inter(
+                                              style: AppFonts.inter(
                                                 fontSize: 11.5,
                                                 fontWeight: FontWeight.w500,
                                                 color: textSecondary,
@@ -569,13 +535,13 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                             ),
                                             const SizedBox(width: 6),
                                             Text('•',
-                                                style: GoogleFonts.inter(
+                                                style: AppFonts.inter(
                                                     color: textSecondary,
                                                     fontSize: 11)),
                                             const SizedBox(width: 6),
                                             Text(
                                               task.time,
-                                              style: GoogleFonts.inter(
+                                              style: AppFonts.inter(
                                                 fontSize: 11.5,
                                                 color: textSecondary,
                                               ),
@@ -599,7 +565,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                     ),
                                     child: Text(
                                       task.priority.toUpperCase(),
-                                      style: GoogleFonts.inter(
+                                      style: AppFonts.inter(
                                         fontSize: 9.5,
                                         fontWeight: FontWeight.w700,
                                         color: priorityColor,
@@ -639,7 +605,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
         ),
         child: Text(
           label,
-          style: GoogleFonts.inter(
+          style: AppFonts.inter(
             fontSize: 12,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
             color:

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
 class _SmartDeviceItem {
@@ -47,7 +48,7 @@ class _MaintenanceItem {
   final String task;
   final String dueDate;
   final String warrantyPeriod;
-  bool isCompleted;
+  bool isCompleted = false;
 
   _MaintenanceItem({
     required this.id,
@@ -55,7 +56,6 @@ class _MaintenanceItem {
     required this.task,
     required this.dueDate,
     required this.warrantyPeriod,
-    this.isCompleted = false,
   });
 }
 
@@ -72,98 +72,9 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  final List<_SmartDeviceItem> _devices = [
-    _SmartDeviceItem(
-      id: 'dev_1',
-      name: 'Living Room AC',
-      room: 'Living Room',
-      icon: LucideIcons.wind,
-      isOn: true,
-    ),
-    _SmartDeviceItem(
-      id: 'dev_2',
-      name: 'Smart Door Lock',
-      room: 'Main Entrance',
-      icon: LucideIcons.lock,
-      isOn: true,
-    ),
-    _SmartDeviceItem(
-      id: 'dev_3',
-      name: 'Balcony Warm Lights',
-      room: 'Balcony',
-      icon: LucideIcons.lightbulb,
-      isOn: false,
-    ),
-    _SmartDeviceItem(
-      id: 'dev_4',
-      name: 'Kitchen Water Purifier',
-      room: 'Kitchen',
-      icon: LucideIcons.droplets,
-      isOn: true,
-    ),
-  ];
-
-  final List<_InventoryItem> _inventory = [
-    _InventoryItem(
-      id: 'inv_1',
-      name: 'Dishwasher Pods',
-      location: 'Kitchen Cabinet',
-      quantity: 4,
-      minQuantity: 5,
-      unit: 'pods',
-    ),
-    _InventoryItem(
-      id: 'inv_2',
-      name: 'LED Light Bulbs (9W)',
-      location: 'Storage Box B',
-      quantity: 6,
-      minQuantity: 2,
-      unit: 'bulbs',
-    ),
-    _InventoryItem(
-      id: 'inv_3',
-      name: 'Air Filter Replacements',
-      location: 'Utility Closet',
-      quantity: 1,
-      minQuantity: 2,
-      unit: 'filters',
-    ),
-    _InventoryItem(
-      id: 'inv_4',
-      name: 'AA Rechargeable Batteries',
-      location: 'Drawer 1',
-      quantity: 8,
-      minQuantity: 4,
-      unit: 'batteries',
-    ),
-  ];
-
-  final List<_MaintenanceItem> _maintenance = [
-    _MaintenanceItem(
-      id: 'maint_1',
-      appliance: 'Daikin Dual Inverter AC',
-      task: 'Clean high-density air mesh & blower',
-      dueDate: 'Due Oct 22 (in 6 days)',
-      warrantyPeriod: 'Valid till Nov 2027',
-      isCompleted: false,
-    ),
-    _MaintenanceItem(
-      id: 'maint_2',
-      appliance: 'Kent Grand RO Purifier',
-      task: 'Replace sediment and carbon filter candle',
-      dueDate: 'Due Nov 05',
-      warrantyPeriod: 'Extended AMC Active',
-      isCompleted: false,
-    ),
-    _MaintenanceItem(
-      id: 'maint_3',
-      appliance: 'Bosch Front Load Washer',
-      task: 'Run drum descaling cycle at 90°C',
-      dueDate: 'Completed yesterday',
-      warrantyPeriod: 'Valid till Aug 2028',
-      isCompleted: true,
-    ),
-  ];
+  final List<_SmartDeviceItem> _devices = [];
+  final List<_InventoryItem> _inventory = [];
+  final List<_MaintenanceItem> _maintenance = [];
 
   @override
   void initState() {
@@ -188,7 +99,7 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         title: Text(
           'Add Smart Device',
-          style: GoogleFonts.inter(fontWeight: FontWeight.w700),
+          style: AppFonts.inter(fontWeight: FontWeight.w700),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -198,7 +109,8 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
               decoration: InputDecoration(
                 labelText: 'Device Name',
                 hintText: 'e.g. Master Bedroom Fan',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
             const SizedBox(height: 12),
@@ -207,7 +119,8 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
               decoration: InputDecoration(
                 labelText: 'Room / Area',
                 hintText: 'e.g. Bedroom',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
           ],
@@ -229,8 +142,10 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                     _SmartDeviceItem(
                       id: 'dev_${DateTime.now().millisecondsSinceEpoch}',
                       name: nameCtrl.text.trim(),
-                      room: roomCtrl.text.trim().isEmpty ? 'General' : roomCtrl.text.trim(),
-                      icon: Icons.devices_rounded,
+                      room: roomCtrl.text.trim().isEmpty
+                          ? 'General'
+                          : roomCtrl.text.trim(),
+                      icon: LucideIcons.laptop,
                       isOn: false,
                     ),
                   );
@@ -259,11 +174,12 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
       appBar: AppBar(
         title: Text(
           'Home Management',
-          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
+          style: AppFonts.plusJakartaSans(
+              fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
-            icon: const Icon(LucideIcons.plus, size: 20),
+            icon: const AppIcon(AppIcons.plus, size: 20),
             tooltip: 'Add Appliance / Device',
             onPressed: _showAddDeviceDialog,
           ),
@@ -273,8 +189,9 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
           labelColor: accentColor,
           indicatorColor: accentColor,
           unselectedLabelColor: textSecondary,
-          labelStyle: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w700),
-          unselectedLabelStyle: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500),
+          labelStyle: AppFonts.inter(fontSize: 13, fontWeight: FontWeight.w700),
+          unselectedLabelStyle:
+              AppFonts.inter(fontSize: 13, fontWeight: FontWeight.w500),
           tabs: const [
             Tab(text: 'Smart Devices'),
             Tab(text: 'Inventory'),
@@ -289,9 +206,12 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
             child: TabBarView(
               controller: _tabController,
               children: [
-                _buildDevicesTab(context, surfaceColor, borderColor, textPrimary, textSecondary, accentColor, isDark),
-                _buildInventoryTab(context, surfaceColor, borderColor, textPrimary, textSecondary, isDark),
-                _buildWarrantiesTab(context, surfaceColor, borderColor, textPrimary, textSecondary, accentColor),
+                _buildDevicesTab(context, surfaceColor, borderColor,
+                    textPrimary, textSecondary, accentColor, isDark),
+                _buildInventoryTab(context, surfaceColor, borderColor,
+                    textPrimary, textSecondary, isDark),
+                _buildWarrantiesTab(context, surfaceColor, borderColor,
+                    textPrimary, textSecondary, accentColor),
               ],
             ).animate().fadeIn(duration: 250.ms),
           ),
@@ -325,13 +245,19 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
           child: Row(
             children: [
               Container(
-                width: 46,
-                height: 46,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
-                  color: accentColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(14),
+                  color: AppColors.iconBackgroundOf(context),
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    color: AppColors.iconBorderOf(context),
+                  ),
                 ),
-                child: Icon(Icons.home_work_rounded, color: accentColor, size: 24),
+                child: Center(
+                  child: AppIcon(AppIcons.homeManagement,
+                      color: AppColors.brandIconOf(context), size: 24),
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -340,24 +266,80 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                   children: [
                     Text(
                       'Smart Home Ecosystem',
-                      style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w700, color: textPrimary),
+                      style: AppFonts.inter(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: textPrimary),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       '$onlineCount of ${_devices.length} appliances currently active',
-                      style: GoogleFonts.inter(fontSize: 12.5, color: textSecondary),
+                      style:
+                          AppFonts.inter(fontSize: 12.5, color: textSecondary),
                     ),
                   ],
                 ),
               ),
-              const LifeUseBadge(text: 'ONLINE', variant: LifeUseBadgeVariant.active),
+              const LifeUseBadge(
+                  text: 'ONLINE', variant: LifeUseBadgeVariant.active),
             ],
           ),
         ),
         const SizedBox(height: 16),
 
-        // Device Switch Grid
-        LayoutBuilder(
+        if (_devices.isEmpty)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 36),
+            decoration: BoxDecoration(
+              color: surfaceColor,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: borderColor),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: AppColors.iconBackgroundOf(context),
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: AppColors.iconBorderOf(context),
+                      width: 1.2,
+                    ),
+                  ),
+                  child: Center(
+                    child: AppIcon(
+                      AppIcons.homeManagement,
+                      size: 26,
+                      color: AppColors.brandIconOf(context),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'No Connected Appliances',
+                  style: AppFonts.inter(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Pair and control smart home appliances and switches from here.\nTap \'+\' in the header to pair a device.',
+                  textAlign: TextAlign.center,
+                  style: AppFonts.inter(
+                    fontSize: 12,
+                    color: textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          )
+        else
+          // Device Switch Grid
+          LayoutBuilder(
           builder: (context, constraints) {
             final isWide = constraints.maxWidth > 600;
             return GridView.builder(
@@ -373,7 +355,8 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
               itemBuilder: (ctx, i) {
                 final dev = _devices[i];
                 return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
                     color: dev.isOn
                         ? accentColor.withValues(alpha: isDark ? 0.15 : 0.08)
@@ -390,10 +373,12 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: dev.isOn ? accentColor : borderColor.withValues(alpha: 0.3),
+                          color: dev.isOn
+                              ? accentColor
+                              : borderColor.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Icon(
+                        child: AppIcon(
                           dev.icon,
                           size: 20,
                           color: dev.isOn ? Colors.white : textSecondary,
@@ -407,7 +392,7 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                           children: [
                             Text(
                               dev.name,
-                              style: GoogleFonts.inter(
+                              style: AppFonts.inter(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
                                 color: textPrimary,
@@ -416,7 +401,8 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                             const SizedBox(height: 2),
                             Text(
                               dev.room,
-                              style: GoogleFonts.inter(fontSize: 11.5, color: textSecondary),
+                              style: AppFonts.inter(
+                                  fontSize: 11.5, color: textSecondary),
                             ),
                           ],
                         ),
@@ -447,6 +433,63 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
     Color textSecondary,
     bool isDark,
   ) {
+    if (_inventory.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 36),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 36),
+            decoration: BoxDecoration(
+              color: surfaceColor,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: borderColor),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: AppColors.iconBackgroundOf(context),
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: AppColors.iconBorderOf(context),
+                      width: 1.2,
+                    ),
+                  ),
+                  child: Center(
+                    child: AppIcon(
+                      AppIcons.homeManagement,
+                      size: 26,
+                      color: AppColors.brandIconOf(context),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Pantry Inventory Empty',
+                  style: AppFonts.inter(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'No grocery supplies or consumables logged yet.\nTrack household items and essential stock here.',
+                  textAlign: TextAlign.center,
+                  style: AppFonts.inter(
+                    fontSize: 12,
+                    color: textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       itemCount: _inventory.length,
@@ -472,13 +515,22 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                 decoration: BoxDecoration(
                   color: item.isLowStock
                       ? AppColors.error.withValues(alpha: 0.1)
-                      : const Color(0xFF0284C7).withValues(alpha: 0.1),
+                      : AppColors.iconBackgroundOf(context),
                   borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: item.isLowStock
+                        ? AppColors.error.withValues(alpha: 0.25)
+                        : AppColors.iconBorderOf(context),
+                  ),
                 ),
                 child: Icon(
-                  item.isLowStock ? Icons.warning_amber_rounded : Icons.inventory_2_outlined,
+                  item.isLowStock
+                      ? LucideIcons.alertTriangle
+                      : LucideIcons.package2,
                   size: 20,
-                  color: item.isLowStock ? AppColors.error : const Color(0xFF0284C7),
+                  color: item.isLowStock
+                      ? AppColors.error
+                      : AppColors.brandIconOf(context),
                 ),
               ),
               const SizedBox(width: 14),
@@ -488,12 +540,15 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                   children: [
                     Text(
                       item.name,
-                      style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700, color: textPrimary),
+                      style: AppFonts.inter(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: textPrimary),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       item.location,
-                      style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
+                      style: AppFonts.inter(fontSize: 12, color: textSecondary),
                     ),
                   ],
                 ),
@@ -502,21 +557,21 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.remove_circle_outline, size: 20),
+                    icon: const Icon(LucideIcons.minusCircle, size: 20),
                     onPressed: item.quantity > 0
                         ? () => setState(() => item.quantity--)
                         : null,
                   ),
                   Text(
                     '${item.quantity} ${item.unit}',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                       color: item.isLowStock ? AppColors.error : textPrimary,
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.add_circle_outline, size: 20),
+                    icon: const Icon(LucideIcons.plusCircle, size: 20),
                     onPressed: () => setState(() => item.quantity++),
                   ),
                 ],
@@ -536,6 +591,63 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
     Color textSecondary,
     Color accentColor,
   ) {
+    if (_maintenance.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 36),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 36),
+            decoration: BoxDecoration(
+              color: surfaceColor,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: borderColor),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: AppColors.iconBackgroundOf(context),
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: AppColors.iconBorderOf(context),
+                      width: 1.2,
+                    ),
+                  ),
+                  child: Center(
+                    child: AppIcon(
+                      AppIcons.homeManagement,
+                      size: 26,
+                      color: AppColors.brandIconOf(context),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'No Maintenance Schedules',
+                  style: AppFonts.inter(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Track appliance service routines, warranties, and AMC renewals here.',
+                  textAlign: TextAlign.center,
+                  style: AppFonts.inter(
+                    fontSize: 12,
+                    color: textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       itemCount: _maintenance.length,
@@ -558,35 +670,43 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                   Expanded(
                     child: Text(
                       m.appliance,
-                      style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w700, color: textPrimary),
+                      style: AppFonts.inter(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: textPrimary),
                     ),
                   ),
                   LifeUseBadge(
                     text: m.isCompleted ? 'COMPLETED' : 'SCHEDULED',
-                    variant: m.isCompleted ? LifeUseBadgeVariant.active : LifeUseBadgeVariant.pending,
+                    variant: m.isCompleted
+                        ? LifeUseBadgeVariant.active
+                        : LifeUseBadgeVariant.pending,
                   ),
                 ],
               ),
               const SizedBox(height: 6),
               Text(
                 m.task,
-                style: GoogleFonts.inter(fontSize: 13, color: textSecondary),
+                style: AppFonts.inter(fontSize: 13, color: textSecondary),
               ),
               const SizedBox(height: 10),
               Row(
                 children: [
-                  Icon(Icons.calendar_today_rounded, size: 14, color: accentColor),
+                  Icon(LucideIcons.calendar, size: 14, color: accentColor),
                   const SizedBox(width: 6),
                   Text(
                     m.dueDate,
-                    style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: accentColor),
+                    style: AppFonts.inter(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: accentColor),
                   ),
                   const Spacer(),
-                  Icon(Icons.verified_user_outlined, size: 14, color: textSecondary),
+                  Icon(LucideIcons.shieldCheck, size: 14, color: textSecondary),
                   const SizedBox(width: 4),
                   Text(
                     m.warrantyPeriod,
-                    style: GoogleFonts.inter(fontSize: 11.5, color: textSecondary),
+                    style: AppFonts.inter(fontSize: 11.5, color: textSecondary),
                   ),
                 ],
               ),

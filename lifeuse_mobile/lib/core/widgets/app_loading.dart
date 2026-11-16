@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import '../theme/app_colors.dart';
 
 /// Clean reusable Loading indicator for LifeUse.
@@ -34,7 +34,7 @@ class AppLoading extends StatelessWidget {
               const SizedBox(height: 14),
               Text(
                 message!,
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                   color: AppColors.textSecondaryOf(context),

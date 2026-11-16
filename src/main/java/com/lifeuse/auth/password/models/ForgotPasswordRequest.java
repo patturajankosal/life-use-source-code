@@ -1,26 +1,33 @@
 package com.lifeuse.auth.password.models;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-
 public class ForgotPasswordRequest {
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Please provide a valid email address")
     private String email;
+    private String identifier;
 
     public ForgotPasswordRequest() {
     }
 
-    public ForgotPasswordRequest(String email) {
-        this.email = email;
+    public ForgotPasswordRequest(String identifierOrEmail) {
+        if (identifierOrEmail != null && identifierOrEmail.contains("@")) {
+            this.email = identifierOrEmail;
+        }
+        this.identifier = identifierOrEmail;
     }
 
     public String getEmail() {
-        return email;
+        return email != null ? email : identifier;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getIdentifier() {
+        return identifier != null ? identifier : email;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 }

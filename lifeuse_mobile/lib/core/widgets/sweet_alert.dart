@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
 
 /// SweetAlert icon & visual style variants
@@ -238,7 +239,7 @@ class SweetAlert extends StatelessWidget {
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 19,
                   fontWeight: FontWeight.w700,
                   color: textPrimary,
@@ -252,7 +253,7 @@ class SweetAlert extends StatelessWidget {
                 Text(
                   message!,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
+                  style: AppFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     color: textSecondary,
@@ -282,10 +283,11 @@ class SweetAlert extends StatelessWidget {
                           ),
                           side: BorderSide(color: borderColor),
                         ),
-                        onPressed: onCancel ?? () => Navigator.of(context).pop(false),
+                        onPressed:
+                            onCancel ?? () => Navigator.of(context).pop(false),
                         child: Text(
                           cancelText!,
-                          style: GoogleFonts.inter(
+                          style: AppFonts.inter(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: textSecondary,
@@ -308,10 +310,11 @@ class SweetAlert extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed: onConfirm ?? () => Navigator.of(context).pop(true),
+                      onPressed:
+                          onConfirm ?? () => Navigator.of(context).pop(true),
                       child: Text(
                         confirmText,
-                        style: GoogleFonts.inter(
+                        style: AppFonts.inter(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
@@ -354,29 +357,27 @@ class SweetAlert extends StatelessWidget {
     switch (type) {
       case SweetAlertType.success:
         return const _StyleConfig(
-          icon: Icons.check_circle_outline_rounded,
+          icon: LucideIcons.checkCircle2,
           accentColor: AppColors.success,
         );
       case SweetAlertType.error:
         return const _StyleConfig(
-          icon: Icons.highlight_off_rounded,
+          icon: LucideIcons.xCircle,
           accentColor: AppColors.error,
         );
       case SweetAlertType.warning:
         return const _StyleConfig(
-          icon: Icons.warning_amber_rounded,
+          icon: LucideIcons.alertTriangle,
           accentColor: AppColors.amberGold,
         );
       case SweetAlertType.info:
         return const _StyleConfig(
-          icon: Icons.info_outline_rounded,
+          icon: LucideIcons.info,
           accentColor: AppColors.primary,
         );
       case SweetAlertType.confirm:
         return _StyleConfig(
-          icon: isDestructive
-              ? Icons.delete_forever_outlined
-              : Icons.help_outline_rounded,
+          icon: isDestructive ? LucideIcons.trash2 : LucideIcons.helpCircle,
           accentColor: isDestructive ? AppColors.error : AppColors.primary,
         );
     }

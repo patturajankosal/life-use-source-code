@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_icons.dart';
 import '../dashboard/models/dashboard_module_item.dart';
 import '../dashboard/widgets/module_card.dart';
 
@@ -16,7 +16,8 @@ class ModulesScreen extends StatefulWidget {
 }
 
 class _ModulesScreenState extends State<ModulesScreen> {
-  String _selectedCategory = 'ALL'; // ALL, Finance, Productivity, Lifestyle, Security, Education, Planning
+  String _selectedCategory =
+      'ALL'; // ALL, Finance, Productivity, Lifestyle, Security, Education, Planning
 
   final List<String> _categories = [
     'ALL',
@@ -31,19 +32,19 @@ class _ModulesScreenState extends State<ModulesScreen> {
   IconData _categoryIcon(String category) {
     switch (category) {
       case 'Finance':
-        return LucideIcons.wallet;
+        return AppIcons.moneyManager;
       case 'Productivity':
-        return LucideIcons.checkSquare;
+        return AppIcons.dailyTasks;
       case 'Lifestyle':
-        return LucideIcons.heartPulse;
+        return AppIcons.healthWellness;
       case 'Education':
-        return LucideIcons.graduationCap;
+        return AppIcons.examsLearning;
       case 'Security':
-        return LucideIcons.shieldCheck;
+        return AppIcons.documentsVault;
       case 'Planning':
-        return LucideIcons.compass;
+        return AppIcons.personalPlanning;
       default:
-        return LucideIcons.layoutGrid;
+        return AppIcons.modulesOutline;
     }
   }
 
@@ -51,12 +52,13 @@ class _ModulesScreenState extends State<ModulesScreen> {
   Widget build(BuildContext context) {
     final textPrimary = AppColors.textPrimaryOf(context);
     final textSecondary = AppColors.textSecondaryOf(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final allModules = HardcodedModuleItem.hardcodedModules;
 
     final filteredModules = allModules.where((m) {
-      if (_selectedCategory != 'ALL' && m.category != _selectedCategory) return false;
+      if (_selectedCategory != 'ALL' && m.category != _selectedCategory) {
+        return false;
+      }
       return true;
     }).toList();
 
@@ -65,7 +67,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
       appBar: AppBar(
         title: Text(
           'Life Management Suite',
-          style: GoogleFonts.plusJakartaSans(
+          style: AppFonts.plusJakartaSans(
             fontSize: 18,
             fontWeight: FontWeight.w700,
             color: textPrimary,
@@ -79,13 +81,13 @@ class _ModulesScreenState extends State<ModulesScreen> {
               color: AppColors.badgeBgOf(context),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0),
+                color: AppColors.borderOf(context),
               ),
             ),
             child: Center(
               child: Text(
                 '10 MODULES',
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
                   color: AppColors.badgeTextOf(context),
@@ -100,14 +102,14 @@ class _ModulesScreenState extends State<ModulesScreen> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 760),
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
               physics: const BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Explore All Modules',
-                    style: GoogleFonts.plusJakartaSans(
+                    style: AppFonts.plusJakartaSans(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -116,7 +118,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                   const SizedBox(height: 2),
                   Text(
                     'Tap any module below to launch its dedicated micro-application.',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 12.5,
                       color: textSecondary,
                     ),
@@ -135,14 +137,16 @@ class _ModulesScreenState extends State<ModulesScreen> {
                           child: FilterChip(
                             avatar: Icon(
                               _categoryIcon(cat),
-                              size: 14,
+                              size: 16,
                               color: isSelected ? Colors.white : textSecondary,
                             ),
                             selected: isSelected,
                             label: Text(cat),
-                            labelStyle: GoogleFonts.inter(
+                            labelStyle: AppFonts.inter(
                               fontSize: 12,
-                              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
                               color: isSelected ? Colors.white : textSecondary,
                             ),
                             selectedColor: AppColors.primary,
@@ -171,7 +175,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                     builder: (ctx, constraints) {
                       final isTablet = constraints.maxWidth >= 600;
                       final crossAxisCount = isTablet ? 3 : 2;
-                      final childAspectRatio = isTablet ? 1.3 : 1.15;
+                      final childAspectRatio = isTablet ? 1.25 : 1.06;
 
                       return GridView.builder(
                         shrinkWrap: true,

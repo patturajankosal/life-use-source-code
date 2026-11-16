@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/icons/lifeuse_icons.dart';
 import '../../../core/widgets/lifeuse_badge.dart';
 
 class _SecureDocItem {
@@ -33,40 +33,7 @@ class DocumentsVaultScreen extends StatefulWidget {
 }
 
 class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
-  final List<_SecureDocItem> _documents = const [
-    _SecureDocItem(
-      id: 'doc_1',
-      title: 'National Passport',
-      category: 'Government ID',
-      docNumber: 'Z894••••',
-      expiryDate: 'Valid till Aug 2032',
-      icon: LucideIcons.fileText,
-    ),
-    _SecureDocItem(
-      id: 'doc_2',
-      title: 'Comprehensive Health Insurance Policy',
-      category: 'Insurance',
-      docNumber: 'POL-9041289',
-      expiryDate: 'Renewal Due Oct 2027',
-      icon: LucideIcons.shieldCheck,
-    ),
-    _SecureDocItem(
-      id: 'doc_3',
-      title: 'Vehicle Registration Certificate (RC)',
-      category: 'Automotive',
-      docNumber: 'TN-07-••••',
-      expiryDate: 'Lifetime Fitness Valid',
-      icon: LucideIcons.car,
-    ),
-    _SecureDocItem(
-      id: 'doc_4',
-      title: 'Driver\'s License',
-      category: 'Government ID',
-      docNumber: 'DL-901428',
-      expiryDate: 'Valid till 2039',
-      icon: LucideIcons.creditCard,
-    ),
-  ];
+  final List<_SecureDocItem> _documents = [];
 
   void _showAddDocumentDialog() {
     final titleCtrl = TextEditingController();
@@ -78,7 +45,8 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surfaceOf(ctx),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: Text('Store Encrypted Document', style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
+        title: Text('Store Encrypted Document',
+            style: AppFonts.inter(fontWeight: FontWeight.w700)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -87,7 +55,8 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
               decoration: InputDecoration(
                 labelText: 'Document Name',
                 hintText: 'e.g. Life Insurance Policy',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
             const SizedBox(height: 12),
@@ -96,7 +65,8 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
               decoration: InputDecoration(
                 labelText: 'Category',
                 hintText: 'e.g. Insurance / Identity',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
             const SizedBox(height: 12),
@@ -105,23 +75,46 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
               decoration: InputDecoration(
                 labelText: 'Document / Policy Number',
                 hintText: 'e.g. #9021849',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF6366F1),
               foregroundColor: Colors.white,
             ),
             onPressed: () {
+              final title = titleCtrl.text.trim();
+              if (title.isNotEmpty) {
+                setState(() {
+                  _documents.insert(
+                    0,
+                    _SecureDocItem(
+                      id: 'doc_${DateTime.now().millisecondsSinceEpoch}',
+                      title: title,
+                      category: catCtrl.text.trim().isEmpty
+                          ? 'Personal Document'
+                          : catCtrl.text.trim(),
+                      docNumber: numCtrl.text.trim().isEmpty
+                          ? 'DOC-••••'
+                          : numCtrl.text.trim(),
+                      expiryDate: 'Secured locally',
+                      icon: AppIcons.documentsVault,
+                    ),
+                  );
+                });
+              }
               Navigator.pop(ctx);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Document encrypted & stored in local AES-256 vault'),
+                  content: Text(
+                      'Document encrypted & stored in local AES-256 vault'),
                   behavior: SnackBarBehavior.floating,
                 ),
               );
@@ -140,18 +133,18 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
     final borderColor = AppColors.borderOf(context);
     final textPrimary = AppColors.textPrimaryOf(context);
     final textSecondary = AppColors.textSecondaryOf(context);
-    const accentColor = Color(0xFF6366F1);
 
     return Scaffold(
       backgroundColor: AppColors.backgroundOf(context),
       appBar: AppBar(
         title: Text(
           'Documents Vault',
-          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
+          style: AppFonts.plusJakartaSans(
+              fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
-            icon: const Icon(LucideIcons.plus, size: 20),
+            icon: const AppIcon(AppIcons.plus, size: 20),
             tooltip: 'Add Document',
             onPressed: _showAddDocumentDialog,
           ),
@@ -175,7 +168,8 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                       border: Border.all(color: borderColor),
                       boxShadow: [
                         BoxShadow(
-                          color: accentColor.withValues(alpha: isDark ? 0.2 : 0.05),
+                          color: Colors.black
+                              .withValues(alpha: isDark ? 0.20 : 0.04),
                           blurRadius: 16,
                           offset: const Offset(0, 4),
                         ),
@@ -184,12 +178,22 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                     child: Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(12),
+                          width: 48,
+                          height: 48,
                           decoration: BoxDecoration(
-                            color: accentColor.withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(14),
+                            color: AppColors.iconBackgroundOf(context),
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: AppColors.iconBorderOf(context),
+                            ),
                           ),
-                          child: const Icon(LucideIcons.lock, color: accentColor, size: 24),
+                          child: Center(
+                            child: AppIcon(
+                              AppIcons.lock,
+                              color: AppColors.brandIconOf(context),
+                              size: 24,
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -198,7 +202,7 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                             children: [
                               Text(
                                 'Hardware-Encrypted Vault',
-                                style: GoogleFonts.inter(
+                                style: AppFonts.inter(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                   color: textPrimary,
@@ -207,12 +211,15 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                               const SizedBox(height: 2),
                               Text(
                                 'All records secured with AES-256 bit client-side keys.',
-                                style: GoogleFonts.inter(fontSize: 12.5, color: textSecondary),
+                                style: AppFonts.inter(
+                                    fontSize: 12.5, color: textSecondary),
                               ),
                             ],
                           ),
                         ),
-                        const LifeUseBadge(text: 'AES-256', variant: LifeUseBadgeVariant.active),
+                        const LifeUseBadge(
+                            text: 'AES-256',
+                            variant: LifeUseBadgeVariant.active),
                       ],
                     ),
                   ),
@@ -221,11 +228,66 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                   // 2. Documents List
                   Text(
                     'Stored Credentials & Documents',
-                    style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: textPrimary),
+                    style: AppFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: textPrimary),
                   ),
                   const SizedBox(height: 12),
 
-                  ListView.separated(
+                  if (_documents.isEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 36),
+                      decoration: BoxDecoration(
+                        color: surfaceColor,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: borderColor),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              color: AppColors.iconBackgroundOf(context),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: AppColors.iconBorderOf(context),
+                                width: 1.2,
+                              ),
+                            ),
+                            child: Center(
+                              child: AppIcon(
+                                AppIcons.documentsVault,
+                                size: 26,
+                                color: AppColors.brandIconOf(context),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Encrypted Vault Empty',
+                            style: AppFonts.inter(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'No identity credentials or insurance policies stored yet.\nTap \'+\' in the header to add an encrypted document.',
+                            textAlign: TextAlign.center,
+                            style: AppFonts.inter(
+                              fontSize: 12,
+                              color: textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: _documents.length,
@@ -242,12 +304,23 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                         child: Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(10),
+                              width: 44,
+                              height: 44,
                               decoration: BoxDecoration(
-                                color: accentColor.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(12),
+                                color: AppColors.iconBackgroundOf(context),
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: AppColors.iconBorderOf(context),
+                                  width: 1.0,
+                                ),
                               ),
-                              child: Icon(doc.icon, color: accentColor, size: 22),
+                              child: Center(
+                                child: AppIcon(
+                                  doc.icon,
+                                  color: AppColors.brandIconOf(context),
+                                  size: 21,
+                                ),
+                              ),
                             ),
                             const SizedBox(width: 14),
                             Expanded(
@@ -256,7 +329,7 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                                 children: [
                                   Text(
                                     doc.title,
-                                    style: GoogleFonts.inter(
+                                    style: AppFonts.inter(
                                       fontSize: 14.5,
                                       fontWeight: FontWeight.w700,
                                       color: textPrimary,
@@ -265,22 +338,23 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                                   const SizedBox(height: 2),
                                   Text(
                                     '${doc.category} • ${doc.docNumber}',
-                                    style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
+                                    style: AppFonts.inter(
+                                        fontSize: 12, color: textSecondary),
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
                                     doc.expiryDate,
-                                    style: GoogleFonts.inter(
+                                    style: AppFonts.inter(
                                       fontSize: 11.5,
                                       fontWeight: FontWeight.w600,
-                                      color: accentColor,
+                                      color: textSecondary,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                             IconButton(
-                              icon: const Icon(LucideIcons.eye, size: 18),
+                              icon: const AppIcon(AppIcons.eye, size: 18),
                               tooltip: 'View Secure Details',
                               onPressed: () {
                                 ScaffoldMessenger.of(context).showSnackBar(

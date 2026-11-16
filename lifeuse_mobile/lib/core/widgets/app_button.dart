@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import '../theme/app_colors.dart';
 
 /// Button visual variants matching modern Figma / shadcn tokens
@@ -105,7 +105,8 @@ class AppButton extends StatelessWidget {
             onPressed: isLoading ? null : onPressed,
             style: ElevatedButton.styleFrom(
               minimumSize: Size(width ?? 0, height),
-              backgroundColor: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
+              backgroundColor:
+                  isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
               foregroundColor: textPrimary,
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -161,7 +162,8 @@ class AppButton extends StatelessWidget {
             onPressed: isLoading ? null : onPressed,
             style: ElevatedButton.styleFrom(
               minimumSize: Size(width ?? 0, height),
-              backgroundColor: AppColors.primary.withValues(alpha: isDark ? 0.2 : 0.1),
+              backgroundColor:
+                  AppColors.primary.withValues(alpha: isDark ? 0.2 : 0.1),
               foregroundColor: AppColors.primary,
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -226,7 +228,7 @@ class AppButton extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             title,
-            style: GoogleFonts.inter(
+            style: AppFonts.inter(
               fontSize: 14.5,
               fontWeight: FontWeight.w700,
               color: textColor,
@@ -239,7 +241,7 @@ class AppButton extends StatelessWidget {
 
     return Text(
       title,
-      style: GoogleFonts.inter(
+      style: AppFonts.inter(
         fontSize: 14.5,
         fontWeight: FontWeight.w700,
         color: textColor,

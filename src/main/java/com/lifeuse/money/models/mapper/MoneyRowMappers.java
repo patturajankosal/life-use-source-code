@@ -246,6 +246,13 @@ public final class MoneyRowMappers {
             t.setPlannedExpenseId(rs.wasNull() ? null : plannedId);
             long occId = rs.getLong("recurring_occurrence_id");
             t.setRecurringOccurrenceId(rs.wasNull() ? null : occId);
+            try {
+                long grpId = rs.getLong("group_id");
+                t.setGroupId(rs.wasNull() ? null : grpId);
+                t.setShared(rs.getBoolean("is_shared"));
+            } catch (SQLException ignored) {
+                // Backward compatibility if columns are not selected
+            }
             t.setCreatedAt(getInstant(rs, "created_at"));
             t.setUpdatedAt(getInstant(rs, "updated_at"));
             return t;

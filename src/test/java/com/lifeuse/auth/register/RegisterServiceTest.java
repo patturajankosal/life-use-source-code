@@ -40,6 +40,12 @@ class RegisterServiceTest {
     @Mock
     private IVerificationService verificationService;
 
+    @Mock
+    private com.lifeuse.security.JwtService jwtService;
+
+    @Mock
+    private com.lifeuse.auth.token.service.ITokenService tokenService;
+
     @InjectMocks
     private RegisterService registerService;
 
@@ -68,7 +74,8 @@ class RegisterServiceTest {
         when(passwordEncoder.encode("Password123!")).thenReturn("encodedPassword");
         when(registerMapper.toEntity(validRequest, "encodedPassword")).thenReturn(testUser);
         when(registerRepository.save(testUser)).thenReturn(testUser);
-        when(registerMapper.toResponse(testUser)).thenReturn(expectedResponse);
+        when(tokenService.createRefreshToken(any())).thenReturn(new com.lifeuse.auth.token.models.RefreshToken(testUser, "sampleRefreshToken", java.time.Instant.now().plusSeconds(3600)));
+        when(registerMapper.toResponse(any(), any(), any(), any())).thenReturn(expectedResponse);
 
         RegisterResponse response = registerService.register(validRequest);
 

@@ -169,9 +169,9 @@ public final class MoneyQueries {
     // --- Financial Transactions ---
     public static final String CREATE_TRANSACTION =
             "INSERT INTO financial_transactions (user_id, transaction_type, category_name, sub_category, amount, currency, " +
-            "payment_method, transaction_date, is_essential, idempotency_key, notes, planned_expense_id, recurring_occurrence_id, created_at, updated_at) " +
+            "payment_method, transaction_date, is_essential, idempotency_key, notes, planned_expense_id, recurring_occurrence_id, group_id, is_shared, created_at, updated_at) " +
             "VALUES (:userId, :transactionType, :categoryName, :subCategory, :amount, :currency, " +
-            ":paymentMethod, :transactionDate, :essential, :idempotencyKey, :notes, :plannedExpenseId, :recurringOccurrenceId, :createdAt, :updatedAt)";
+            ":paymentMethod, :transactionDate, :essential, :idempotencyKey, :notes, :plannedExpenseId, :recurringOccurrenceId, :groupId, :isShared, :createdAt, :updatedAt)";
 
     public static final String FIND_TRANSACTION_BY_ID =
             "SELECT * FROM financial_transactions WHERE id = :id AND user_id = :userId";
@@ -187,15 +187,15 @@ public final class MoneyQueries {
 
     public static final String SUM_EXPENSES_TODAY =
             "SELECT COALESCE(SUM(amount), 0) FROM financial_transactions " +
-            "WHERE user_id = :userId AND transaction_type = 'EXPENSE' AND transaction_date >= :startOfDay AND transaction_date <= :endOfDay";
+            "WHERE user_id = :userId AND transaction_type = 'EXPENSE' AND transaction_date >= :startOfDay AND transaction_date <= :endOfDay AND (group_id IS NULL OR is_shared = FALSE)";
 
     public static final String SUM_BY_TYPE_AND_RANGE =
             "SELECT COALESCE(SUM(amount), 0) FROM financial_transactions " +
-            "WHERE user_id = :userId AND transaction_type = :type AND transaction_date >= :startDate AND transaction_date <= :endDate";
+            "WHERE user_id = :userId AND transaction_type = :type AND transaction_date >= :startDate AND transaction_date <= :endDate AND (group_id IS NULL OR is_shared = FALSE)";
 
     public static final String SUM_EXPENSES_BY_ESSENTIAL =
             "SELECT COALESCE(SUM(amount), 0) FROM financial_transactions " +
-            "WHERE user_id = :userId AND transaction_type = 'EXPENSE' AND is_essential = :essential AND transaction_date >= :startDate AND transaction_date <= :endDate";
+            "WHERE user_id = :userId AND transaction_type = 'EXPENSE' AND is_essential = :essential AND transaction_date >= :startDate AND transaction_date <= :endDate AND (group_id IS NULL OR is_shared = FALSE)";
 
     // --- Reminder Preferences ---
     public static final String CREATE_REMINDER_PREFERENCE =

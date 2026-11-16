@@ -59,24 +59,38 @@ class DailySpendingLimitModel {
 
   factory DailySpendingLimitModel.fromJson(Map<String, dynamic> json) {
     return DailySpendingLimitModel(
-      recommendedDailyLimit: (json['recommendedDailyLimit'] as num?)?.toDouble() ?? 0.0,
+      recommendedDailyLimit:
+          (json['recommendedDailyLimit'] as num?)?.toDouble() ?? 0.0,
       spentToday: (json['spentToday'] as num?)?.toDouble() ?? 0.0,
-      remainingTodayAllowance: (json['remainingTodayAllowance'] as num?)?.toDouble() ?? 0.0,
+      remainingTodayAllowance:
+          (json['remainingTodayAllowance'] as num?)?.toDouble() ?? 0.0,
       reportedFunds: (json['reportedFunds'] as num?)?.toDouble() ?? 0.0,
-      calculatedAvailableFunds: (json['calculatedAvailableFunds'] as num?)?.toDouble() ?? 0.0,
-      reservedForCommitments: (json['reservedForCommitments'] as num?)?.toDouble() ?? 0.0,
-      reservedForSavings: (json['reservedForSavings'] as num?)?.toDouble() ?? 0.0,
-      plannedExpensesAhead: (json['plannedExpensesAhead'] as num?)?.toDouble() ?? 0.0,
+      calculatedAvailableFunds:
+          (json['calculatedAvailableFunds'] as num?)?.toDouble() ?? 0.0,
+      reservedForCommitments:
+          (json['reservedForCommitments'] as num?)?.toDouble() ?? 0.0,
+      reservedForSavings:
+          (json['reservedForSavings'] as num?)?.toDouble() ?? 0.0,
+      plannedExpensesAhead:
+          (json['plannedExpensesAhead'] as num?)?.toDouble() ?? 0.0,
       emergencyReserve: (json['emergencyReserve'] as num?)?.toDouble() ?? 0.0,
-      remainingDiscretionaryBudget: (json['remainingDiscretionaryBudget'] as num?)?.toDouble() ?? 0.0,
-      remainingDaysInPeriod: (json['remainingDaysInPeriod'] as num?)?.toInt() ?? 0,
-      budgetUtilizationPercent: (json['budgetUtilizationPercent'] as num?)?.toDouble() ?? 0.0,
+      remainingDiscretionaryBudget:
+          (json['remainingDiscretionaryBudget'] as num?)?.toDouble() ?? 0.0,
+      remainingDaysInPeriod:
+          (json['remainingDaysInPeriod'] as num?)?.toInt() ?? 0,
+      budgetUtilizationPercent:
+          (json['budgetUtilizationPercent'] as num?)?.toDouble() ?? 0.0,
       calculatedAt: json['calculatedAt'] != null
-          ? DateTime.tryParse(json['calculatedAt'].toString())?.toLocal() ?? DateTime.now()
+          ? DateTime.tryParse(json['calculatedAt'].toString())?.toLocal() ??
+              DateTime.now()
           : DateTime.now(),
       explanation: json['explanation']?.toString() ?? '',
-      warnings: (json['warnings'] as List?)?.map((e) => e.toString()).toList() ?? [],
-      actionableInsights: (json['actionableInsights'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      warnings:
+          (json['warnings'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      actionableInsights: (json['actionableInsights'] as List?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
     );
   }
 }
@@ -124,12 +138,21 @@ class BudgetPressureModel {
     return BudgetPressureModel(
       pressureLevel: json['pressureLevel']?.toString() ?? 'HEALTHY',
       pressureScore: (json['pressureScore'] as num?)?.toDouble() ?? 0.0,
-      upcomingCommitmentsTotal: (json['upcomingCommitmentsTotal'] as num?)?.toDouble() ?? 0.0,
-      upcomingPlannedExpensesTotal: (json['upcomingPlannedExpensesTotal'] as num?)?.toDouble() ?? 0.0,
-      projectedBalanceAtPeriodEnd: (json['projectedBalanceAtPeriodEnd'] as num?)?.toDouble() ?? 0.0,
+      upcomingCommitmentsTotal:
+          (json['upcomingCommitmentsTotal'] as num?)?.toDouble() ?? 0.0,
+      upcomingPlannedExpensesTotal:
+          (json['upcomingPlannedExpensesTotal'] as num?)?.toDouble() ?? 0.0,
+      projectedBalanceAtPeriodEnd:
+          (json['projectedBalanceAtPeriodEnd'] as num?)?.toDouble() ?? 0.0,
       summaryText: json['summaryText']?.toString() ?? '',
-      pressureFactors: (json['pressureFactors'] as List?)?.map((e) => e.toString()).toList() ?? [],
-      actionableRecommendations: (json['actionableRecommendations'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      pressureFactors: (json['pressureFactors'] as List?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+      actionableRecommendations: (json['actionableRecommendations'] as List?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
     );
   }
 }
@@ -168,11 +191,15 @@ class SpendingBreakdownModel {
 
     return SpendingBreakdownModel(
       totalIncomeMonth: (json['totalIncomeMonth'] as num?)?.toDouble() ?? 0.0,
-      totalExpensesMonth: (json['totalExpensesMonth'] as num?)?.toDouble() ?? 0.0,
-      totalCommitmentsMonth: (json['totalCommitmentsMonth'] as num?)?.toDouble() ?? 0.0,
+      totalExpensesMonth:
+          (json['totalExpensesMonth'] as num?)?.toDouble() ?? 0.0,
+      totalCommitmentsMonth:
+          (json['totalCommitmentsMonth'] as num?)?.toDouble() ?? 0.0,
       totalSavingsMonth: (json['totalSavingsMonth'] as num?)?.toDouble() ?? 0.0,
-      plannedExpensesMonth: (json['plannedExpensesMonth'] as num?)?.toDouble() ?? 0.0,
-      unallocatedDiscretionary: (json['unallocatedDiscretionary'] as num?)?.toDouble() ?? 0.0,
+      plannedExpensesMonth:
+          (json['plannedExpensesMonth'] as num?)?.toDouble() ?? 0.0,
+      unallocatedDiscretionary:
+          (json['unallocatedDiscretionary'] as num?)?.toDouble() ?? 0.0,
       breakdownByCategory: parseMap(json['breakdownByCategory']),
       commitmentsByType: parseMap(json['commitmentsByType']),
     );

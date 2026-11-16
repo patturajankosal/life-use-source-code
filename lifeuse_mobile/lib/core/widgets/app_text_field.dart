@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 
@@ -140,13 +141,10 @@ class _AppTextFieldState extends State<AppTextField> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 14),
                         child: Icon(
-                          _obscureText
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
+                          _obscureText ? LucideIcons.eyeOff : LucideIcons.eye,
                           size: 20,
-                          color: _obscureText
-                              ? textSecondary
-                              : AppColors.primary,
+                          color:
+                              _obscureText ? textSecondary : AppColors.primary,
                         ),
                       ),
                     )

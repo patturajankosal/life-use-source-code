@@ -61,6 +61,23 @@ public class PasswordResetController {
     }
 
     /**
+     * POST /api/lifeUse/auth/password/verify -> PasswordResetController.verifyForgotPasswordOtp()
+     */
+    @PostMapping(AppRoutes.Auth.POST_VERIFY_PASSWORD_OTP)
+    @Operation(summary = "Verify forgot password OTP and obtain reset token")
+    public ResponseEntity<ApiResponse<java.util.Map<String, String>>> verifyForgotPasswordOtp(
+            @Valid @RequestBody com.lifeuse.auth.verification.models.EmailVerificationRequest request) {
+        try {
+            String resetToken = passwordResetService.verifyForgotPasswordOtp(request.getEmail(), request.getOtpCode());
+            log.success("Password", "Password reset OTP verified for '{}'", request.getEmail());
+            return ApiResponse.ok("OTP verified successfully", java.util.Map.of("token", resetToken));
+        } catch (Exception ex) {
+            log.error("Password", "Password reset OTP verification failed: {}", ex.getMessage());
+            throw ex;
+        }
+    }
+
+    /**
      * POST /api/v1/auth/password/change -> PasswordResetController.changePassword()
      */
     @PostMapping(AppRoutes.Auth.POST_CHANGE_PASSWORD)

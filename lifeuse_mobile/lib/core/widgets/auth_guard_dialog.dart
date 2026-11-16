@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
@@ -98,7 +98,8 @@ class AuthGuardDialog extends StatelessWidget {
                     height: 60,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppColors.primary.withValues(alpha: isDark ? 0.18 : 0.10),
+                      color: AppColors.primary
+                          .withValues(alpha: isDark ? 0.18 : 0.10),
                       border: Border.all(
                         color: AppColors.primary.withValues(alpha: 0.3),
                         width: 1.5,
@@ -119,7 +120,7 @@ class AuthGuardDialog extends StatelessWidget {
                 Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
+                  style: AppFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                     color: textPrimary,
@@ -132,7 +133,7 @@ class AuthGuardDialog extends StatelessWidget {
                 Text(
                   message,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
+                  style: AppFonts.inter(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w400,
                     color: textSecondary,
@@ -177,11 +178,12 @@ class AuthGuardDialog extends StatelessWidget {
                     onPressed: () => Navigator.of(context).pop(false),
                     style: TextButton.styleFrom(
                       foregroundColor: textSecondary,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                     ),
                     child: Text(
                       'Continue as Guest',
-                      style: GoogleFonts.inter(
+                      style: AppFonts.inter(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: textSecondary,

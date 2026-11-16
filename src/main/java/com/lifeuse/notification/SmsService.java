@@ -16,13 +16,14 @@ public class SmsService implements ISmsService {
     @Value("${app.sms.sender-id:AUTHAPP}")
     private String senderId;
 
+    private final com.lifeuse.notification.provider.SmsOtpProvider smsOtpProvider;
+
+    public SmsService(com.lifeuse.notification.provider.SmsOtpProvider smsOtpProvider) {
+        this.smsOtpProvider = smsOtpProvider;
+    }
+
     @Override
     public void sendOtpSms(String phoneNumber, String otpCode) {
-        if (!smsEnabled) {
-            log.info("[DEV MODE] SMS OTP simulation for {}: [Code: {}] (SMS sending disabled)", phoneNumber, otpCode);
-            return;
-        }
-        // In production with SMS provider enabled, Twilio / AWS SNS / Infobip API call is triggered here.
-        log.info("Sending SMS OTP to {} with Sender ID {}", phoneNumber, senderId);
+        smsOtpProvider.sendOtp(phoneNumber, otpCode, "Phone Verification");
     }
 }

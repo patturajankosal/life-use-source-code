@@ -94,7 +94,9 @@ class _CornerCosmicBeaconPainter extends CustomPainter {
       ..color = AppColors.neonCyan.withValues(alpha: 0.14 + 0.08 * pulse)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 22.0);
     canvas.drawCircle(
-      center + Offset(15 * math.cos(rotation * 2 * math.pi), 15 * math.sin(rotation * 2 * math.pi)),
+      center +
+          Offset(15 * math.cos(rotation * 2 * math.pi),
+              15 * math.sin(rotation * 2 * math.pi)),
       baseRadius * 0.55,
       cyanNebula,
     );

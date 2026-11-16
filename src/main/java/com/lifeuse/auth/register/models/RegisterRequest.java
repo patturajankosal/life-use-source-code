@@ -17,13 +17,13 @@ public class RegisterRequest {
 
     private String lastName;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Please provide a valid email address")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Please provide a valid email address")
     private String email;
 
-    @NotBlank(message = "Phone number is required")
     @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$", message = "Phone number must be a valid E.164 format (e.g. +1234567890)")
     private String phoneNumber;
+
+    private String verificationToken;
 
     @NotBlank(message = "Password is required")
     @Size(min = 8, max = 100, message = "Password must be at least 8 characters long")
@@ -48,6 +48,11 @@ public class RegisterRequest {
 
     public RegisterRequest(String username, String email, String phoneNumber, String password, String confirmPassword) {
         this(username, "", "", email, phoneNumber, password, confirmPassword);
+    }
+
+    public RegisterRequest(String username, String email, String phoneNumber, String password, String confirmPassword, String verificationToken) {
+        this(username, "", "", email, phoneNumber, password, confirmPassword);
+        this.verificationToken = verificationToken;
     }
 
     public String getUsername() {
@@ -104,5 +109,13 @@ public class RegisterRequest {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
     }
 }

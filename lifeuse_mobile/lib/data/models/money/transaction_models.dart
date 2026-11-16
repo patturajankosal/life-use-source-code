@@ -14,6 +14,9 @@ class TransactionModel {
   final String? notes;
   final int? plannedExpenseId;
   final int? recurringOccurrenceId;
+  final int? groupId;
+  final bool isShared;
+  final String? memberName;
   final DateTime? createdAt;
 
   const TransactionModel({
@@ -31,6 +34,9 @@ class TransactionModel {
     this.notes,
     this.plannedExpenseId,
     this.recurringOccurrenceId,
+    this.groupId,
+    this.isShared = false,
+    this.memberName,
     this.createdAt,
   });
 
@@ -49,13 +55,17 @@ class TransactionModel {
       currency: json['currency']?.toString() ?? 'INR',
       paymentMethod: json['paymentMethod']?.toString() ?? 'UPI',
       transactionDate: json['transactionDate'] != null
-          ? DateTime.tryParse(json['transactionDate'].toString())?.toLocal() ?? DateTime.now()
+          ? DateTime.tryParse(json['transactionDate'].toString())?.toLocal() ??
+              DateTime.now()
           : DateTime.now(),
       essential: json['essential'] == true,
       idempotencyKey: json['idempotencyKey']?.toString(),
       notes: json['notes']?.toString(),
       plannedExpenseId: (json['plannedExpenseId'] as num?)?.toInt(),
       recurringOccurrenceId: (json['recurringOccurrenceId'] as num?)?.toInt(),
+      groupId: (json['groupId'] as num?)?.toInt(),
+      isShared: json['isShared'] == true,
+      memberName: json['memberName']?.toString(),
       createdAt: json['createdAt'] != null
           ? DateTime.tryParse(json['createdAt'].toString())?.toLocal()
           : null,
@@ -78,6 +88,9 @@ class TransactionModel {
       'notes': notes,
       'plannedExpenseId': plannedExpenseId,
       'recurringOccurrenceId': recurringOccurrenceId,
+      'groupId': groupId,
+      'isShared': isShared,
+      'memberName': memberName,
       'createdAt': createdAt?.toUtc().toIso8601String(),
     };
   }
@@ -95,6 +108,8 @@ class TransactionCreateRequest {
   final String? idempotencyKey;
   final String? notes;
   final int? plannedExpenseId;
+  final int? groupId;
+  final bool isShared;
 
   const TransactionCreateRequest({
     required this.transactionType,
@@ -108,6 +123,8 @@ class TransactionCreateRequest {
     this.idempotencyKey,
     this.notes,
     this.plannedExpenseId,
+    this.groupId,
+    this.isShared = false,
   });
 
   Map<String, dynamic> toJson() {
@@ -123,6 +140,8 @@ class TransactionCreateRequest {
       'idempotencyKey': idempotencyKey,
       'notes': notes,
       'plannedExpenseId': plannedExpenseId,
+      'groupId': groupId,
+      'isShared': isShared,
     };
   }
 }
@@ -178,7 +197,8 @@ class TransactionSummaryModel {
       totalRefunds: (json['totalRefunds'] as num?)?.toDouble() ?? 0.0,
       netCashFlow: (json['netCashFlow'] as num?)?.toDouble() ?? 0.0,
       essentialExpenses: (json['essentialExpenses'] as num?)?.toDouble() ?? 0.0,
-      discretionaryExpenses: (json['discretionaryExpenses'] as num?)?.toDouble() ?? 0.0,
+      discretionaryExpenses:
+          (json['discretionaryExpenses'] as num?)?.toDouble() ?? 0.0,
       transactionCount: (json['transactionCount'] as num?)?.toInt() ?? 0,
       expensesByCategory: categoryMap,
     );

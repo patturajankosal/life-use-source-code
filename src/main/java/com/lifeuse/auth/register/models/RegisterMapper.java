@@ -12,8 +12,8 @@ public class RegisterMapper {
             return null;
         }
         String username = request.getUsername() != null ? request.getUsername().trim() : "";
-        String email = request.getEmail() != null ? request.getEmail().trim().toLowerCase() : "";
-        String phone = request.getPhoneNumber() != null ? request.getPhoneNumber().trim() : "";
+        String email = request.getEmail() != null && !request.getEmail().isBlank() ? request.getEmail().trim().toLowerCase() : null;
+        String phone = request.getPhoneNumber() != null && !request.getPhoneNumber().isBlank() ? request.getPhoneNumber().trim() : null;
         String firstName = request.getFirstName() != null ? request.getFirstName().trim() : "";
         String lastName = request.getLastName() != null ? request.getLastName().trim() : "";
 
@@ -35,6 +35,23 @@ public class RegisterMapper {
                 user.getPhoneNumber(),
                 user.isEmailVerified(),
                 user.isPhoneVerified()
+        );
+    }
+
+    public RegisterResponse toResponse(User user, String accessToken, String refreshToken, Long expiresIn) {
+        if (user == null) {
+            return null;
+        }
+        return new RegisterResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.isEmailVerified(),
+                user.isPhoneVerified(),
+                accessToken,
+                refreshToken,
+                expiresIn
         );
     }
 }

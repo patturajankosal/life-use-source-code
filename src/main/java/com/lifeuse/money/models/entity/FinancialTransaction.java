@@ -22,6 +22,8 @@ public class FinancialTransaction {
     private String notes;
     private Long plannedExpenseId;
     private Long recurringOccurrenceId;
+    private Long groupId;
+    private boolean isShared;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -29,6 +31,7 @@ public class FinancialTransaction {
         this.currency = "INR";
         this.paymentMethod = PaymentMethod.UPI;
         this.essential = false;
+        this.isShared = false;
         this.transactionDate = Instant.now();
     }
 
@@ -73,6 +76,12 @@ public class FinancialTransaction {
 
     public Long getRecurringOccurrenceId() { return recurringOccurrenceId; }
     public void setRecurringOccurrenceId(Long recurringOccurrenceId) { this.recurringOccurrenceId = recurringOccurrenceId; }
+
+    public Long getGroupId() { return groupId; }
+    public void setGroupId(Long groupId) { this.groupId = groupId; }
+
+    public boolean isShared() { return isShared; }
+    public void setShared(boolean shared) { isShared = shared; }
 
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }

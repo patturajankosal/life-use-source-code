@@ -24,9 +24,15 @@ public class OtpVerification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(length = 150)
+    private String identifier;
+
+    @Column(length = 255)
+    private String token;
 
     @Column(name = "otp_code", nullable = false, length = 10)
     private String otpCode;
@@ -52,6 +58,26 @@ public class OtpVerification {
 
     public OtpVerification(User user, String otpCode, OtpType type, Instant expiresAt) {
         this.user = user;
+        this.identifier = user != null ? (type == OtpType.EMAIL ? user.getEmail() : user.getPhoneNumber()) : null;
+        this.otpCode = otpCode;
+        this.type = type;
+        this.expiresAt = expiresAt;
+        this.verified = false;
+        this.attempts = 0;
+    }
+
+    public OtpVerification(String identifier, String otpCode, OtpType type, Instant expiresAt) {
+        this.identifier = identifier;
+        this.otpCode = otpCode;
+        this.type = type;
+        this.expiresAt = expiresAt;
+        this.verified = false;
+        this.attempts = 0;
+    }
+
+    public OtpVerification(User user, String identifier, String otpCode, OtpType type, Instant expiresAt) {
+        this.user = user;
+        this.identifier = identifier;
         this.otpCode = otpCode;
         this.type = type;
         this.expiresAt = expiresAt;
@@ -118,6 +144,22 @@ public class OtpVerification {
 
     public void setAttempts(int attempts) {
         this.attempts = attempts;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public Instant getCreatedAt() {

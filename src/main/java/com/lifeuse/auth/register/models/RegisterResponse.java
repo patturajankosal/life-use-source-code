@@ -8,6 +8,10 @@ public class RegisterResponse {
     private String phoneNumber;
     private boolean emailVerified;
     private boolean phoneVerified;
+    private String accessToken;
+    private String refreshToken;
+    private String tokenType = "Bearer";
+    private Long expiresIn;
 
     public RegisterResponse() {
     }
@@ -19,6 +23,15 @@ public class RegisterResponse {
         this.phoneNumber = phoneNumber;
         this.emailVerified = emailVerified;
         this.phoneVerified = phoneVerified;
+    }
+
+    public RegisterResponse(Long id, String username, String email, String phoneNumber, boolean emailVerified, boolean phoneVerified,
+                            String accessToken, String refreshToken, Long expiresIn) {
+        this(id, username, email, phoneNumber, emailVerified, phoneVerified);
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.tokenType = "Bearer";
+        this.expiresIn = expiresIn;
     }
 
     public Long getId() {
@@ -67,5 +80,37 @@ public class RegisterResponse {
 
     public void setPhoneVerified(boolean phoneVerified) {
         this.phoneVerified = phoneVerified;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public String getTokenType() {
+        return tokenType;
+    }
+
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
+    }
+
+    public Long getExpiresIn() {
+        return expiresIn;
+    }
+
+    public void setExpiresIn(Long expiresIn) {
+        this.expiresIn = expiresIn;
     }
 }

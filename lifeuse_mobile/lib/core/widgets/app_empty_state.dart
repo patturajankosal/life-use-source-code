@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import '../theme/app_colors.dart';
 import 'app_button.dart';
 
@@ -59,7 +59,7 @@ class AppEmptyState extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
+              style: AppFonts.inter(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,
@@ -70,7 +70,7 @@ class AppEmptyState extends StatelessWidget {
             Text(
               description,
               textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
+              style: AppFonts.inter(
                 fontSize: 13,
                 color: textSecondary,
                 height: 1.4,

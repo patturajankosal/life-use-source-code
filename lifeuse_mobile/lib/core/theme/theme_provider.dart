@@ -1,61 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-/// Central state provider for managing Dark Mode & Light Mode.
+/// Central state provider for automatic system theme detection.
+/// Follows the user's Android/iOS system appearance settings as the single source of truth.
 /// File: lib/core/theme/theme_provider.dart
-class ThemeProvider extends ChangeNotifier {
-  static const String _keyThemeMode = 'lifeuse_theme_mode';
+class ThemeProvider extends ChangeNotifier with WidgetsBindingObserver {
+  ThemeMode get themeMode => ThemeMode.system;
 
-  ThemeMode _themeMode = ThemeMode.dark; // Default to dark aesthetic
+  bool _isSystemDark =
+      WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+          Brightness.dark;
 
-  ThemeMode get themeMode => _themeMode;
-  bool get isDarkMode => _themeMode == ThemeMode.dark;
-  bool get isDark => isDarkMode;
+  bool get isDarkMode => _isSystemDark;
+  bool get isDark => _isSystemDark;
+
+  void toggleTheme() {
+    _isSystemDark = !_isSystemDark;
+    notifyListeners();
+  }
 
   ThemeProvider() {
-    _loadThemePreference();
+    WidgetsBinding.instance.addObserver(this);
+    _syncWithSystem();
   }
 
-  Future<void> _loadThemePreference() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final saved = prefs.getString(_keyThemeMode);
-      if (saved != null) {
-        if (saved == 'light') {
-          _themeMode = ThemeMode.light;
-        } else if (saved == 'dark') {
-          _themeMode = ThemeMode.dark;
-        } else {
-          _themeMode = ThemeMode.system;
-        }
-        notifyListeners();
-      }
-    } catch (_) {}
-  }
-
-  Future<void> toggleTheme() async {
-    if (_themeMode == ThemeMode.dark) {
-      _themeMode = ThemeMode.light;
-    } else {
-      _themeMode = ThemeMode.dark;
+  void _syncWithSystem() {
+    final isDark =
+        WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+            Brightness.dark;
+    if (_isSystemDark != isDark) {
+      _isSystemDark = isDark;
+      notifyListeners();
     }
-    notifyListeners();
-
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(
-        _keyThemeMode,
-        _themeMode == ThemeMode.dark ? 'dark' : 'light',
-      );
-    } catch (_) {}
   }
 
-  Future<void> setThemeMode(ThemeMode mode) async {
-    _themeMode = mode;
-    notifyListeners();
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_keyThemeMode, mode.name);
-    } catch (_) {}
+  @override
+  void didChangePlatformBrightness() {
+    _syncWithSystem();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }

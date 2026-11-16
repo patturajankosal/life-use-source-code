@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import '../theme/app_colors.dart';
 
 /// Elevation levels matching shadcn card elevation tokens:
@@ -64,7 +64,7 @@ class LifeUseCard extends StatefulWidget {
                   children: [
                     Text(
                       title,
-                      style: GoogleFonts.inter(
+                      style: AppFonts.inter(
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
                         letterSpacing: -0.005,
@@ -74,7 +74,7 @@ class LifeUseCard extends StatefulWidget {
                       const SizedBox(height: 4),
                       Text(
                         description,
-                        style: GoogleFonts.inter(
+                        style: AppFonts.inter(
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
                           color: const Color(0xFF64748B),
@@ -144,7 +144,8 @@ class _LifeUseCardState extends State<LifeUseCard> {
             onTap: widget.onTap,
             borderRadius: finalRadius,
             onHighlightChanged: widget.interactive
-                ? (highlighted) => setState(() => _isHoveredOrPressed = highlighted)
+                ? (highlighted) =>
+                    setState(() => _isHoveredOrPressed = highlighted)
                 : null,
             child: Padding(
               padding: widget.padding,

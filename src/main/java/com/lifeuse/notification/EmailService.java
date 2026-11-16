@@ -16,14 +16,15 @@ public class EmailService implements IEmailService {
     @Value("${app.mail.from:noreply@authapp.com}")
     private String mailFrom;
 
+    private final com.lifeuse.notification.provider.EmailOtpProvider emailOtpProvider;
+
+    public EmailService(com.lifeuse.notification.provider.EmailOtpProvider emailOtpProvider) {
+        this.emailOtpProvider = emailOtpProvider;
+    }
+
     @Override
     public void sendVerificationEmail(String toEmail, String otpCode) {
-        if (!mailEnabled) {
-            log.info("[DEV MODE] Email verification OTP simulation for {}: [Code: {}] (Mail sending disabled)", toEmail, otpCode);
-            return;
-        }
-        // In production with mail enabled, integration with JavaMailSender / SendGrid / AWS SES is triggered here.
-        log.info("Sending verification email to {} from {}", toEmail, mailFrom);
+        emailOtpProvider.sendOtp(toEmail, otpCode, "Email Verification");
     }
 
     @Override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/widgets/lifeuse_floating_navigation.dart';
 import '../screens/activity/activity_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
@@ -12,11 +12,11 @@ import '../screens/profile/profile_screen.dart';
 import '../state/notification_provider.dart';
 
 /// Enterprise application shell providing persistent bottom navigation across 5 core views:
-/// - Home (Dashboard)
-/// - Modules (10-micro-app suite)
-/// - Activity (Daily tasks & habits)
-/// - Notifications (Alerts & reminders)
-/// - Profile (Account details, security & auth)
+/// - Home (0: Dashboard)
+/// - Activity (1: Daily tasks & habits)
+/// - Modules (2: 10-micro-app suite)
+/// - Alerts (3: Notifications & reminders)
+/// - Profile (4: Account details, security & auth)
 ///
 /// Implements IndexedStack for zero-latency tab switching and preserves state.
 /// Supports smooth Android back-button interception (returns to Dashboard before app exit).
@@ -34,8 +34,15 @@ class MainNavigationShell extends StatefulWidget {
     state?.setTab(index);
   }
 
+  static void openHome(BuildContext context) => switchTab(context, 0);
+  static void openActivity(BuildContext context) => switchTab(context, 1);
+  static void openModules(BuildContext context) => switchTab(context, 2);
+  static void openAlerts(BuildContext context) => switchTab(context, 3);
+  static void openProfile(BuildContext context) => switchTab(context, 4);
+
   /// Static helper to open full Money Manager micro-app with back navigation
-  static void openMoneyManager(BuildContext context, {int initialTabIndex = 0}) {
+  static void openMoneyManager(BuildContext context,
+      {int initialTabIndex = 0}) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => MoneyManagerScreen(initialTabIndex: initialTabIndex),
@@ -51,11 +58,11 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
   late int _currentIndex;
 
   final List<Widget> _screens = const [
-    DashboardScreen(),
-    ModulesScreen(),
-    ActivityScreen(),
-    NotificationsScreen(),
-    ProfileScreen(),
+    DashboardScreen(), // 0: Home
+    ActivityScreen(), // 1: Activity
+    ModulesScreen(), // 2: Modules
+    NotificationsScreen(), // 3: Alerts
+    ProfileScreen(), // 4: Profile
   ];
 
   @override
@@ -97,24 +104,29 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
           items: [
             const LifeUseNavigationItemData(
               label: 'Home',
-              icon: LucideIcons.home,
-            ),
-            const LifeUseNavigationItemData(
-              label: 'Modules',
-              icon: LucideIcons.layoutGrid,
+              icon: AppIcons.homeOutline,
+              activeIcon: AppIcons.homeFilled,
             ),
             const LifeUseNavigationItemData(
               label: 'Activity',
-              icon: LucideIcons.activity,
+              icon: AppIcons.activityOutline,
+              activeIcon: AppIcons.activityFilled,
+            ),
+            const LifeUseNavigationItemData(
+              label: 'Modules',
+              icon: AppIcons.modulesOutline,
+              activeIcon: AppIcons.modulesFilled,
             ),
             LifeUseNavigationItemData(
               label: 'Alerts',
-              icon: LucideIcons.bell,
+              icon: AppIcons.alertsOutline,
+              activeIcon: AppIcons.alertsFilled,
               showDot: hasUnreadAlerts,
             ),
             const LifeUseNavigationItemData(
               label: 'Profile',
-              icon: LucideIcons.user,
+              icon: AppIcons.profileOutline,
+              activeIcon: AppIcons.profileFilled,
             ),
           ],
         ),

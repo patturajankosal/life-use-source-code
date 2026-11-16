@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
 
 /// Item model for LifeUseSelect
@@ -50,7 +51,8 @@ class LifeUseSelect<T> extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final triggerBg = isDark ? const Color(0xFF1A1A1A) : Colors.white;
-    final borderColor = isDark ? const Color(0xFF333333) : const Color(0xFFE6E6E6);
+    final borderColor =
+        isDark ? const Color(0xFF333333) : const Color(0xFFE6E6E6);
     final textColor = isDark ? Colors.white : const Color(0xFF1A1A1A);
 
     final selectedItem = items.cast<LifeUseSelectItem<T>?>().firstWhere(
@@ -64,7 +66,7 @@ class LifeUseSelect<T> extends StatelessWidget {
         if (label != null) ...[
           Text(
             label!,
-            style: GoogleFonts.inter(
+            style: AppFonts.inter(
               fontSize: 13.5,
               fontWeight: FontWeight.w600,
               color: AppColors.inputLabelOf(context),
@@ -105,21 +107,25 @@ class LifeUseSelect<T> extends StatelessWidget {
                   Expanded(
                     child: Text(
                       selectedItem != null ? selectedItem.label : placeholder,
-                      style: GoogleFonts.inter(
+                      style: AppFonts.inter(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                         color: selectedItem != null
                             ? textColor
-                            : (isDark ? const Color(0xFFA3A3A3) : const Color(0xFF808080)),
+                            : (isDark
+                                ? const Color(0xFFA3A3A3)
+                                : const Color(0xFF808080)),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Icon(
-                    Icons.keyboard_arrow_down_rounded,
+                    LucideIcons.chevronDown,
                     size: 18,
-                    color: isDark ? const Color(0xFFA3A3A3) : const Color(0xFF808080),
+                    color: isDark
+                        ? const Color(0xFFA3A3A3)
+                        : const Color(0xFF808080),
                   ),
                 ],
               ),
@@ -167,7 +173,9 @@ class LifeUseSelect<T> extends StatelessWidget {
                     width: 36,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF404040) : const Color(0xFFE0E0E0),
+                      color: isDark
+                          ? const Color(0xFF404040)
+                          : const Color(0xFFE0E0E0),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -175,22 +183,26 @@ class LifeUseSelect<T> extends StatelessWidget {
 
                 // Sheet Title
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         label ?? placeholder,
-                        style: GoogleFonts.inter(
+                        style: AppFonts.inter(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
-                          color: isDark ? Colors.white : const Color(0xFF1A1A1A),
+                          color:
+                              isDark ? Colors.white : const Color(0xFF1A1A1A),
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close_rounded, size: 20),
+                        icon: const Icon(LucideIcons.x, size: 20),
                         onPressed: () => Navigator.pop(ctx),
-                        color: isDark ? const Color(0xFFA3A3A3) : const Color(0xFF808080),
+                        color: isDark
+                            ? const Color(0xFFA3A3A3)
+                            : const Color(0xFF808080),
                       ),
                     ],
                   ),
@@ -217,15 +229,20 @@ class LifeUseSelect<T> extends StatelessWidget {
                               },
                         borderRadius: BorderRadius.circular(12),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 11),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? (isDark ? const Color(0xFF262626) : const Color(0xFFF8F8F8))
+                                ? (isDark
+                                    ? const Color(0xFF262626)
+                                    : const Color(0xFFF8F8F8))
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(12),
                             border: isSelected
                                 ? Border.all(
-                                    color: isDark ? const Color(0xFF333333) : const Color(0xFFE0E0E0),
+                                    color: isDark
+                                        ? const Color(0xFF333333)
+                                        : const Color(0xFFE0E0E0),
                                     width: 1.0,
                                   )
                                 : null,
@@ -242,21 +259,27 @@ class LifeUseSelect<T> extends StatelessWidget {
                                   children: [
                                     Text(
                                       item.label,
-                                      style: GoogleFonts.inter(
+                                      style: AppFonts.inter(
                                         fontSize: 13.5,
-                                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                        fontWeight: isSelected
+                                            ? FontWeight.w600
+                                            : FontWeight.w500,
                                         color: item.disabled
                                             ? Colors.grey
-                                            : (isDark ? Colors.white : const Color(0xFF1A1A1A)),
+                                            : (isDark
+                                                ? Colors.white
+                                                : const Color(0xFF1A1A1A)),
                                       ),
                                     ),
                                     if (item.subtitle != null) ...[
                                       const SizedBox(height: 2),
                                       Text(
                                         item.subtitle!,
-                                        style: GoogleFonts.inter(
+                                        style: AppFonts.inter(
                                           fontSize: 11.5,
-                                          color: isDark ? Colors.grey : const Color(0xFF6B7280),
+                                          color: isDark
+                                              ? Colors.grey
+                                              : const Color(0xFF6B7280),
                                         ),
                                       ),
                                     ],
@@ -265,7 +288,7 @@ class LifeUseSelect<T> extends StatelessWidget {
                               ),
                               if (isSelected)
                                 const Icon(
-                                  Icons.check_rounded,
+                                  LucideIcons.check,
                                   size: 18,
                                   color: AppColors.primary,
                                 ),

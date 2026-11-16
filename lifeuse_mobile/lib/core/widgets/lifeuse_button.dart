@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
 import '../theme/app_colors.dart';
 
 /// Button visual variants matching shadcn / CVA specification:
@@ -111,8 +111,8 @@ class _LifeUseButtonState extends State<LifeUseButton> {
     final config = _getStyleConfig(widget.variant, isDark);
     final sizeMetrics = _getSizeMetrics(widget.size);
 
-    final finalBorderRadius = widget.borderRadius ??
-        BorderRadius.circular(sizeMetrics.borderRadius);
+    final finalBorderRadius =
+        widget.borderRadius ?? BorderRadius.circular(sizeMetrics.borderRadius);
 
     return AnimatedScale(
       scale: _isPressed && isEnabled ? 0.98 : 1.0,
@@ -121,7 +121,8 @@ class _LifeUseButtonState extends State<LifeUseButton> {
       child: GestureDetector(
         onTapDown: isEnabled ? (_) => setState(() => _isPressed = true) : null,
         onTapUp: isEnabled ? (_) => setState(() => _isPressed = false) : null,
-        onTapCancel: isEnabled ? () => setState(() => _isPressed = false) : null,
+        onTapCancel:
+            isEnabled ? () => setState(() => _isPressed = false) : null,
         child: Opacity(
           opacity: isEnabled ? 1.0 : 0.5,
           child: Container(
@@ -161,7 +162,9 @@ class _LifeUseButtonState extends State<LifeUseButton> {
                         : sizeMetrics.horizontalPadding,
                   ),
                   child: Row(
-                    mainAxisSize: widget.width != null ? MainAxisSize.max : MainAxisSize.min,
+                    mainAxisSize: widget.width != null
+                        ? MainAxisSize.max
+                        : MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -171,7 +174,8 @@ class _LifeUseButtonState extends State<LifeUseButton> {
                           height: sizeMetrics.iconSize,
                           child: CircularProgressIndicator(
                             strokeWidth: 2.0,
-                            valueColor: AlwaysStoppedAnimation<Color>(config.textColor),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(config.textColor),
                           ),
                         ),
                         if (widget.title != null) const SizedBox(width: 8),
@@ -188,13 +192,14 @@ class _LifeUseButtonState extends State<LifeUseButton> {
                       if (widget.title != null)
                         Text(
                           widget.title!,
-                          style: GoogleFonts.inter(
+                          style: AppFonts.inter(
                             fontSize: sizeMetrics.fontSize,
                             fontWeight: FontWeight.w600,
                             color: config.textColor,
-                            decoration: widget.variant == LifeUseButtonVariant.link
-                                ? TextDecoration.underline
-                                : TextDecoration.none,
+                            decoration:
+                                widget.variant == LifeUseButtonVariant.link
+                                    ? TextDecoration.underline
+                                    : TextDecoration.none,
                           ),
                         ),
                       if (widget.suffixIcon != null && !widget.isLoading) ...[
@@ -218,7 +223,8 @@ class _LifeUseButtonState extends State<LifeUseButton> {
     );
   }
 
-  static _ButtonConfig _getStyleConfig(LifeUseButtonVariant variant, bool isDark) {
+  static _ButtonConfig _getStyleConfig(
+      LifeUseButtonVariant variant, bool isDark) {
     switch (variant) {
       case LifeUseButtonVariant.defaultVariant:
         return const _ButtonConfig(
@@ -236,19 +242,23 @@ class _LifeUseButtonState extends State<LifeUseButton> {
         return _ButtonConfig(
           backgroundColor: isDark ? AppColors.darkBase0 : AppColors.base0,
           borderColor: isDark ? AppColors.darkBase100 : AppColors.base100,
-          textColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          textColor:
+              isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           hasShadow: true,
         );
       case LifeUseButtonVariant.secondary:
         return _ButtonConfig(
-          backgroundColor: isDark ? AppColors.darkBase50 : const Color(0xFFF4F5F5),
-          textColor: isDark ? AppColors.darkTextPrimary : const Color(0xFF282D2D),
+          backgroundColor:
+              isDark ? AppColors.darkBase50 : const Color(0xFFF4F5F5),
+          textColor:
+              isDark ? AppColors.darkTextPrimary : const Color(0xFF282D2D),
           hasShadow: true,
         );
       case LifeUseButtonVariant.ghost:
         return _ButtonConfig(
           backgroundColor: Colors.transparent,
-          textColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          textColor:
+              isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           hasShadow: false,
         );
       case LifeUseButtonVariant.link:
@@ -259,7 +269,8 @@ class _LifeUseButtonState extends State<LifeUseButton> {
         );
       case LifeUseButtonVariant.tonal:
         return _ButtonConfig(
-          backgroundColor: isDark ? const Color(0xFF0C3E20) : const Color(0xFFDCFCE7),
+          backgroundColor:
+              isDark ? const Color(0xFF0C3E20) : const Color(0xFFDCFCE7),
           textColor: isDark ? const Color(0xFF86EFAC) : const Color(0xFF15803D),
           hasShadow: false,
         );

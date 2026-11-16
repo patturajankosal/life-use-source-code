@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
 
 /// Clean inline banner and snackbar alerts for errors and successes.
@@ -18,10 +19,13 @@ class FeedbackBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     if (message.isEmpty) return const SizedBox.shrink();
 
-    final bgColor = isError ? AppColors.errorBackground : AppColors.successBackground;
-    final borderColor = isError ? AppColors.error.withValues(alpha: 0.4) : AppColors.success.withValues(alpha: 0.4);
+    final bgColor =
+        isError ? AppColors.errorBackground : AppColors.successBackground;
+    final borderColor = isError
+        ? AppColors.error.withValues(alpha: 0.4)
+        : AppColors.success.withValues(alpha: 0.4);
     final iconColor = isError ? AppColors.error : AppColors.success;
-    final icon = isError ? Icons.error_outline_rounded : Icons.check_circle_outline_rounded;
+    final icon = isError ? LucideIcons.alertCircle : LucideIcons.checkCircle2;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -52,7 +56,7 @@ class FeedbackBanner extends StatelessWidget {
               onTap: onDismiss,
               child: Padding(
                 padding: const EdgeInsets.only(left: 6),
-                child: Icon(Icons.close_rounded, size: 16, color: iconColor),
+                child: Icon(LucideIcons.x, size: 16, color: iconColor),
               ),
             ),
         ],
@@ -60,7 +64,8 @@ class FeedbackBanner extends StatelessWidget {
     );
   }
 
-  static void showSnackBar(BuildContext context, String message, {bool isError = true}) {
+  static void showSnackBar(BuildContext context, String message,
+      {bool isError = true}) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

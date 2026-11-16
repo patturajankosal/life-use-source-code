@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeuse_mobile/core/theme/app_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
 
 /// Preset date range options matching the specification:
@@ -31,8 +32,18 @@ class LifeUseDateRange {
 
   static String _format(DateTime d) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
     return '${d.day} ${months[d.month - 1]} ${d.year}';
   }
@@ -160,7 +171,8 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
     }
 
     _activePreset = preset;
-    widget.onSelectRange(LifeUseDateRange(start: start, end: end, preset: preset));
+    widget.onSelectRange(
+        LifeUseDateRange(start: start, end: end, preset: preset));
   }
 
   void _handleDayTap(DateTime day) {
@@ -197,7 +209,8 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final bgColor = isDark ? const Color(0xFF0F172A) : Colors.white;
-    final borderColor = isDark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0);
+    final borderColor =
+        isDark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0);
 
     return Container(
       width: _isCustomMode ? 340 : 200,
@@ -215,7 +228,9 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
           ),
         ],
       ),
-      child: _isCustomMode ? _buildCalendarView(isDark) : _buildPresetsView(isDark),
+      child: _isCustomMode
+          ? _buildCalendarView(isDark)
+          : _buildPresetsView(isDark),
     );
   }
 
@@ -251,12 +266,14 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
             ),
             child: Text(
               p['label'] as String,
-              style: GoogleFonts.inter(
+              style: AppFonts.inter(
                 fontSize: 13.5,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: isSelected
                     ? (isDark ? Colors.white : const Color(0xFF0F172A))
-                    : (isDark ? const Color(0xFFCBD5E1) : const Color(0xFF334155)),
+                    : (isDark
+                        ? const Color(0xFFCBD5E1)
+                        : const Color(0xFF334155)),
               ),
             ),
           ),
@@ -281,7 +298,7 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Icon(
-                Icons.arrow_forward_rounded,
+                LucideIcons.arrowRight,
                 size: 16,
                 color: Color(0xFF94A3B8),
               ),
@@ -298,26 +315,28 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
-              icon: const Icon(Icons.chevron_left_rounded, size: 20),
+              icon: const Icon(LucideIcons.chevronLeft, size: 20),
               onPressed: () {
                 setState(() {
-                  _viewMonth = DateTime(_viewMonth.year, _viewMonth.month - 1, 1);
+                  _viewMonth =
+                      DateTime(_viewMonth.year, _viewMonth.month - 1, 1);
                 });
               },
             ),
             Text(
               '${_getMonthName(_viewMonth.month)} ${_viewMonth.year}',
-              style: GoogleFonts.inter(
+              style: AppFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
                 color: isDark ? Colors.white : const Color(0xFF0F172A),
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.chevron_right_rounded, size: 20),
+              icon: const Icon(LucideIcons.chevronRight, size: 20),
               onPressed: () {
                 setState(() {
-                  _viewMonth = DateTime(_viewMonth.year, _viewMonth.month + 1, 1);
+                  _viewMonth =
+                      DateTime(_viewMonth.year, _viewMonth.month + 1, 1);
                 });
               },
             ),
@@ -334,7 +353,7 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
               child: Text(
                 d,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w500,
                   color: const Color(0xFF94A3B8),
@@ -358,7 +377,7 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
                 onPressed: widget.onClear,
                 child: Text(
                   'Clear',
-                  style: GoogleFonts.inter(
+                  style: AppFonts.inter(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w600,
                     color: AppColors.error,
@@ -373,10 +392,12 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
                   onPressed: () => setState(() => _isCustomMode = false),
                   child: Text(
                     'Cancel',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF475569),
+                      color: isDark
+                          ? const Color(0xFFCBD5E1)
+                          : const Color(0xFF475569),
                     ),
                   ),
                 ),
@@ -388,13 +409,14 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(999),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
                     elevation: 0,
                   ),
                   onPressed: _applyCustom,
                   child: Text(
                     'Apply',
-                    style: GoogleFonts.inter(
+                    style: AppFonts.inter(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w700,
                     ),
@@ -421,7 +443,7 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
       child: Text(
         LifeUseDateRange._format(date),
         textAlign: TextAlign.center,
-        style: GoogleFonts.inter(
+        style: AppFonts.inter(
           fontSize: 12,
           fontWeight: FontWeight.w700,
           color: isDark ? Colors.white : const Color(0xFF0F172A),
@@ -447,24 +469,25 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
         final cellDate = DateTime(_viewMonth.year, _viewMonth.month, dayNumber);
         final isStart = _isSameDay(cellDate, _selectedStart);
         final isEnd = _isSameDay(cellDate, _selectedEnd);
-        final isInRange = cellDate.isAfter(_selectedStart) && cellDate.isBefore(_selectedEnd);
+        final isInRange =
+            cellDate.isAfter(_selectedStart) && cellDate.isBefore(_selectedEnd);
 
         Color? cellBg;
         if (isStart || isEnd) {
           cellBg = AppColors.primary;
         } else if (isInRange) {
-          cellBg = isDark
-              ? const Color(0xFF2E1065)
-              : const Color(0xFFF3E8FF);
+          cellBg = isDark ? const Color(0xFF2E1065) : const Color(0xFFF3E8FF);
         }
 
         Color textColor;
         if (isStart || isEnd) {
           textColor = Colors.white;
         } else if (isInRange) {
-          textColor = isDark ? const Color(0xFFE9D5FF) : const Color(0xFF6B21A8);
+          textColor =
+              isDark ? const Color(0xFFE9D5FF) : const Color(0xFF6B21A8);
         } else {
-          textColor = isDark ? const Color(0xFFE2E8F0) : const Color(0xFF1E293B);
+          textColor =
+              isDark ? const Color(0xFFE2E8F0) : const Color(0xFF1E293B);
         }
 
         return GestureDetector(
@@ -480,15 +503,17 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
                   : isStart
                       ? const BorderRadius.horizontal(left: Radius.circular(18))
                       : isEnd
-                          ? const BorderRadius.horizontal(right: Radius.circular(18))
+                          ? const BorderRadius.horizontal(
+                              right: Radius.circular(18))
                           : null,
             ),
             child: Center(
               child: Text(
                 '$dayNumber',
-                style: GoogleFonts.inter(
+                style: AppFonts.inter(
                   fontSize: 12.5,
-                  fontWeight: isStart || isEnd ? FontWeight.w700 : FontWeight.w500,
+                  fontWeight:
+                      isStart || isEnd ? FontWeight.w700 : FontWeight.w500,
                   color: textColor,
                 ),
               ),
@@ -505,8 +530,18 @@ class _LifeUseDateRangePickerState extends State<LifeUseDateRangePicker> {
 
   String _getMonthName(int month) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
     return months[month - 1];
   }
