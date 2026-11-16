@@ -37,7 +37,12 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
   late DateTime _endDate;
   bool _isSubmitting = false;
 
-  final List<String> _periodTypes = ['MONTHLY', 'WEEKLY', 'BI_WEEKLY', 'CUSTOM'];
+  final List<String> _periodTypes = [
+    'MONTHLY',
+    'WEEKLY',
+    'BI_WEEKLY',
+    'CUSTOM'
+  ];
   final List<String> _carryForwardRules = [
     'RESET',
     'CARRY_POSITIVE',
@@ -48,7 +53,8 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
   @override
   void initState() {
     super.initState();
-    _endDate = DateTime(_startDate.year, _startDate.month + 1, 0); // End of current month
+    _endDate = DateTime(
+        _startDate.year, _startDate.month + 1, 0); // End of current month
   }
 
   @override
@@ -102,7 +108,9 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
         endDate: _endDate,
         totalBudget: totalBudget,
         carryForwardRule: _carryForwardRule,
-        notes: _notesController.text.trim().isNotEmpty ? _notesController.text.trim() : null,
+        notes: _notesController.text.trim().isNotEmpty
+            ? _notesController.text.trim()
+            : null,
       );
 
       final moneyProvider = context.read<MoneyProvider>();
@@ -113,7 +121,8 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
         SweetAlert.showSuccess(
           context,
           title: 'Budget Plan Created',
-          message: '$_periodType budget plan of ₹${totalBudget.toStringAsFixed(2)} is now active.',
+          message:
+              '$_periodType budget plan of ₹${totalBudget.toStringAsFixed(2)} is now active.',
         );
       }
     } catch (e) {
@@ -198,7 +207,8 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                 decoration: InputDecoration(
                   labelText: 'Plan Period Horizon',
                   labelStyle: GoogleFonts.inter(color: textSecondary),
-                  prefixIcon: Icon(LucideIcons.calendar, color: textSecondary, size: 18),
+                  prefixIcon: Icon(LucideIcons.calendar,
+                      color: textSecondary, size: 18),
                   filled: true,
                   fillColor: isDark
                       ? Colors.white.withValues(alpha: 0.04)
@@ -227,11 +237,16 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                 label: 'Total Budget Amount (₹)',
                 hint: 'e.g. 25000.00',
                 controller: _budgetController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
                 prefixIcon: Icons.currency_rupee_rounded,
                 validator: (val) {
-                  if (val == null || val.trim().isEmpty) return 'Enter budget amount';
-                  if (double.tryParse(val.trim()) == null) return 'Enter a valid number';
+                  if (val == null || val.trim().isEmpty) {
+                    return 'Enter budget amount';
+                  }
+                  if (double.tryParse(val.trim()) == null) {
+                    return 'Enter a valid number';
+                  }
                   return null;
                 },
               ),
@@ -253,14 +268,16 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                           setState(() {
                             _startDate = picked;
                             if (_endDate.isBefore(_startDate)) {
-                              _endDate = _startDate.add(const Duration(days: 30));
+                              _endDate =
+                                  _startDate.add(const Duration(days: 30));
                             }
                           });
                         }
                       },
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 14),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: borderColor),
@@ -271,11 +288,16 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Start Date', style: GoogleFonts.inter(fontSize: 11, color: textSecondary)),
+                            Text('Start Date',
+                                style: GoogleFonts.inter(
+                                    fontSize: 11, color: textSecondary)),
                             const SizedBox(height: 4),
                             Text(
                               '${_startDate.day}/${_startDate.month}/${_startDate.year}',
-                              style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: textPrimary),
+                              style: GoogleFonts.inter(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: textPrimary),
                             ),
                           ],
                         ),
@@ -298,7 +320,8 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                       },
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 14),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: borderColor),
@@ -309,11 +332,16 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('End Date', style: GoogleFonts.inter(fontSize: 11, color: textSecondary)),
+                            Text('End Date',
+                                style: GoogleFonts.inter(
+                                    fontSize: 11, color: textSecondary)),
                             const SizedBox(height: 4),
                             Text(
                               '${_endDate.day}/${_endDate.month}/${_endDate.year}',
-                              style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: textPrimary),
+                              style: GoogleFonts.inter(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: textPrimary),
                             ),
                           ],
                         ),
@@ -331,7 +359,8 @@ class _CreateBudgetPlanDialogState extends State<CreateBudgetPlanDialog> {
                 decoration: InputDecoration(
                   labelText: 'Carry Forward Rule',
                   labelStyle: GoogleFonts.inter(color: textSecondary),
-                  prefixIcon: Icon(LucideIcons.repeat, color: textSecondary, size: 18),
+                  prefixIcon:
+                      Icon(LucideIcons.repeat, color: textSecondary, size: 18),
                   filled: true,
                   fillColor: isDark
                       ? Colors.white.withValues(alpha: 0.04)

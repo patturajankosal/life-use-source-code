@@ -144,7 +144,8 @@ class _LifeUseCardState extends State<LifeUseCard> {
             onTap: widget.onTap,
             borderRadius: finalRadius,
             onHighlightChanged: widget.interactive
-                ? (highlighted) => setState(() => _isHoveredOrPressed = highlighted)
+                ? (highlighted) =>
+                    setState(() => _isHoveredOrPressed = highlighted)
                 : null,
             child: Padding(
               padding: widget.padding,

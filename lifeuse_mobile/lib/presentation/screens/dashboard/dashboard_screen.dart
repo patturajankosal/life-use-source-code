@@ -1,35 +1,36 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_icons.dart';
 import '../../../core/theme/theme_provider.dart';
-import '../../../core/widgets/auth_guard_dialog.dart';
-import '../../../core/widgets/icons/lifeuse_icons.dart';
-import '../../../data/models/user_model.dart';
+import '../../../core/widgets/lifeuse_floating_navigation.dart';
 import '../../navigation/main_navigation_shell.dart';
 import '../../state/auth_provider.dart';
 import '../../state/money_provider.dart';
 import '../../state/notification_provider.dart';
-import '../modules/bills_payments_screen.dart';
-import '../money/dialogs/add_transaction_dialog.dart';
 import 'models/dashboard_module_item.dart';
-import 'widgets/animated_hero_banner.dart';
-import 'widgets/bento_life_overview.dart';
-import 'widgets/module_card.dart';
+import 'widgets/daily_life_overview.dart';
+import 'widgets/dashboard_surface.dart';
+import 'widgets/hero_zone.dart';
+import 'widgets/pending_alerts_banner.dart';
+import 'widgets/quick_actions_panel.dart';
+import 'widgets/recent_activity_section.dart';
+import 'widgets/search_results_view.dart';
 
-/// Premium White & Purple Mobile Application Home Dashboard for LifeUse.
-/// Follows strict Google Pay, PhonePe, and Google Gemini design principles:
-/// - 80-90% White & soft neutral surfaces with primary purple (#7041C5) accents.
-/// - Glanceable hero financial & productivity status with privacy peek mode.
-/// - Tactile Google Pay inspired quick action hubs in consistent purple treatment.
-/// - Contextual PhonePe category filtering and icon-first modules grid.
-/// - Proactive Google Gemini intelligence capsule in soft lavender.
-/// - Distinctive iconography with strict separation between Home and Dashboard.
-/// - Seamless Guest Mode and Authenticated Cloud Sync.
+/// LifeUse Home Dashboard.
+///
+/// Layout, top to bottom:
+///   1. Full-bleed hero (status bar, header, search, swipeable banners)
+///   2. Direct Controls panel overlapping the hero's lower edge
+///   3. Pending Alerts & Reminders (only when something needs attention)
+///   4. Recent Activity (real transactions, honest empty state)
+///   5. Daily Life Overview (real provider data only)
+///   6. Floating bottom navigation (provided by MainNavigationShell)
+///
+/// All data and navigation are unchanged: Provider state, API-backed
+/// MoneyProvider, auth guards and MainNavigationShell routing are reused.
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -38,32 +39,35 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
-  String _selectedCategory = 'ALL'; // ALL, FINANCE, PRODUCTIVITY, LIFESTYLE
-  bool _hideBalances = false; // Privacy mode toggle for public viewing
+  /// How far the Direct Controls panel overlaps the hero.
+  static const double _overlap = 40;
 
-  // Interactive daily rhythm checklist items (Clean White & Purple)
-  final List<Map<String, dynamic>> _quickTasks = [
-    {
-      'title': 'Drink 500ml morning water',
-      'category': 'Health',
-      'isDone': true,
-    },
-    {
-      'title': 'Review monthly grocery budget',
-      'category': 'Finance',
-      'isDone': false,
-    },
-    {
-      'title': 'Pay broadband Internet bill',
-      'category': 'Bills',
-      'isDone': false,
-    },
-  ];
+  final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final ValueNotifier<double> _scrollOffset = ValueNotifier<double>(0);
+
+  String _query = '';
+  bool _hideBalances = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final offset = _scrollController.offset;
+    if ((offset - _scrollOffset.value).abs() > 0.5) {
+      _scrollOffset.value = offset;
+    }
+  }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    _scrollOffset.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -73,1282 +77,270 @@ class _DashboardScreenState extends State<DashboardScreen> {
     await money.loadDashboardData(silent: true);
   }
 
+  void _openHomeManagement() {
+    final modules = HardcodedModuleItem.hardcodedModules;
+    final home = modules.where((m) => m.id == 'home_management');
+    if (home.isEmpty) {
+      MainNavigationShell.switchTab(context, 1);
+      return;
+    }
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: home.first.screenBuilder));
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bgColor = AppColors.backgroundOf(context);
-    final surfaceColor = AppColors.surfaceOf(context);
-    final borderColor = AppColors.borderOf(context);
-    final textPrimary = AppColors.textPrimaryOf(context);
-    final textSecondary = AppColors.textSecondaryOf(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
     final auth = context.watch<AuthProvider>();
-    final user = auth.currentUser;
     final money = context.watch<MoneyProvider>();
+    final hasUnread = context.select<NotificationProvider, bool>(
+      (p) => p.hasUnread,
+    );
+    final isDarkMode = context.select<ThemeProvider, bool>(
+      (t) => t.isDarkMode,
+    );
 
-    final now = DateTime.now();
-    final dateStr = DateFormat('EEEE, MMM d').format(now);
+    final user = auth.currentUser;
+    final displayName = user != null
+        ? (user.fullName.isNotEmpty ? user.fullName : '@${user.username}')
+        : 'Guest Explorer';
+    final dateStr = DateFormat('EEEE, MMM d').format(DateTime.now());
 
-    final allModules = HardcodedModuleItem.hardcodedModules;
-
-    // Filter modules based on category chip and search query
-    final filteredModules = allModules.where((mod) {
-      if (_selectedCategory == 'FINANCE' && mod.category != 'Finance') {
-        return false;
-      }
-      if (_selectedCategory == 'PRODUCTIVITY' &&
-          mod.category != 'Productivity' &&
-          mod.category != 'Education') {
-        return false;
-      }
-      if (_selectedCategory == 'LIFESTYLE' &&
-          mod.category != 'Lifestyle' &&
-          mod.category != 'Security') {
-        return false;
-      }
-      if (_searchQuery.isNotEmpty) {
-        final q = _searchQuery.toLowerCase();
-        final matchesTitle = mod.title.toLowerCase().contains(q);
-        final matchesSubtitle = mod.subtitle.toLowerCase().contains(q);
-        final matchesCategory = mod.category.toLowerCase().contains(q);
-        return matchesTitle || matchesSubtitle || matchesCategory;
-      }
-      return true;
-    }).toList();
+    final topInset = MediaQuery.paddingOf(context).top;
+    final navHeight = LifeUseFloatingNavigation.heightFor(context);
+    final searching = _query.isNotEmpty;
 
     return Scaffold(
-      backgroundColor: bgColor,
-      body: SafeArea(
+      backgroundColor: DashboardTokens.pageBackground(isDark),
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        // The hero is always a deep purple gradient, so status bar icons
+        // stay light regardless of theme.
+        value: SystemUiOverlayStyle.light.copyWith(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        ),
         child: RefreshIndicator(
           onRefresh: _handleRefresh,
           color: AppColors.primary,
-          backgroundColor: surfaceColor,
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 760),
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(
-                  parent: BouncingScrollPhysics(),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // =========================================================
-                    // LAYER 1: LIGHT TOP HEADER (Amethyst Pastel Wash)
-                    // =========================================================
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(18, 16, 18, 20),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: isDark
-                              ? [
-                                  const Color(0xFF160E21),
-                                  const Color(0xFF110B1A)
-                                ]
-                              : [
-                                  const Color(0xFFFAF7FD),
-                                  const Color(0xFFF3EEF8)
-                                ],
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildHeader(
-                            context: context,
-                            user: user,
-                            dateStr: dateStr,
-                            textPrimary: textPrimary,
-                            textSecondary: textSecondary,
-                            surfaceColor: surfaceColor,
-                            borderColor: borderColor,
-                            isDark: isDark,
-                          ),
-                          const SizedBox(height: 14),
-                          _buildSearchBar(
-                            context: context,
-                            surfaceColor: surfaceColor,
-                            borderColor: borderColor,
-                            textPrimary: textPrimary,
-                            textSecondary: textSecondary,
-                            isDark: isDark,
-                          ),
-                          const SizedBox(height: 16),
-                          AnimatedHeroBanner(
-                            isDark: isDark,
-                            onMoneyManagerTap: () =>
-                                MainNavigationShell.openMoneyManager(context),
-                            dailyPaceLabel: (auth.isAuthenticated &&
-                                    money.dailyLimit != null &&
-                                    !_hideBalances)
-                                ? '₹${NumberFormat('#,##,###').format(money.dailyLimit!.remainingTodayAllowance)} left today'
-                                : '₹1,200/day safe',
-                            financialSubtext: (auth.isAuthenticated &&
-                                    !_hideBalances)
-                                ? 'Monthly outflow: ${NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 0).format(money.summary.totalExpenses)} (${money.summary.transactionCount} transactions)'
-                                : null,
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // =========================================================
-                    // LAYER 2: DARK CONTRAST ACTION SECTION (Midnight Amethyst)
-                    // =========================================================
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(18, 22, 18, 44),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF1B1326),
-                        gradient: RadialGradient(
-                          center: Alignment(0, -0.6),
-                          radius: 1.2,
-                          colors: [
-                            Color(0xFF351C52),
-                            Color(0xFF1B1326),
-                          ],
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'DIRECT CONTROLS',
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 11.5,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 0.8,
-                                  color: const Color(0xFFD4B2FC),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () =>
-                                    MainNavigationShell.openMoneyManager(
-                                        context),
-                                child: Text(
-                                  'Manage',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: const Color(0xFFB399D4),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 14),
-                          _buildQuickActionRow(context),
-                        ],
-                      ),
-                    ),
-
-                    // =========================================================
-                    // LAYER 3: LOWER FLOATING WHITE CONTENT SHEET (-22px overlap)
-                    // =========================================================
-                    Transform.translate(
-                      offset: const Offset(0, -22),
-                      child: Container(
-                        padding: const EdgeInsets.fromLTRB(18, 14, 18, 24),
-                        decoration: BoxDecoration(
-                          color: surfaceColor,
-                          borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(28)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black
-                                  .withValues(alpha: isDark ? 0.40 : 0.08),
-                              blurRadius: 24,
-                              offset: const Offset(0, -6),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Pill Grab Handle
-                            Center(
-                              child: Container(
-                                width: 36,
-                                height: 4,
-                                margin: const EdgeInsets.only(bottom: 18),
-                                decoration: BoxDecoration(
-                                  color: isDark
-                                      ? const Color(0xFF2E223D)
-                                      : const Color(0xFFE2E8F0),
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              ),
-                            ),
-
-                            // 1. Live Recent Activity (Real Transactions Timeline)
-                            _buildRecentActivitySection(
-                              context: context,
-                              money: money,
-                              isAuthenticated: auth.isAuthenticated,
-                              textPrimary: textPrimary,
-                              textSecondary: textSecondary,
-                              surfaceColor: surfaceColor,
-                              borderColor: borderColor,
-                              isDark: isDark,
-                            ),
-
-                            const SizedBox(height: 20),
-
-                            // 2. Google Gemini Ambient Life Intelligence Capsule
-                            _buildSmartInsightsCard(
-                              context: context,
-                              money: money,
-                              surfaceColor: surfaceColor,
-                              borderColor: borderColor,
-                              textPrimary: textPrimary,
-                              textSecondary: textSecondary,
-                              isDark: isDark,
-                            ),
-
-                            const SizedBox(height: 22),
-
-                            // 3. 2026 Modern Bento Life Overview (Health, Bills, Home, Habits)
-                            BentoLifeOverview(
-                              isDark: isDark,
-                              surfaceColor: surfaceColor,
-                              borderColor: borderColor,
-                              textPrimary: textPrimary,
-                              textSecondary: textSecondary,
-                            ),
-
-                            const SizedBox(height: 24),
-
-                            // 4. Contextual Life Modules Hub (PhonePe Categorization)
-                            _buildModulesHubSection(
-                              context: context,
-                              allModules: allModules,
-                              filteredModules: filteredModules,
-                              textPrimary: textPrimary,
-                              textSecondary: textSecondary,
-                              surfaceColor: surfaceColor,
-                              borderColor: borderColor,
-                              isDark: isDark,
-                            ),
-
-                            const SizedBox(height: 22),
-
-                            // 5. Today's Rhythm & Priorities Checklist
-                            _buildTasksPreview(
-                              context: context,
-                              textPrimary: textPrimary,
-                              textSecondary: textSecondary,
-                              surfaceColor: surfaceColor,
-                              borderColor: borderColor,
-                              isDark: isDark,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    // Bottom spacing allowing comfortable scrolling above floating navigation bar
-                    const SizedBox(height: 80),
-                  ],
-                ),
-              ).animate().fadeIn(duration: 250.ms),
+          backgroundColor: DashboardTokens.surface(isDark),
+          edgeOffset: topInset + 8,
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // --- 1. Ambient White & Purple Header Widget ---
-  Widget _buildHeader({
-    required BuildContext context,
-    required UserModel? user,
-    required String dateStr,
-    required Color textPrimary,
-    required Color textSecondary,
-    required Color surfaceColor,
-    required Color borderColor,
-    required bool isDark,
-  }) {
-    final theme = context.watch<ThemeProvider>();
-    final isAuthenticated = user != null;
-    final displayName = isAuthenticated
-        ? (user.fullName.isNotEmpty ? user.fullName : '@${user.username}')
-        : 'Guest Explorer';
-
-    final hour = DateTime.now().hour;
-    final timeGreeting = hour < 12
-        ? 'Good morning'
-        : (hour < 17 ? 'Good afternoon' : 'Good evening');
-
-    return Row(
-      children: [
-        // Persona Emblem with Dynamic Status Ring
-        LifeUsePersonaEmblem(
-          name: displayName,
-          isAuthenticated: isAuthenticated,
-          size: 46,
-          onTap: () => MainNavigationShell.switchTab(context, 4),
-        ),
-
-        const SizedBox(width: 14),
-
-        // Greeting and Name
-        Expanded(
-          child: InkWell(
-            onTap: () => MainNavigationShell.switchTab(context, 4),
-            borderRadius: BorderRadius.circular(8),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        '$timeGreeting, $displayName',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 16.5,
-                          fontWeight: FontWeight.w700,
-                          color: textPrimary,
-                          letterSpacing: -0.2,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                // 1. Full-bleed hero: header + search + banner carousel
+                HeroZone(
+                  displayName: displayName,
+                  isAuthenticated: auth.isAuthenticated,
+                  dateStr: dateStr,
+                  hideBalances: _hideBalances,
+                  onToggleHide: () =>
+                      setState(() => _hideBalances = !_hideBalances),
+                  isDarkMode: isDarkMode,
+                  onToggleTheme: () =>
+                      context.read<ThemeProvider>().toggleTheme(),
+                  hasUnread: hasUnread,
+                  onOpenProfile: () =>
+                      MainNavigationShell.switchTab(context, 4),
+                  onOpenAlerts: () => MainNavigationShell.switchTab(context, 3),
+                  searchController: _searchController,
+                  onSearchChanged: (value) =>
+                      setState(() => _query = value.trim()),
+                  scrollOffset: _scrollOffset,
+                  onOpenModules: () =>
+                      MainNavigationShell.switchTab(context, 1),
+                  onOpenMoney: () =>
+                      MainNavigationShell.openMoneyManager(context),
+                  onOpenTasks: () => MainNavigationShell.switchTab(context, 2),
+                  onOpenHome: _openHomeManagement,
+                  bottomOverlap: _overlap,
+                ),
+
+                // 2+. Everything below pulls up over the hero's lower edge.
+                Transform.translate(
+                  offset: const Offset(0, -_overlap),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: DashboardTokens.gutter,
+                    ),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 720),
+                        child: searching
+                            ? _buildSearchResults(money)
+                            : _buildSections(auth, money),
                       ),
                     ),
-                  ],
+                  ),
                 ),
-                const SizedBox(height: 2),
-                Row(
-                  children: [
-                    Text(
-                      dateStr,
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        color: textSecondary,
-                      ),
-                    ),
-                    if (!isAuthenticated) ...[
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 1.5),
-                        decoration: BoxDecoration(
-                          color: AppColors.badgeBgOf(context),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: isDark
-                                ? const Color(0xFF3D2550)
-                                : const Color(0xFFEBE3F0),
-                            width: 0.8,
-                          ),
-                        ),
-                        child: Text(
-                          'GUEST MODE',
-                          style: GoogleFonts.inter(
-                            fontSize: 9.5,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.badgeTextOf(context),
-                            letterSpacing: 0.4,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
+
+                // Reserve room for the floating navigation (minus the
+                // overlap that the translate above leaves behind).
+                SizedBox(height: (navHeight + 12 - _overlap).clamp(0.0, 400.0)),
               ],
             ),
           ),
         ),
-
-        // Privacy Peek Toggle Button
-        IconButton(
-          icon: Icon(
-            _hideBalances ? LucideIcons.eyeOff : LucideIcons.eye,
-            color: textSecondary,
-            size: 20,
-          ),
-          tooltip: _hideBalances ? 'Show Balances' : 'Hide Balances',
-          onPressed: () => setState(() => _hideBalances = !_hideBalances),
-        ),
-
-        // Dark / Light Mode Toggle Button
-        IconButton(
-          icon: Icon(
-            theme.isDarkMode ? LucideIcons.sun : LucideIcons.moon,
-            color: textSecondary,
-            size: 20,
-          ),
-          tooltip: 'Toggle Theme',
-          onPressed: () => theme.toggleTheme(),
-        ),
-
-        // Notification Bell Icon with Badge (switches to Alerts tab)
-        IconButton(
-          icon: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Icon(LucideIcons.bell, color: textPrimary, size: 20),
-              if (context.watch<NotificationProvider>().hasUnread)
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFEF4444),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          tooltip: 'Notifications',
-          onPressed: () => MainNavigationShell.switchTab(context, 3),
-        ),
-      ],
-    );
-  }
-
-  // --- 2. Google-Inspired Quick Search Bar ---
-  Widget _buildSearchBar({
-    required BuildContext context,
-    required Color surfaceColor,
-    required Color borderColor,
-    required Color textPrimary,
-    required Color textSecondary,
-    required bool isDark,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: surfaceColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isDark ? const Color(0xFF2A2233) : borderColor,
-          width: 1.1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller: _searchController,
-        onChanged: (val) {
-          setState(() {
-            _searchQuery = val.trim();
-          });
-        },
-        style: GoogleFonts.inter(fontSize: 13.5, color: textPrimary),
-        decoration: InputDecoration(
-          isDense: true,
-          hintText: 'Search 10 life modules, tasks, finances...',
-          hintStyle: GoogleFonts.inter(
-            fontSize: 13,
-            color: textSecondary.withValues(alpha: 0.75),
-          ),
-          prefixIcon: const Icon(
-            LucideIcons.search,
-            size: 18,
-            color: AppColors.primary,
-          ),
-          suffixIcon: _searchQuery.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(LucideIcons.x, size: 16),
-                  onPressed: () {
-                    _searchController.clear();
-                    setState(() {
-                      _searchQuery = '';
-                    });
-                  },
-                )
-              : null,
-          border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        ),
       ),
     );
   }
 
-  // --- 4. Google Pay Signature Action Carousel (Consistent Purple Treatment) ---
-  Widget _buildQuickActionRow(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
-      child: Row(
-        children: [
-          // 1. Record Expense (Guarded by AuthGuard)
-          _buildActionPill(
-            context: context,
-            label: 'Record',
-            icon: AppIcons.addExpense,
-            accentColor: AppColors.primary,
-            onTap: () {
-              AuthGuardDialog.protect(
-                context,
-                title: 'Sign In to Record Expenses',
-                message:
-                    'Keep your personal transactions, budgets, and accounts synced securely to your LifeUse account.',
-                onAuthenticated: () {
-                  showDialog(
-                    context: context,
-                    builder: (_) => const AddTransactionDialog(),
-                  );
-                },
-              );
-            },
-          ),
-          const SizedBox(width: 14),
-
-          // 2. Open Money Manager Micro-App
-          _buildActionPill(
-            context: context,
-            label: 'Money Manager',
-            icon: AppIcons.moneyManager,
-            accentColor: const Color(0xFF059669),
-            onTap: () => MainNavigationShell.openMoneyManager(context),
-          ),
-          const SizedBox(width: 14),
-
-          // 3. Add Task (Switches to Activity Tab)
-          _buildActionPill(
-            context: context,
-            label: 'Add Task',
-            icon: AppIcons.dailyTasks,
-            accentColor: const Color(0xFF2563EB),
-            onTap: () => MainNavigationShell.switchTab(context, 2),
-          ),
-          const SizedBox(width: 14),
-
-          // 4. Set Alert / Reminder (Switches to Alerts Tab)
-          _buildActionPill(
-            context: context,
-            label: 'Set Alert',
-            icon: AppIcons.remindersAlerts,
-            accentColor: const Color(0xFFD97706),
-            onTap: () => MainNavigationShell.switchTab(context, 3),
-          ),
-          const SizedBox(width: 14),
-
-          // 5. Pay Bills (Navigates to Bills & Payments Screen)
-          _buildActionPill(
-            context: context,
-            label: 'Pay Bills',
-            icon: AppIcons.billsPayments,
-            accentColor: const Color(0xFFE11D48),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const BillsPaymentsScreen()),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionPill({
-    required BuildContext context,
-    required String label,
-    required IconData icon,
-    required VoidCallback onTap,
-    Color? accentColor,
-  }) {
-    final accent = accentColor ?? AppColors.primary;
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: accent.withValues(alpha: 0.28),
-                    blurRadius: 12,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: LifeUseIcon.duotone(
-                icon,
-                accentColor: accent,
-                customSize: 22,
-                customContainerSize: 52,
-                customRadius: 16,
-                semanticLabel: label,
-              ),
-            ),
-            const SizedBox(height: 7),
-            Text(
-              label,
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFFE6DEF0),
-                letterSpacing: -0.1,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // --- 5. Google Gemini Ambient Life Intelligence Capsule (Soft Lavender & Purple) ---
-  Widget _buildSmartInsightsCard({
-    required BuildContext context,
-    required MoneyProvider money,
-    required Color surfaceColor,
-    required Color borderColor,
-    required Color textPrimary,
-    required Color textSecondary,
-    required bool isDark,
-  }) {
-    final notifProvider = context.watch<NotificationProvider>();
-    final hasUnreadNotifs = notifProvider.hasUnread;
-    final hasHighPressure = money.budgetPressure?.isHigh ?? false;
-
-    final IconData insightIcon;
-    final String insightTitle;
-    final String insightMessage;
-    final String actionText;
-    final VoidCallback onAction;
-
-    if (hasUnreadNotifs) {
-      insightIcon = LucideIcons.bellRing;
-      insightTitle = 'Pending Alerts & Reminders';
-      insightMessage =
-          'You have unread reminders and utility alerts. Tap to review deadlines.';
-      actionText = 'View Alerts';
-      onAction = () => MainNavigationShell.switchTab(context, 3);
-    } else if (hasHighPressure) {
-      insightIcon = LucideIcons.triangleAlert;
-      insightTitle = 'Budget Pressure Alert';
-      insightMessage =
-          'Spending in certain categories is exceeding safe threshold pacing.';
-      actionText = 'Review Plan';
-      onAction = () =>
-          MainNavigationShell.openMoneyManager(context, initialTabIndex: 2);
-    } else {
-      insightIcon = LucideIcons.sparkles;
-      insightTitle = 'Pace & Wellness On Track';
-      insightMessage =
-          'Daily expenses and routine priorities are pacing within healthy targets.';
-      actionText = 'Explore';
-      onAction = () => MainNavigationShell.switchTab(context, 1);
-    }
-
-    final cardBg = isDark ? const Color(0xFF2A1838) : AppColors.softLavender;
-    final cardBorder =
-        isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: cardBorder,
-          width: 1.1,
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 38,
-            height: 38,
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF181220) : Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color:
-                    isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0),
-                width: 1,
-              ),
-            ),
-            child: Icon(insightIcon, size: 20, color: AppColors.primary),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  insightTitle,
-                  style: GoogleFonts.inter(
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w700,
-                    color: textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  insightMessage,
-                  style: GoogleFonts.inter(
-                    fontSize: 11.5,
-                    color: textSecondary,
-                    height: 1.3,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          TextButton(
-            onPressed: onAction,
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              minimumSize: Size.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            child: Text(
-              actionText,
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: AppColors.primary,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // --- 6. Contextual Life Modules Hub (PhonePe Categorization Principle) ---
-  Widget _buildModulesHubSection({
-    required BuildContext context,
-    required List<HardcodedModuleItem> allModules,
-    required List<HardcodedModuleItem> filteredModules,
-    required Color textPrimary,
-    required Color textSecondary,
-    required Color surfaceColor,
-    required Color borderColor,
-    required bool isDark,
-  }) {
+  Widget _buildSections(AuthProvider auth, MoneyProvider money) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Header
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Life Modules',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: textPrimary,
-                    letterSpacing: -0.3,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'All 10 modules ready to use',
-                  style: GoogleFonts.inter(
-                    fontSize: 12.5,
-                    color: textSecondary,
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: AppColors.badgeBgOf(context),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: isDark
-                      ? const Color(0xFF3D2550)
-                      : const Color(0xFFEBE3F0),
-                ),
-              ),
-              child: Text(
-                '${filteredModules.length} Apps',
-                style: GoogleFonts.inter(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.badgeTextOf(context),
-                ),
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 12),
-
-        // Contextual Category Filter Chips (PhonePe Category Organization)
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          child: Row(
-            children: [
-              _buildCategoryChip('ALL', 'All (10)'),
-              const SizedBox(width: 8),
-              _buildCategoryChip('FINANCE', 'Finance (2)'),
-              const SizedBox(width: 8),
-              _buildCategoryChip('PRODUCTIVITY', 'Productivity (4)'),
-              const SizedBox(width: 8),
-              _buildCategoryChip('LIFESTYLE', 'Lifestyle (4)'),
-            ],
+        const QuickActionsPanel(),
+        const SizedBox(height: 20),
+        _RevealOnScroll(
+          offset: _scrollOffset,
+          child: PendingAlertsBanner(
+            isAuthenticated: auth.isAuthenticated,
+            hideBalances: _hideBalances,
           ),
         ),
-
-        const SizedBox(height: 14),
-
-        // Responsive Asymmetric Grid
-        LayoutBuilder(
-          builder: (ctx, constraints) {
-            final isTablet = constraints.maxWidth >= 600;
-            final crossAxisCount = isTablet ? 3 : 2;
-            final childAspectRatio = isTablet ? 1.3 : 1.15;
-
-            if (filteredModules.isEmpty) {
-              return Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: surfaceColor,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: borderColor),
-                ),
-                child: Text(
-                  'No modules match "$_searchQuery"',
-                  style: GoogleFonts.inter(fontSize: 13, color: textSecondary),
-                ),
-              );
-            }
-
-            return GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: filteredModules.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                childAspectRatio: childAspectRatio,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              itemBuilder: (ctx, index) {
-                final mod = filteredModules[index];
-                return ModuleCard(
-                  module: mod,
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: mod.screenBuilder),
-                    );
-                  },
-                );
-              },
-            );
-          },
+        // The banner collapses to nothing when there is nothing to show; its
+        // spacing is handled inside the column so no stray gap appears.
+        _AlertSpacing(isAuthenticated: auth.isAuthenticated),
+        _RevealOnScroll(
+          offset: _scrollOffset,
+          child: RecentActivitySection(
+            money: money,
+            isAuthenticated: auth.isAuthenticated,
+            hideBalances: _hideBalances,
+          ),
+        ),
+        const SizedBox(height: 24),
+        _RevealOnScroll(
+          offset: _scrollOffset,
+          child: DailyLifeOverview(
+            isAuthenticated: auth.isAuthenticated,
+            hideBalances: _hideBalances,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildCategoryChip(String categoryKey, String label) {
-    final isSelected = _selectedCategory == categoryKey;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+  Widget _buildSearchResults(MoneyProvider money) {
+    final modules = SearchResultsView.matchModules(
+      HardcodedModuleItem.hardcodedModules,
+      _query,
+    );
+    final transactions =
+        SearchResultsView.matchTransactions(money.transactions, _query);
 
-    return InkWell(
-      onTap: () => setState(() => _selectedCategory = categoryKey),
-      borderRadius: BorderRadius.circular(10),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.primary
-              : (isDark ? const Color(0xFF2A1838) : AppColors.secondarySurface),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: isSelected
-                ? AppColors.primary
-                : (isDark ? const Color(0xFF2A2233) : const Color(0xFFEBE3F0)),
-          ),
-        ),
-        child: Text(
-          label,
-          style: GoogleFonts.inter(
-            fontSize: 11.5,
-            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-            color:
-                isSelected ? Colors.white : AppColors.textSecondaryOf(context),
-          ),
-        ),
+    return Padding(
+      // Clears the hero overlap so results never sit on the gradient.
+      padding: const EdgeInsets.only(top: _overlap + 12),
+      child: SearchResultsView(
+        query: _query,
+        modules: modules,
+        transactions: transactions,
+        hideBalances: _hideBalances,
       ),
     );
   }
+}
 
-  // --- 7. Live Recent Activity Section (Real Transactions) ---
-  Widget _buildRecentActivitySection({
-    required BuildContext context,
-    required MoneyProvider money,
-    required bool isAuthenticated,
-    required Color textPrimary,
-    required Color textSecondary,
-    required Color surfaceColor,
-    required Color borderColor,
-    required bool isDark,
-  }) {
-    final currencyFormat =
-        NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
-    final transactions = money.transactions.take(3).toList();
+/// Adds the gap after the alerts banner only when the banner is visible, so
+/// a collapsed banner leaves no empty space.
+class _AlertSpacing extends StatelessWidget {
+  final bool isAuthenticated;
 
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: surfaceColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isDark ? const Color(0xFF2A2233) : borderColor,
-          width: 1.1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  LifeUseIcon.duotone(
-                    AppIcons.salarySlip,
-                    accentColor: AppColors.primary,
-                    customSize: 16,
-                    customContainerSize: 32,
-                    customRadius: 9,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Recent Activity',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-              TextButton(
-                onPressed: () => MainNavigationShell.openMoneyManager(context,
-                    initialTabIndex: 1),
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                child: Text(
-                  'View All',
-                  style: GoogleFonts.inter(
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          if (isAuthenticated && transactions.isNotEmpty) ...[
-            ...transactions.map((tx) {
-              final isIncome = tx.isIncome;
-              final description = (tx.notes != null && tx.notes!.isNotEmpty)
-                  ? tx.notes!
-                  : tx.categoryName;
-              final displayAmount = _hideBalances
-                  ? '₹••••'
-                  : '${isIncome ? '+' : '-'}${currencyFormat.format(tx.amount)}';
+  const _AlertSpacing({required this.isAuthenticated});
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: InkWell(
-                  onTap: () => MainNavigationShell.openMoneyManager(context,
-                      initialTabIndex: 1),
-                  borderRadius: BorderRadius.circular(10),
-                  child: Row(
-                    children: [
-                      LifeUseIcon.duotone(
-                        isIncome ? AppIcons.incomeFlow : AppIcons.expenseFlow,
-                        accentColor: isIncome
-                            ? const Color(0xFF10B981)
-                            : AppColors.primary,
-                        customSize: 16,
-                        customContainerSize: 36,
-                        customRadius: 10,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              description,
-                              style: GoogleFonts.inter(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: textPrimary,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              '${tx.categoryName} • ${tx.paymentMethod}',
-                              style: GoogleFonts.inter(
-                                fontSize: 11,
-                                color: textSecondary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Text(
-                        displayAmount,
-                        style: GoogleFonts.inter(
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w700,
-                          color: isIncome
-                              ? AppColors.financialPositive
-                              : textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-          ] else ...[
-            // Empty / Guest State
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  LifeUseIcon.duotone(
-                    AppIcons.documentsVault,
-                    accentColor: AppColors.primary,
-                    customSize: 18,
-                    customContainerSize: 36,
-                    customRadius: 10,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      isAuthenticated
-                          ? 'No transactions recorded yet. Tap Record to add an entry.'
-                          : 'Sign in to record and view real-time transactions.',
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        color: textSecondary,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
+  @override
+  Widget build(BuildContext context) {
+    final notifications = context.watch<NotificationProvider>();
+    final money = context.watch<MoneyProvider>();
+
+    final hasUnread = notifications.hasUnread;
+    var hasDue = false;
+    var highPressure = false;
+    if (isAuthenticated) {
+      final horizon = DateTime.now().add(const Duration(days: 7));
+      hasDue = money.upcomingOccurrences
+          .any((o) => o.isPending && o.scheduledDate.isBefore(horizon));
+      highPressure = money.budgetPressure?.isHigh ?? false;
+    }
+    final visible = hasUnread || hasDue || highPressure;
+    return SizedBox(height: visible ? 20 : 0);
+  }
+}
+
+/// Fades + slides a section up the first time it scrolls into view.
+/// Plays once, uses a single short controller per section, and is skipped
+/// entirely when the user prefers reduced motion.
+class _RevealOnScroll extends StatefulWidget {
+  final ValueListenable<double> offset;
+  final Widget child;
+
+  const _RevealOnScroll({required this.offset, required this.child});
+
+  @override
+  State<_RevealOnScroll> createState() => _RevealOnScrollState();
+}
+
+class _RevealOnScrollState extends State<_RevealOnScroll>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 420),
+  );
+  late final Animation<double> _curve = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.easeOutCubic,
+  );
+  late final Animation<Offset> _slide = Tween<Offset>(
+    begin: const Offset(0, 0.06),
+    end: Offset.zero,
+  ).animate(_curve);
+
+  bool _revealed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.offset.addListener(_check);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _check());
   }
 
-  // --- 8. Today's Rhythm & Priorities Checklist ---
-  Widget _buildTasksPreview({
-    required BuildContext context,
-    required Color textPrimary,
-    required Color textSecondary,
-    required Color surfaceColor,
-    required Color borderColor,
-    required bool isDark,
-  }) {
-    final completedCount = _quickTasks.where((t) => t['isDone'] == true).length;
-    final totalCount = _quickTasks.length;
-    final progressFraction =
-        totalCount > 0 ? (completedCount / totalCount) : 0.0;
+  void _check() {
+    if (_revealed || !mounted) return;
+    final box = context.findRenderObject();
+    if (box is! RenderBox || !box.attached) return;
+    final top = box.localToGlobal(Offset.zero).dy;
+    final screenHeight = MediaQuery.sizeOf(context).height;
+    // Reveal slightly before the section's top edge reaches the viewport.
+    if (top < screenHeight - 32) {
+      _revealed = true;
+      widget.offset.removeListener(_check);
+      if (MediaQuery.disableAnimationsOf(context)) {
+        _controller.value = 1;
+      } else {
+        _controller.forward();
+      }
+    }
+  }
 
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: surfaceColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isDark ? const Color(0xFF2A2233) : borderColor,
-          width: 1.1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  LifeUseIcon.duotone(
-                    AppIcons.dailyTasks,
-                    accentColor: AppColors.primary,
-                    customSize: 16,
-                    customContainerSize: 32,
-                    customRadius: 9,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    "Today's Priorities",
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-              TextButton(
-                onPressed: () => MainNavigationShell.switchTab(context, 2),
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                child: Text(
-                  'View All',
-                  style: GoogleFonts.inter(
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ),
-            ],
-          ),
+  @override
+  void dispose() {
+    widget.offset.removeListener(_check);
+    _controller.dispose();
+    super.dispose();
+  }
 
-          const SizedBox(height: 10),
-
-          // Completion Progress Bar in Primary Purple
-          Row(
-            children: [
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: LinearProgressIndicator(
-                    value: progressFraction,
-                    backgroundColor: isDark
-                        ? const Color(0xFF2A1838)
-                        : const Color(0xFFEBE3F0),
-                    valueColor:
-                        const AlwaysStoppedAnimation<Color>(AppColors.primary),
-                    minHeight: 4,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Text(
-                '$completedCount of $totalCount completed',
-                style: GoogleFonts.inter(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: textSecondary,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          ..._quickTasks.map((task) {
-            final isDone = task['isDone'] as bool;
-            final category = task['category'] as String;
-
-            return InkWell(
-              onTap: () {
-                setState(() {
-                  task['isDone'] = !isDone;
-                });
-              },
-              borderRadius: BorderRadius.circular(10),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Row(
-                  children: [
-                    Icon(
-                      isDone ? LucideIcons.checkCircle2 : LucideIcons.circle,
-                      size: 18,
-                      color: isDone ? AppColors.primary : textSecondary,
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        task['title'] as String,
-                        style: GoogleFonts.inter(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: isDone ? textSecondary : textPrimary,
-                          decoration:
-                              isDone ? TextDecoration.lineThrough : null,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2.5),
-                      decoration: BoxDecoration(
-                        color: AppColors.badgeBgOf(context),
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(
-                          color: isDark
-                              ? const Color(0xFF3D2550)
-                              : const Color(0xFFEBE3F0),
-                          width: 0.8,
-                        ),
-                      ),
-                      child: Text(
-                        category,
-                        style: GoogleFonts.inter(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.badgeTextOf(context),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
-        ],
-      ),
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _curve,
+      child: SlideTransition(position: _slide, child: widget.child),
     );
   }
 }

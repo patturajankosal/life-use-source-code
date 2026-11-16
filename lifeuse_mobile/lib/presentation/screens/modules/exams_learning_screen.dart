@@ -74,16 +74,20 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
   int _currentCardIdx = 0;
   final List<_Flashcard> _flashcards = [
     _Flashcard(
-      question: 'What is the primary difference between SQS Standard and SQS FIFO?',
-      answer: 'SQS FIFO guarantees exactly-once processing and strict first-in-first-out delivery ordering.',
+      question:
+          'What is the primary difference between SQS Standard and SQS FIFO?',
+      answer:
+          'SQS FIFO guarantees exactly-once processing and strict first-in-first-out delivery ordering.',
     ),
     _Flashcard(
       question: 'In Flutter, what is the role of InheritedWidget?',
-      answer: 'It enables efficient data propagation down the widget tree, allowing descendants to subscribe to changes without rebuilding intermediate widgets.',
+      answer:
+          'It enables efficient data propagation down the widget tree, allowing descendants to subscribe to changes without rebuilding intermediate widgets.',
     ),
     _Flashcard(
       question: 'Explain CAP Theorem in Distributed Databases.',
-      answer: 'A distributed system can guarantee at most two out of Consistency, Availability, and Partition Tolerance.',
+      answer:
+          'A distributed system can guarantee at most two out of Consistency, Availability, and Partition Tolerance.',
     ),
   ];
 
@@ -103,7 +107,8 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
       appBar: AppBar(
         title: Text(
           'Exams & Learning',
-          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
+          style: GoogleFonts.plusJakartaSans(
+              fontSize: 18, fontWeight: FontWeight.w700),
         ),
       ),
       body: SafeArea(
@@ -124,7 +129,8 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                       border: Border.all(color: borderColor),
                       boxShadow: [
                         BoxShadow(
-                          color: accentColor.withValues(alpha: isDark ? 0.2 : 0.05),
+                          color: accentColor.withValues(
+                              alpha: isDark ? 0.2 : 0.05),
                           blurRadius: 16,
                           offset: const Offset(0, 4),
                         ),
@@ -138,7 +144,8 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                           children: [
                             Row(
                               children: [
-                                const Icon(LucideIcons.bookOpen, color: accentColor, size: 18),
+                                const Icon(LucideIcons.bookOpen,
+                                    color: accentColor, size: 18),
                                 const SizedBox(width: 8),
                                 Text(
                                   'Daily Revision Flashcard',
@@ -151,7 +158,8 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                               ],
                             ),
                             LifeUseBadge(
-                              text: '${_currentCardIdx + 1} / ${_flashcards.length}',
+                              text:
+                                  '${_currentCardIdx + 1} / ${_flashcards.length}',
                               variant: LifeUseBadgeVariant.active,
                             ),
                           ],
@@ -168,8 +176,11 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
                               color: card.isFlipped
-                                  ? accentColor.withValues(alpha: isDark ? 0.15 : 0.08)
-                                  : (isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.03)),
+                                  ? accentColor.withValues(
+                                      alpha: isDark ? 0.15 : 0.08)
+                                  : (isDark
+                                      ? Colors.white10
+                                      : Colors.black.withValues(alpha: 0.03)),
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
                                 color: card.isFlipped
@@ -181,11 +192,15 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  card.isFlipped ? 'ANSWER' : 'QUESTION (Tap to flip)',
+                                  card.isFlipped
+                                      ? 'ANSWER'
+                                      : 'QUESTION (Tap to flip)',
                                   style: GoogleFonts.inter(
                                     fontSize: 10.5,
                                     fontWeight: FontWeight.w700,
-                                    color: card.isFlipped ? accentColor : textSecondary,
+                                    color: card.isFlipped
+                                        ? accentColor
+                                        : textSecondary,
                                     letterSpacing: 0.5,
                                   ),
                                 ),
@@ -211,9 +226,12 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                           children: [
                             TextButton.icon(
                               icon: const Icon(LucideIcons.refreshCw, size: 14),
-                              label: Text(card.isFlipped ? 'Show Question' : 'Reveal Answer'),
+                              label: Text(card.isFlipped
+                                  ? 'Show Question'
+                                  : 'Reveal Answer'),
                               onPressed: () {
-                                setState(() => card.isFlipped = !card.isFlipped);
+                                setState(
+                                    () => card.isFlipped = !card.isFlipped);
                               },
                             ),
                             ElevatedButton.icon(
@@ -221,12 +239,14 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                                 backgroundColor: accentColor,
                                 foregroundColor: Colors.white,
                               ),
-                              icon: const Icon(LucideIcons.arrowRight, size: 14),
+                              icon:
+                                  const Icon(LucideIcons.arrowRight, size: 14),
                               label: const Text('Next Card'),
                               onPressed: () {
                                 setState(() {
                                   card.isFlipped = false;
-                                  _currentCardIdx = (_currentCardIdx + 1) % _flashcards.length;
+                                  _currentCardIdx = (_currentCardIdx + 1) %
+                                      _flashcards.length;
                                 });
                               },
                             ),
@@ -240,7 +260,10 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                   // 2. Courses & Exam Countdowns
                   Text(
                     'Active Study Plans & Exam Countdowns',
-                    style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: textPrimary),
+                    style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: textPrimary),
                   ),
                   const SizedBox(height: 12),
 
@@ -275,7 +298,8 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
                                     color: accentColor.withValues(alpha: 0.12),
                                     borderRadius: BorderRadius.circular(8),
@@ -294,7 +318,8 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                             const SizedBox(height: 4),
                             Text(
                               '${c.platform} • Target: ${c.targetExamDate}',
-                              style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
+                              style: GoogleFonts.inter(
+                                  fontSize: 12, color: textSecondary),
                             ),
                             const SizedBox(height: 12),
 
@@ -308,7 +333,9 @@ class _ExamsLearningScreenState extends State<ExamsLearningScreen> {
                                       value: c.progress,
                                       minHeight: 8,
                                       backgroundColor: borderColor,
-                                      valueColor: const AlwaysStoppedAnimation<Color>(accentColor),
+                                      valueColor:
+                                          const AlwaysStoppedAnimation<Color>(
+                                              accentColor),
                                     ),
                                   ),
                                 ),

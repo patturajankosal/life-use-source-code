@@ -51,7 +51,8 @@ class MoneyProvider extends ChangeNotifier {
   BudgetPlanModel? get activeBudgetPlan => _activeBudgetPlan;
   List<PlannedExpenseModel> get plannedExpenses => _plannedExpenses;
   List<RecurringScheduleModel> get recurringSchedules => _recurringSchedules;
-  List<RecurringOccurrenceModel> get upcomingOccurrences => _upcomingOccurrences;
+  List<RecurringOccurrenceModel> get upcomingOccurrences =>
+      _upcomingOccurrences;
   FinancialProfileModel? get financialProfile => _financialProfile;
 
   String get selectedTypeFilter => _selectedTypeFilter;
@@ -70,18 +71,32 @@ class MoneyProvider extends ChangeNotifier {
 
     try {
       final results = await Future.wait([
-        _service.getDailySpendingLimit().catchError((_) => DailySpendingLimitModel.empty()),
-        _service.getBudgetPressure().catchError((_) => BudgetPressureModel.empty()),
-        _service.getTransactionSummary().catchError((_) => TransactionSummaryModel.empty()),
-        _service.getTransactions(
-          type: _selectedTypeFilter == 'ALL' ? null : _selectedTypeFilter,
-          category: _selectedCategoryFilter == 'ALL' ? null : _selectedCategoryFilter,
-          limit: 30,
-        ).catchError((_) => <TransactionModel>[]),
+        _service
+            .getDailySpendingLimit()
+            .catchError((_) => DailySpendingLimitModel.empty()),
+        _service
+            .getBudgetPressure()
+            .catchError((_) => BudgetPressureModel.empty()),
+        _service
+            .getTransactionSummary()
+            .catchError((_) => TransactionSummaryModel.empty()),
+        _service
+            .getTransactions(
+              type: _selectedTypeFilter == 'ALL' ? null : _selectedTypeFilter,
+              category: _selectedCategoryFilter == 'ALL'
+                  ? null
+                  : _selectedCategoryFilter,
+              limit: 30,
+            )
+            .catchError((_) => <TransactionModel>[]),
         _service.getCategories().catchError((_) => <CategoryModel>[]),
         _service.getActiveBudgetPlan().catchError((_) => null),
-        _service.getPlannedExpenses().catchError((_) => <PlannedExpenseModel>[]),
-        _service.getUpcomingOccurrences().catchError((_) => <RecurringOccurrenceModel>[]),
+        _service
+            .getPlannedExpenses()
+            .catchError((_) => <PlannedExpenseModel>[]),
+        _service
+            .getUpcomingOccurrences()
+            .catchError((_) => <RecurringOccurrenceModel>[]),
       ]);
 
       _dailyLimit = results[0] as DailySpendingLimitModel;
@@ -123,7 +138,8 @@ class MoneyProvider extends ChangeNotifier {
     try {
       final list = await _service.getTransactions(
         type: _selectedTypeFilter == 'ALL' ? null : _selectedTypeFilter,
-        category: _selectedCategoryFilter == 'ALL' ? null : _selectedCategoryFilter,
+        category:
+            _selectedCategoryFilter == 'ALL' ? null : _selectedCategoryFilter,
         limit: 50,
       );
       _transactions = list;
@@ -208,7 +224,8 @@ class MoneyProvider extends ChangeNotifier {
   }
 
   /// Add planned expense
-  Future<PlannedExpenseModel> addPlannedExpense(PlannedExpenseRequest req) async {
+  Future<PlannedExpenseModel> addPlannedExpense(
+      PlannedExpenseRequest req) async {
     final created = await _service.createPlannedExpense(req);
     _plannedExpenses.insert(0, created);
     _service.getBudgetPressure().then((bp) {
@@ -249,7 +266,8 @@ class MoneyProvider extends ChangeNotifier {
   }
 
   /// Add recurring schedule
-  Future<RecurringScheduleModel> addRecurringSchedule(RecurringScheduleRequest req) async {
+  Future<RecurringScheduleModel> addRecurringSchedule(
+      RecurringScheduleRequest req) async {
     final created = await _service.createRecurringSchedule(req);
     await loadRecurringData();
     return created;

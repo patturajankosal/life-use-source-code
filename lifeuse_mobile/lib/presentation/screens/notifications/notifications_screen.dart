@@ -89,11 +89,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     children: [
                       _buildFilterChip('ALL', 'All (${notifications.length})'),
                       const SizedBox(width: 8),
-                      _buildFilterChip('REMINDERS', 'Reminders (${notifications.where((n) => n.type == 'reminder').length})'),
+                      _buildFilterChip('REMINDERS',
+                          'Reminders (${notifications.where((n) => n.type == 'reminder').length})'),
                       const SizedBox(width: 8),
-                      _buildFilterChip('FINANCE', 'Finance (${notifications.where((n) => n.type == 'finance').length})'),
+                      _buildFilterChip('FINANCE',
+                          'Finance (${notifications.where((n) => n.type == 'finance').length})'),
                       const SizedBox(width: 8),
-                      _buildFilterChip('SYSTEM', 'System (${notifications.where((n) => n.type == 'system').length})'),
+                      _buildFilterChip('SYSTEM',
+                          'System (${notifications.where((n) => n.type == 'system').length})'),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -172,8 +175,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                     width: 40,
                                     height: 40,
                                     decoration: BoxDecoration(
-                                      color:
-                                          item.color.withValues(alpha: 0.12),
+                                      color: item.color.withValues(alpha: 0.12),
                                       borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
                                         color:
@@ -233,8 +235,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                           const SizedBox(height: 8),
                                           const LifeUseBadge(
                                             text: 'NEW ALERT',
-                                            variant:
-                                                LifeUseBadgeVariant.active,
+                                            variant: LifeUseBadgeVariant.active,
                                           ),
                                         ],
                                       ],

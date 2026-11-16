@@ -83,7 +83,8 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       return null;
     } catch (e) {
-      _errorMessage = 'Registration failed. Please check your network and try again.';
+      _errorMessage =
+          'Registration failed. Please check your network and try again.';
       notifyListeners();
       return null;
     } finally {
@@ -148,7 +149,9 @@ class AuthProvider extends ChangeNotifier {
       case 'PHONE_ALREADY_EXISTS':
         return 'This phone number is already registered with an account.';
       case 'VALIDATION_FAILED':
-        return defaultMsg.isNotEmpty ? defaultMsg : 'Please check the form inputs.';
+        return defaultMsg.isNotEmpty
+            ? defaultMsg
+            : 'Please check the form inputs.';
       default:
         return defaultMsg;
     }

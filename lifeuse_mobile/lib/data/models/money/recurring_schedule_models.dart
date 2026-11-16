@@ -50,7 +50,8 @@ class RecurringScheduleModel {
       categoryName: json['categoryName']?.toString() ?? 'General',
       amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
       frequency: json['frequency']?.toString() ?? 'MONTHLY',
-      startDate: DateTime.tryParse(json['startDate']?.toString() ?? '') ?? DateTime.now(),
+      startDate: DateTime.tryParse(json['startDate']?.toString() ?? '') ??
+          DateTime.now(),
       endDate: parseNullableDate(json['endDate']),
       dayOfMonth: (json['dayOfMonth'] as num?)?.toInt(),
       dayOfWeek: json['dayOfWeek']?.toString(),
@@ -143,7 +144,9 @@ class RecurringOccurrenceModel {
       scheduleId: (json['scheduleId'] as num?)?.toInt() ?? 0,
       scheduleTitle: json['scheduleTitle']?.toString() ?? '',
       userId: (json['userId'] as num?)?.toInt() ?? 0,
-      scheduledDate: DateTime.tryParse(json['scheduledDate']?.toString() ?? '') ?? DateTime.now(),
+      scheduledDate:
+          DateTime.tryParse(json['scheduledDate']?.toString() ?? '') ??
+              DateTime.now(),
       amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
       status: json['status']?.toString() ?? 'PENDING',
       transactionId: (json['transactionId'] as num?)?.toInt(),

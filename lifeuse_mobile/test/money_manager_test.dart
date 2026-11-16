@@ -40,7 +40,8 @@ void main() {
       expect(tx.notes, equals('Weekly fruits and veggies'));
     });
 
-    test('TransactionSummaryModel parses backend summary and empty fallback', () {
+    test('TransactionSummaryModel parses backend summary and empty fallback',
+        () {
       final empty = TransactionSummaryModel.empty();
       expect(empty.totalIncome, equals(0.0));
       expect(empty.totalExpenses, equals(0.0));

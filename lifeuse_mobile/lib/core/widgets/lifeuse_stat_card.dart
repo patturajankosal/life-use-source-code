@@ -35,7 +35,8 @@ class LifeUseStatCard extends StatelessWidget {
 
     final gradientColors = _getGradientColors(variant, isDark);
     final borderColor = _getBorderColor(variant, isDark);
-    final labelColor = isDark ? const Color(0xFFE2E8F0) : const Color(0xFF1F2430);
+    final labelColor =
+        isDark ? const Color(0xFFE2E8F0) : const Color(0xFF1F2430);
     final valueColor = isDark ? Colors.white : const Color(0xFF111827);
 
     return InkWell(
@@ -107,7 +108,9 @@ class LifeUseStatCard extends StatelessWidget {
                 style: GoogleFonts.inter(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                  color: isDark
+                      ? const Color(0xFF94A3B8)
+                      : const Color(0xFF64748B),
                 ),
               ),
             ],
@@ -117,28 +120,61 @@ class LifeUseStatCard extends StatelessWidget {
     );
   }
 
-  static List<Color> _getGradientColors(LifeUseStatVariant variant, bool isDark) {
+  static List<Color> _getGradientColors(
+      LifeUseStatVariant variant, bool isDark) {
     if (isDark) {
       switch (variant) {
         case LifeUseStatVariant.purple:
-          return const [Color(0xFF1E1B4B), Color(0xFF231454), Color(0xFF2E1065)];
+          return const [
+            Color(0xFF1E1B4B),
+            Color(0xFF231454),
+            Color(0xFF2E1065)
+          ];
         case LifeUseStatVariant.blue:
-          return const [Color(0xFF172554), Color(0xFF1A2E6B), Color(0xFF1E3A8A)];
+          return const [
+            Color(0xFF172554),
+            Color(0xFF1A2E6B),
+            Color(0xFF1E3A8A)
+          ];
         case LifeUseStatVariant.green:
-          return const [Color(0xFF052E16), Color(0xFF0C3E20), Color(0xFF14532D)];
+          return const [
+            Color(0xFF052E16),
+            Color(0xFF0C3E20),
+            Color(0xFF14532D)
+          ];
         case LifeUseStatVariant.teal:
-          return const [Color(0xFF042F2E), Color(0xFF0A3E3D), Color(0xFF134E4A)];
+          return const [
+            Color(0xFF042F2E),
+            Color(0xFF0A3E3D),
+            Color(0xFF134E4A)
+          ];
       }
     } else {
       switch (variant) {
         case LifeUseStatVariant.purple:
-          return const [Color(0xFFFFFFFF), Color(0xFFFBFAFF), Color(0xFFE7E2FA)];
+          return const [
+            Color(0xFFFFFFFF),
+            Color(0xFFFBFAFF),
+            Color(0xFFE7E2FA)
+          ];
         case LifeUseStatVariant.blue:
-          return const [Color(0xFFFFFFFF), Color(0xFFFAFDFF), Color(0xFFDCECFB)];
+          return const [
+            Color(0xFFFFFFFF),
+            Color(0xFFFAFDFF),
+            Color(0xFFDCECFB)
+          ];
         case LifeUseStatVariant.green:
-          return const [Color(0xFFFFFFFF), Color(0xFFFAFFFC), Color(0xFFD9F1E2)];
+          return const [
+            Color(0xFFFFFFFF),
+            Color(0xFFFAFFFC),
+            Color(0xFFD9F1E2)
+          ];
         case LifeUseStatVariant.teal:
-          return const [Color(0xFFFFFFFF), Color(0xFFF9FFFC), Color(0xFFD6F3E7)];
+          return const [
+            Color(0xFFFFFFFF),
+            Color(0xFFF9FFFC),
+            Color(0xFFD6F3E7)
+          ];
       }
     }
   }

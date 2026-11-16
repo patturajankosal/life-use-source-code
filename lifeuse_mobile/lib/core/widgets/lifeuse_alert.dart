@@ -156,62 +156,63 @@ class LifeUseAlert extends StatelessWidget {
     );
   }
 
-  static _AlertConfig _getStyleConfig(LifeUseAlertVariant variant, bool isDark) {
+  static _AlertConfig _getStyleConfig(
+      LifeUseAlertVariant variant, bool isDark) {
     switch (variant) {
       case LifeUseAlertVariant.defaultVariant:
         return _AlertConfig(
           backgroundColor: isDark ? AppColors.darkBase50 : AppColors.base50,
           borderColor: isDark ? AppColors.darkBase100 : AppColors.base100,
-          iconColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-          titleColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-          descColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+          iconColor:
+              isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          titleColor:
+              isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          descColor: isDark
+              ? AppColors.darkTextSecondary
+              : AppColors.lightTextSecondary,
         );
       case LifeUseAlertVariant.destructive:
         return _AlertConfig(
-          backgroundColor: isDark
-              ? const Color(0xFF2A0A0A)
-              : const Color(0xFFFEF2F2),
-          borderColor: isDark
-              ? const Color(0xFF7F1D1D)
-              : const Color(0xFFFECACA),
+          backgroundColor:
+              isDark ? const Color(0xFF2A0A0A) : const Color(0xFFFEF2F2),
+          borderColor:
+              isDark ? const Color(0xFF7F1D1D) : const Color(0xFFFECACA),
           iconColor: isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626),
-          titleColor: isDark ? const Color(0xFFF87171) : const Color(0xFF991B1B),
+          titleColor:
+              isDark ? const Color(0xFFF87171) : const Color(0xFF991B1B),
           descColor: isDark ? const Color(0xFFFCA5A5) : const Color(0xFFB91C1C),
         );
       case LifeUseAlertVariant.success:
         return _AlertConfig(
-          backgroundColor: isDark
-              ? const Color(0xFF04170E)
-              : const Color(0xFFF0FDF4),
-          borderColor: isDark
-              ? const Color(0xFF115E39)
-              : const Color(0xFFBBF7D0),
+          backgroundColor:
+              isDark ? const Color(0xFF04170E) : const Color(0xFFF0FDF4),
+          borderColor:
+              isDark ? const Color(0xFF115E39) : const Color(0xFFBBF7D0),
           iconColor: isDark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A),
-          titleColor: isDark ? const Color(0xFF86EFAC) : const Color(0xFF166534),
+          titleColor:
+              isDark ? const Color(0xFF86EFAC) : const Color(0xFF166534),
           descColor: isDark ? const Color(0xFFBBF7D0) : const Color(0xFF15803D),
         );
       case LifeUseAlertVariant.warning:
         return _AlertConfig(
-          backgroundColor: isDark
-              ? const Color(0xFF201305)
-              : const Color(0xFFFFFBEB),
-          borderColor: isDark
-              ? const Color(0xFF78350F)
-              : const Color(0xFFFDE68A),
+          backgroundColor:
+              isDark ? const Color(0xFF201305) : const Color(0xFFFFFBEB),
+          borderColor:
+              isDark ? const Color(0xFF78350F) : const Color(0xFFFDE68A),
           iconColor: isDark ? const Color(0xFFFBBF24) : const Color(0xFFD97706),
-          titleColor: isDark ? const Color(0xFFFDE68A) : const Color(0xFF92400E),
+          titleColor:
+              isDark ? const Color(0xFFFDE68A) : const Color(0xFF92400E),
           descColor: isDark ? const Color(0xFFFEF3C7) : const Color(0xFFB45309),
         );
       case LifeUseAlertVariant.info:
         return _AlertConfig(
-          backgroundColor: isDark
-              ? const Color(0xFF08172D)
-              : const Color(0xFFEFF6FF),
-          borderColor: isDark
-              ? const Color(0xFF1E40AF)
-              : const Color(0xFFBFDBFE),
+          backgroundColor:
+              isDark ? const Color(0xFF08172D) : const Color(0xFFEFF6FF),
+          borderColor:
+              isDark ? const Color(0xFF1E40AF) : const Color(0xFFBFDBFE),
           iconColor: isDark ? const Color(0xFF60A5FA) : const Color(0xFF2563EB),
-          titleColor: isDark ? const Color(0xFF93C5FD) : const Color(0xFF1E40AF),
+          titleColor:
+              isDark ? const Color(0xFF93C5FD) : const Color(0xFF1E40AF),
           descColor: isDark ? const Color(0xFFDBEAFE) : const Color(0xFF1D4ED8),
         );
     }

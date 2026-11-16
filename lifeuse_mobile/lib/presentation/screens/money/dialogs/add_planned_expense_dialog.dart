@@ -23,7 +23,8 @@ class AddPlannedExpenseDialog extends StatefulWidget {
   }
 
   @override
-  State<AddPlannedExpenseDialog> createState() => _AddPlannedExpenseDialogState();
+  State<AddPlannedExpenseDialog> createState() =>
+      _AddPlannedExpenseDialogState();
 }
 
 class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
@@ -79,7 +80,9 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
         plannedDate: _plannedDate,
         categoryName: _selectedCategory,
         essential: _isEssential,
-        notes: _notesController.text.trim().isNotEmpty ? _notesController.text.trim() : null,
+        notes: _notesController.text.trim().isNotEmpty
+            ? _notesController.text.trim()
+            : null,
       );
 
       final moneyProvider = context.read<MoneyProvider>();
@@ -90,7 +93,8 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
         SweetAlert.showSuccess(
           context,
           title: 'Planned Expense Scheduled',
-          message: '"${_titleController.text.trim()}" (₹${amount.toStringAsFixed(2)}) has been scheduled.',
+          message:
+              '"${_titleController.text.trim()}" (₹${amount.toStringAsFixed(2)}) has been scheduled.',
         );
       }
     } catch (e) {
@@ -183,7 +187,8 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                 hint: 'e.g., Diwali shopping, Laptop purchase',
                 controller: _titleController,
                 prefixIcon: LucideIcons.fileText,
-                validator: (val) => val == null || val.trim().isEmpty ? 'Enter title' : null,
+                validator: (val) =>
+                    val == null || val.trim().isEmpty ? 'Enter title' : null,
               ),
               const SizedBox(height: 16),
 
@@ -192,11 +197,14 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                 label: 'Planned Amount (₹)',
                 hint: '0.00',
                 controller: _amountController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
                 prefixIcon: Icons.currency_rupee_rounded,
                 validator: (val) {
                   if (val == null || val.trim().isEmpty) return 'Enter amount';
-                  if (double.tryParse(val.trim()) == null) return 'Enter a valid number';
+                  if (double.tryParse(val.trim()) == null) {
+                    return 'Enter a valid number';
+                  }
                   return null;
                 },
               ),
@@ -212,7 +220,8 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                       decoration: InputDecoration(
                         labelText: 'Category',
                         labelStyle: GoogleFonts.inter(color: textSecondary),
-                        prefixIcon: Icon(LucideIcons.layoutGrid, color: textSecondary, size: 18),
+                        prefixIcon: Icon(LucideIcons.layoutGrid,
+                            color: textSecondary, size: 18),
                         filled: true,
                         fillColor: isDark
                             ? Colors.white.withValues(alpha: 0.04)
@@ -226,12 +235,15 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                           borderSide: BorderSide(color: borderColor),
                         ),
                       ),
-                      style: GoogleFonts.inter(fontSize: 14, color: textPrimary),
+                      style:
+                          GoogleFonts.inter(fontSize: 14, color: textPrimary),
                       items: categories.map((cat) {
                         return DropdownMenuItem(value: cat, child: Text(cat));
                       }).toList(),
                       onChanged: (val) {
-                        if (val != null) setState(() => _selectedCategory = val);
+                        if (val != null) {
+                          setState(() => _selectedCategory = val);
+                        }
                       },
                     ),
                   ),
@@ -243,7 +255,8 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                           context: context,
                           initialDate: _plannedDate,
                           firstDate: DateTime.now(),
-                          lastDate: DateTime.now().add(const Duration(days: 730)),
+                          lastDate:
+                              DateTime.now().add(const Duration(days: 730)),
                         );
                         if (picked != null) {
                           setState(() => _plannedDate = picked);
@@ -251,7 +264,8 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                       },
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 14),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: borderColor),
@@ -262,11 +276,16 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Planned Date', style: GoogleFonts.inter(fontSize: 11, color: textSecondary)),
+                            Text('Planned Date',
+                                style: GoogleFonts.inter(
+                                    fontSize: 11, color: textSecondary)),
                             const SizedBox(height: 4),
                             Text(
                               '${_plannedDate.day}/${_plannedDate.month}/${_plannedDate.year}',
-                              style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: textPrimary),
+                              style: GoogleFonts.inter(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: textPrimary),
                             ),
                           ],
                         ),
@@ -278,23 +297,27 @@ class _AddPlannedExpenseDialogState extends State<AddPlannedExpenseDialog> {
               const SizedBox(height: 14),
 
               // Essential Toggle
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(
-                  'Essential Expense',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: textPrimary,
+              Material(
+                color: Colors.transparent,
+                child: SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(
+                    'Essential Expense',
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: textPrimary,
+                    ),
                   ),
+                  subtitle: Text(
+                    'Guarantees daily limit protects funds for this expense',
+                    style:
+                        GoogleFonts.inter(fontSize: 12, color: textSecondary),
+                  ),
+                  value: _isEssential,
+                  activeThumbColor: AppColors.primary,
+                  onChanged: (val) => setState(() => _isEssential = val),
                 ),
-                subtitle: Text(
-                  'Guarantees daily limit protects funds for this expense',
-                  style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
-                ),
-                value: _isEssential,
-                activeThumbColor: AppColors.primary,
-                onChanged: (val) => setState(() => _isEssential = val),
               ),
               const SizedBox(height: 10),
 

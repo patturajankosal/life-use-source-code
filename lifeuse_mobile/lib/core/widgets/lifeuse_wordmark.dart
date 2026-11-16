@@ -17,8 +17,8 @@ class LifeUseWordmark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Dynamic adaptive color for dark vs light mode
-    final effectiveColor = color ??
-        (isDark ? Colors.white : const Color(0xFF0F172A));
+    final effectiveColor =
+        color ?? (isDark ? Colors.white : const Color(0xFF0F172A));
 
     return Image.asset(
       'assets/images/lifeuse_wordmark.png',

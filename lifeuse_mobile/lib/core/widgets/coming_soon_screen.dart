@@ -54,7 +54,8 @@ class ComingSoonScreen extends StatelessWidget {
                   border: Border.all(color: borderColor),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.05),
+                      color:
+                          Colors.black.withValues(alpha: isDark ? 0.35 : 0.05),
                       blurRadius: 20,
                       offset: const Offset(0, 6),
                     ),
@@ -68,7 +69,8 @@ class ComingSoonScreen extends StatelessWidget {
                       height: 76,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: accentColor.withValues(alpha: isDark ? 0.20 : 0.10),
+                        color:
+                            accentColor.withValues(alpha: isDark ? 0.20 : 0.10),
                         border: Border.all(
                           color: accentColor.withValues(alpha: 0.35),
                           width: 2,
@@ -80,7 +82,8 @@ class ComingSoonScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 5),
                       decoration: BoxDecoration(
                         color: accentColor.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(12),

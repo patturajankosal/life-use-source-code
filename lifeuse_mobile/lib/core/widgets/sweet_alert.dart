@@ -282,7 +282,8 @@ class SweetAlert extends StatelessWidget {
                           ),
                           side: BorderSide(color: borderColor),
                         ),
-                        onPressed: onCancel ?? () => Navigator.of(context).pop(false),
+                        onPressed:
+                            onCancel ?? () => Navigator.of(context).pop(false),
                         child: Text(
                           cancelText!,
                           style: GoogleFonts.inter(
@@ -308,7 +309,8 @@ class SweetAlert extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed: onConfirm ?? () => Navigator.of(context).pop(true),
+                      onPressed:
+                          onConfirm ?? () => Navigator.of(context).pop(true),
                       child: Text(
                         confirmText,
                         style: GoogleFonts.inter(

@@ -34,5 +34,6 @@ class UnauthorizedException extends AppException {
 
 /// 404 Resource Not Found
 class ResourceNotFoundException extends AppException {
-  const ResourceNotFoundException(super.message, {super.statusCode, super.details});
+  const ResourceNotFoundException(super.message,
+      {super.statusCode, super.details});
 }

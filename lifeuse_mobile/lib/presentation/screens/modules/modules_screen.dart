@@ -16,7 +16,8 @@ class ModulesScreen extends StatefulWidget {
 }
 
 class _ModulesScreenState extends State<ModulesScreen> {
-  String _selectedCategory = 'ALL'; // ALL, Finance, Productivity, Lifestyle, Security, Education, Planning
+  String _selectedCategory =
+      'ALL'; // ALL, Finance, Productivity, Lifestyle, Security, Education, Planning
 
   final List<String> _categories = [
     'ALL',
@@ -56,7 +57,9 @@ class _ModulesScreenState extends State<ModulesScreen> {
     final allModules = HardcodedModuleItem.hardcodedModules;
 
     final filteredModules = allModules.where((m) {
-      if (_selectedCategory != 'ALL' && m.category != _selectedCategory) return false;
+      if (_selectedCategory != 'ALL' && m.category != _selectedCategory) {
+        return false;
+      }
       return true;
     }).toList();
 
@@ -79,7 +82,8 @@ class _ModulesScreenState extends State<ModulesScreen> {
               color: AppColors.badgeBgOf(context),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0),
+                color:
+                    isDark ? const Color(0xFF3D2550) : const Color(0xFFEBE3F0),
               ),
             ),
             child: Center(
@@ -142,7 +146,9 @@ class _ModulesScreenState extends State<ModulesScreen> {
                             label: Text(cat),
                             labelStyle: GoogleFonts.inter(
                               fontSize: 12,
-                              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
                               color: isSelected ? Colors.white : textSecondary,
                             ),
                             selectedColor: AppColors.primary,

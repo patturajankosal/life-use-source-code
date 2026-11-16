@@ -23,7 +23,8 @@ class LifeUseFilterTabs extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final containerBg = isDark ? const Color(0xFF1A1A1A) : Colors.white;
-    final containerBorder = isDark ? const Color(0xFF333333) : const Color(0xFFE7E8EC);
+    final containerBorder =
+        isDark ? const Color(0xFF333333) : const Color(0xFFE7E8EC);
 
     return Container(
       padding: const EdgeInsets.all(4),
@@ -67,7 +68,9 @@ class LifeUseFilterTabs extends StatelessWidget {
                   height: 20 / 12,
                   color: isSelected
                       ? Colors.white
-                      : (isDark ? const Color(0xFFB3B3B3) : const Color(0xFF808080)),
+                      : (isDark
+                          ? const Color(0xFFB3B3B3)
+                          : const Color(0xFF808080)),
                 ),
               ),
             ),

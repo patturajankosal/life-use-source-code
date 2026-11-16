@@ -53,7 +53,8 @@ class AuthService {
     final response = await _apiClient.post<RegisterResponse>(
       url: ApiConfig.register,
       body: request.toJson(),
-      fromJson: (json) => RegisterResponse.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          RegisterResponse.fromJson(json as Map<String, dynamic>),
     );
 
     if (response.data == null) {

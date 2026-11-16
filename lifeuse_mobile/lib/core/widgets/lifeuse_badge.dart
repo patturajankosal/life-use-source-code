@@ -64,48 +64,57 @@ class LifeUseBadge extends StatelessWidget {
     );
   }
 
-  static _BadgeConfig _getStyleConfig(LifeUseBadgeVariant variant, bool isDark) {
+  static _BadgeConfig _getStyleConfig(
+      LifeUseBadgeVariant variant, bool isDark) {
     switch (variant) {
       case LifeUseBadgeVariant.active:
         return _BadgeConfig(
-          backgroundColor: const Color(0xFF84CC16).withValues(alpha: isDark ? 0.12 : 0.08),
+          backgroundColor:
+              const Color(0xFF84CC16).withValues(alpha: isDark ? 0.12 : 0.08),
           borderColor: const Color(0xFF84CC16).withValues(alpha: 0.35),
           textColor: isDark ? const Color(0xFFA3E635) : const Color(0xFF65A30D),
         );
       case LifeUseBadgeVariant.pending:
         return _BadgeConfig(
-          backgroundColor: const Color(0xFFCA8A04).withValues(alpha: isDark ? 0.14 : 0.09),
+          backgroundColor:
+              const Color(0xFFCA8A04).withValues(alpha: isDark ? 0.14 : 0.09),
           borderColor: const Color(0xFFCA8A04).withValues(alpha: 0.35),
           textColor: isDark ? const Color(0xFFFBBF24) : const Color(0xFFB45309),
         );
       case LifeUseBadgeVariant.invited:
         return _BadgeConfig(
-          backgroundColor: const Color(0xFF3B82F6).withValues(alpha: isDark ? 0.14 : 0.09),
+          backgroundColor:
+              const Color(0xFF3B82F6).withValues(alpha: isDark ? 0.14 : 0.09),
           borderColor: const Color(0xFF3B82F6).withValues(alpha: 0.35),
           textColor: isDark ? const Color(0xFF60A5FA) : const Color(0xFF2563EB),
         );
       case LifeUseBadgeVariant.suspended:
         return _BadgeConfig(
-          backgroundColor: const Color(0xFF6366F1).withValues(alpha: isDark ? 0.14 : 0.09),
+          backgroundColor:
+              const Color(0xFF6366F1).withValues(alpha: isDark ? 0.14 : 0.09),
           borderColor: const Color(0xFF6366F1).withValues(alpha: 0.35),
           textColor: isDark ? const Color(0xFF818CF8) : const Color(0xFF4F46E5),
         );
       case LifeUseBadgeVariant.terminated:
         return _BadgeConfig(
-          backgroundColor: const Color(0xFFEF4444).withValues(alpha: isDark ? 0.14 : 0.09),
+          backgroundColor:
+              const Color(0xFFEF4444).withValues(alpha: isDark ? 0.14 : 0.09),
           borderColor: const Color(0xFFEF4444).withValues(alpha: 0.35),
           textColor: isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626),
         );
       case LifeUseBadgeVariant.cyan:
         return _BadgeConfig(
-          backgroundColor: const Color(0xFF0891B2).withValues(alpha: isDark ? 0.14 : 0.09),
+          backgroundColor:
+              const Color(0xFF0891B2).withValues(alpha: isDark ? 0.14 : 0.09),
           borderColor: const Color(0xFF0891B2).withValues(alpha: 0.35),
           textColor: isDark ? const Color(0xFF22D3EE) : const Color(0xFF0891B2),
         );
       case LifeUseBadgeVariant.defaultVariant:
         return _BadgeConfig(
-          backgroundColor: isDark ? const Color(0xFF262626) : const Color(0xFFF4F5F5),
-          borderColor: isDark ? const Color(0xFF333333) : const Color(0xFFE6E6E6),
+          backgroundColor:
+              isDark ? const Color(0xFF262626) : const Color(0xFFF4F5F5),
+          borderColor:
+              isDark ? const Color(0xFF333333) : const Color(0xFFE6E6E6),
           textColor: isDark ? const Color(0xFFCCCCCC) : const Color(0xFF4D4D4D),
         );
     }

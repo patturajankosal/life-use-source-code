@@ -144,9 +144,8 @@ class _AppTextFieldState extends State<AppTextField> {
                               ? Icons.visibility_off_outlined
                               : Icons.visibility_outlined,
                           size: 20,
-                          color: _obscureText
-                              ? textSecondary
-                              : AppColors.primary,
+                          color:
+                              _obscureText ? textSecondary : AppColors.primary,
                         ),
                       ),
                     )

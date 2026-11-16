@@ -99,7 +99,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                 AuthGuardDialog.protect(
                   context,
                   title: 'Sign In to Sync Finances',
-                  message: 'Sign in to access your live bank accounts, monthly limits, and budgets.',
+                  message:
+                      'Sign in to access your live bank accounts, monthly limits, and budgets.',
                   onAuthenticated: () => money.loadDashboardData(silent: true),
                 );
               }
@@ -112,7 +113,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
               AuthGuardDialog.protect(
                 context,
                 title: 'Sign In to Record Transactions',
-                message: 'Keep your transactions, accounts, and budgets synced securely to your LifeUse account.',
+                message:
+                    'Keep your transactions, accounts, and budgets synced securely to your LifeUse account.',
                 onAuthenticated: () => AddTransactionDialog.show(context),
               );
             },
@@ -124,8 +126,10 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
           unselectedLabelColor: textSecondary,
           indicatorColor: AppColors.primary,
           indicatorWeight: 3,
-          labelStyle: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w700),
-          unselectedLabelStyle: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w500),
+          labelStyle: GoogleFonts.plusJakartaSans(
+              fontSize: 13, fontWeight: FontWeight.w700),
+          unselectedLabelStyle: GoogleFonts.plusJakartaSans(
+              fontSize: 13, fontWeight: FontWeight.w500),
           tabs: const [
             Tab(text: 'Overview'),
             Tab(text: 'Transactions'),
@@ -150,7 +154,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
         icon: const Icon(LucideIcons.plus, color: Colors.white, size: 18),
         label: Text(
           'Add',
-          style: GoogleFonts.inter(fontWeight: FontWeight.w700, color: Colors.white),
+          style: GoogleFonts.inter(
+              fontWeight: FontWeight.w700, color: Colors.white),
         ),
         onPressed: () => _handleFabAction(context),
       ),
@@ -161,7 +166,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
     AuthGuardDialog.protect(
       context,
       title: 'Sign In to Money Manager',
-      message: 'Sign in or create an account to record transactions, create budget plans, and sync recurring bills.',
+      message:
+          'Sign in or create an account to record transactions, create budget plans, and sync recurring bills.',
       onAuthenticated: () {
         switch (_tabController.index) {
           case 0:
@@ -211,7 +217,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                 margin: const EdgeInsets.only(bottom: 16),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: isDark ? 0.16 : 0.08),
+                  color:
+                      AppColors.primary.withValues(alpha: isDark ? 0.16 : 0.08),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: AppColors.primary.withValues(alpha: 0.25),
@@ -261,7 +268,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
                         minimumSize: Size.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         shape: RoundedRectangleBorder(
@@ -272,7 +280,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                         AuthGuardDialog.protect(
                           context,
                           title: 'Sign In to Money Manager',
-                          message: 'Sign in to access your live bank accounts, monthly limits, and budgets.',
+                          message:
+                              'Sign in to access your live bank accounts, monthly limits, and budgets.',
                           onAuthenticated: () => money.loadDashboardData(),
                         );
                       },
@@ -308,7 +317,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withValues(alpha: isDark ? 0.15 : 0.08),
+                      color: AppColors.primary
+                          .withValues(alpha: isDark ? 0.15 : 0.08),
                       blurRadius: 20,
                       offset: const Offset(0, 6),
                     ),
@@ -325,7 +335,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: AppColors.primary.withValues(alpha: 0.15),
+                                color:
+                                    AppColors.primary.withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: const Icon(
@@ -368,7 +379,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                     const SizedBox(height: 4),
                     Text(
                       'Remaining daily allowance for today (Target: ${_currencyFormat.format(daily.recommendedDailyLimit)}/day)',
-                      style: GoogleFonts.inter(fontSize: 12.5, color: textSecondary),
+                      style: GoogleFonts.inter(
+                          fontSize: 12.5, color: textSecondary),
                     ),
                     const SizedBox(height: 16),
 
@@ -377,7 +389,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                       borderRadius: BorderRadius.circular(8),
                       child: LinearProgressIndicator(
                         value: daily.recommendedDailyLimit > 0
-                            ? (daily.spentToday / daily.recommendedDailyLimit).clamp(0.0, 1.0)
+                            ? (daily.spentToday / daily.recommendedDailyLimit)
+                                .clamp(0.0, 1.0)
                             : 0.0,
                         backgroundColor: isDark
                             ? Colors.white.withValues(alpha: 0.1)
@@ -417,7 +430,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                     if (daily.warnings.isNotEmpty) ...[
                       const SizedBox(height: 12),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
                           color: AppColors.warning.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(10),
@@ -427,7 +441,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                         ),
                         child: Row(
                           children: [
-                            const Icon(LucideIcons.alertTriangle, size: 16, color: AppColors.warning),
+                            const Icon(LucideIcons.alertTriangle,
+                                size: 16, color: AppColors.warning),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -506,9 +521,12 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                       Wrap(
                         spacing: 6,
                         runSpacing: 6,
-                        children: pressure.actionableRecommendations.take(2).map((rec) {
+                        children: pressure.actionableRecommendations
+                            .take(2)
+                            .map((rec) {
                           return Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
                               color: isDark
                                   ? Colors.white.withValues(alpha: 0.05)
@@ -517,7 +535,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                             ),
                             child: Text(
                               '💡 $rec',
-                              style: GoogleFonts.inter(fontSize: 11, color: textSecondary),
+                              style: GoogleFonts.inter(
+                                  fontSize: 11, color: textSecondary),
                             ),
                           );
                         }).toList(),
@@ -555,8 +574,12 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
             LifeUseStatCard(
               label: 'Net Cash Flow',
               value: _currencyFormat.format(summary.netCashFlow),
-              subtitle: summary.netCashFlow >= 0 ? 'Positive balance growth' : 'Deficit spending',
-              variant: summary.netCashFlow >= 0 ? LifeUseStatVariant.purple : LifeUseStatVariant.blue,
+              subtitle: summary.netCashFlow >= 0
+                  ? 'Positive balance growth'
+                  : 'Deficit spending',
+              variant: summary.netCashFlow >= 0
+                  ? LifeUseStatVariant.purple
+                  : LifeUseStatVariant.blue,
             ),
             const SizedBox(height: 20),
 
@@ -591,7 +614,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
               _buildEmptyPlaceholder(
                 icon: LucideIcons.receipt,
                 title: 'No Transactions Yet',
-                description: 'Tap the "+ Add" button to record your first income or expense.',
+                description:
+                    'Tap the "+ Add" button to record your first income or expense.',
                 actionLabel: 'Record Transaction',
                 onAction: () => AddTransactionDialog.show(context),
               )
@@ -644,7 +668,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                     selected: isSelected,
                     labelStyle: GoogleFonts.inter(
                       fontSize: 12,
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      fontWeight:
+                          isSelected ? FontWeight.w700 : FontWeight.w500,
                       color: isSelected ? Colors.white : textSecondary,
                     ),
                     selectedColor: AppColors.primary,
@@ -668,7 +693,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                 ? _buildEmptyPlaceholder(
                     icon: LucideIcons.receipt,
                     title: 'No Transactions Found',
-                    description: 'No transactions match your current filter settings.',
+                    description:
+                        'No transactions match your current filter settings.',
                     actionLabel: 'Record New Transaction',
                     onAction: () => AddTransactionDialog.show(context),
                   )
@@ -715,7 +741,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withValues(alpha: isDark ? 0.15 : 0.06),
+                    color: AppColors.primary
+                        .withValues(alpha: isDark ? 0.15 : 0.06),
                     blurRadius: 18,
                     offset: const Offset(0, 6),
                   ),
@@ -755,7 +782,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                               ),
                               Text(
                                 '${_dateFormat.format(activePlan.startDate)} - ${_dateFormat.format(activePlan.endDate)}',
-                                style: GoogleFonts.inter(fontSize: 11.5, color: textSecondary),
+                                style: GoogleFonts.inter(
+                                    fontSize: 11.5, color: textSecondary),
                               ),
                             ],
                           ),
@@ -775,14 +803,17 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                     style: GoogleFonts.inter(
                       fontSize: 30,
                       fontWeight: FontWeight.w800,
-                      color: activePlan.remainingBudget >= 0 ? AppColors.primary : AppColors.error,
+                      color: activePlan.remainingBudget >= 0
+                          ? AppColors.primary
+                          : AppColors.error,
                       letterSpacing: -0.5,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Remaining from total ${_currencyFormat.format(activePlan.totalBudget)} budget',
-                    style: GoogleFonts.inter(fontSize: 12.5, color: textSecondary),
+                    style:
+                        GoogleFonts.inter(fontSize: 12.5, color: textSecondary),
                   ),
                   const SizedBox(height: 16),
 
@@ -791,7 +822,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                     borderRadius: BorderRadius.circular(8),
                     child: LinearProgressIndicator(
                       value: activePlan.totalBudget > 0
-                          ? (activePlan.actualExpenses / activePlan.totalBudget).clamp(0.0, 1.0)
+                          ? (activePlan.actualExpenses / activePlan.totalBudget)
+                              .clamp(0.0, 1.0)
                           : 0.0,
                       backgroundColor: isDark
                           ? Colors.white.withValues(alpha: 0.1)
@@ -811,7 +843,10 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                     children: [
                       Text(
                         'Spent: ${_currencyFormat.format(activePlan.actualExpenses)}',
-                        style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: textSecondary),
+                        style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: textSecondary),
                       ),
                       Text(
                         '${activePlan.periodUtilizationPercent.toStringAsFixed(1)}% Used',
@@ -833,7 +868,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
             _buildEmptyPlaceholder(
               icon: LucideIcons.pieChart,
               title: 'No Active Budget Plan',
-              description: 'Create a budget plan to set spending targets and monitor category limits.',
+              description:
+                  'Create a budget plan to set spending targets and monitor category limits.',
               actionLabel: 'Create Budget Plan',
               onAction: () => CreateBudgetPlanDialog.show(context),
             ),
@@ -880,7 +916,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
               const SizedBox(width: 10),
               Expanded(
                 child: _buildSubTabButton(
-                  title: 'Recurring Schedules (${money.recurringSchedules.length})',
+                  title:
+                      'Recurring Schedules (${money.recurringSchedules.length})',
                   index: 1,
                 ),
               ),
@@ -918,7 +955,9 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
             style: GoogleFonts.inter(
               fontSize: 12.5,
               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-              color: isSelected ? Colors.white : AppColors.textSecondaryOf(context),
+              color: isSelected
+                  ? Colors.white
+                  : AppColors.textSecondaryOf(context),
             ),
           ),
         ),
@@ -931,7 +970,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
       return _buildEmptyPlaceholder(
         icon: LucideIcons.calendar,
         title: 'No Planned Expenses',
-        description: 'Schedule future expenses or special-day spending to protect daily limits.',
+        description:
+            'Schedule future expenses or special-day spending to protect daily limits.',
         actionLabel: 'Schedule Expense',
         onAction: () => AddPlannedExpenseDialog.show(context),
       );
@@ -983,12 +1023,13 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
               ),
               LifeUseBadge(
                 text: pe.executed ? 'EXECUTED' : 'UPCOMING',
-                variant: pe.executed ? LifeUseBadgeVariant.active : LifeUseBadgeVariant.pending,
+                variant: pe.executed
+                    ? LifeUseBadgeVariant.active
+                    : LifeUseBadgeVariant.pending,
               ),
             ],
           ),
           const SizedBox(height: 6),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -1006,7 +1047,6 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
               ),
             ],
           ),
-
           if (pe.notes != null && pe.notes!.isNotEmpty) ...[
             const SizedBox(height: 6),
             Text(
@@ -1014,30 +1054,37 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
               style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
             ),
           ],
-
           if (!pe.executed) ...[
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: const Icon(LucideIcons.trash2, size: 18, color: AppColors.error),
+                  icon: const Icon(LucideIcons.trash2,
+                      size: 18, color: AppColors.error),
                   tooltip: 'Delete Planned Expense',
-                  onPressed: () => _confirmDeletePlannedExpense(context, pe, money),
+                  onPressed: () =>
+                      _confirmDeletePlannedExpense(context, pe, money),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton.icon(
-                  icon: const Icon(LucideIcons.checkCheck, size: 16, color: Colors.white),
+                  icon: const Icon(LucideIcons.checkCheck,
+                      size: 16, color: Colors.white),
                   label: Text(
                     'Execute Now',
-                    style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white),
+                    style: GoogleFonts.inter(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     minimumSize: const Size(110, 36),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                   ),
-                  onPressed: () => _confirmExecutePlannedExpense(context, pe, money),
+                  onPressed: () =>
+                      _confirmExecutePlannedExpense(context, pe, money),
                 ),
               ],
             ),
@@ -1055,7 +1102,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
     SweetAlert.showConfirm(
       context,
       title: 'Execute Expense?',
-      message: 'This will convert "${pe.title}" into an actual recorded transaction of ${_currencyFormat.format(pe.amount)}.',
+      message:
+          'This will convert "${pe.title}" into an actual recorded transaction of ${_currencyFormat.format(pe.amount)}.',
       confirmText: 'Execute Now',
       onConfirm: () async {
         try {
@@ -1114,12 +1162,14 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
     );
   }
 
-  Widget _buildRecurringSchedulesList(BuildContext context, MoneyProvider money) {
+  Widget _buildRecurringSchedulesList(
+      BuildContext context, MoneyProvider money) {
     if (money.recurringSchedules.isEmpty) {
       return _buildEmptyPlaceholder(
         icon: LucideIcons.repeat,
         title: 'No Recurring Schedules',
-        description: 'Set up recurring bills, subscriptions, or salaries for automated tracking.',
+        description:
+            'Set up recurring bills, subscriptions, or salaries for automated tracking.',
         actionLabel: 'Add Schedule',
         onAction: () => AddRecurringScheduleDialog.show(context),
       );
@@ -1176,7 +1226,6 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
             ],
           ),
           const SizedBox(height: 6),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -1189,13 +1238,14 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: rs.transactionType == 'INCOME' ? AppColors.success : AppColors.error,
+                  color: rs.transactionType == 'INCOME'
+                      ? AppColors.success
+                      : AppColors.error,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -1204,9 +1254,11 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                 style: GoogleFonts.inter(fontSize: 11.5, color: textSecondary),
               ),
               IconButton(
-                icon: const Icon(LucideIcons.trash2, size: 18, color: AppColors.error),
+                icon: const Icon(LucideIcons.trash2,
+                    size: 18, color: AppColors.error),
                 tooltip: 'Delete Schedule',
-                onPressed: () => _confirmDeleteRecurringSchedule(context, rs, money),
+                onPressed: () =>
+                    _confirmDeleteRecurringSchedule(context, rs, money),
               ),
             ],
           ),
@@ -1307,18 +1359,21 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                   children: [
                     Text(
                       _dateFormat.format(tx.transactionDate),
-                      style: GoogleFonts.inter(fontSize: 11.5, color: textSecondary),
+                      style: GoogleFonts.inter(
+                          fontSize: 11.5, color: textSecondary),
                     ),
                     const SizedBox(width: 6),
                     Container(
                       width: 4,
                       height: 4,
-                      decoration: BoxDecoration(color: textSecondary, shape: BoxShape.circle),
+                      decoration: BoxDecoration(
+                          color: textSecondary, shape: BoxShape.circle),
                     ),
                     const SizedBox(width: 6),
                     Text(
                       tx.paymentMethod,
-                      style: GoogleFonts.inter(fontSize: 11.5, color: textSecondary),
+                      style: GoogleFonts.inter(
+                          fontSize: 11.5, color: textSecondary),
                     ),
                   ],
                 ),
@@ -1328,7 +1383,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
                     tx.notes!,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.inter(fontSize: 11, color: textSecondary),
+                    style:
+                        GoogleFonts.inter(fontSize: 11, color: textSecondary),
                   ),
                 ],
               ],
@@ -1370,7 +1426,8 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
     SweetAlert.showConfirm(
       context,
       title: 'Delete Transaction',
-      message: 'Delete ${_currencyFormat.format(tx.amount)} for ${tx.categoryName}?',
+      message:
+          'Delete ${_currencyFormat.format(tx.amount)} for ${tx.categoryName}?',
       confirmText: 'Delete',
       isDestructive: true,
       onConfirm: () async {
@@ -1440,11 +1497,13 @@ class _MoneyManagerScreenState extends State<MoneyManagerScreen>
               onPressed: onAction,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
               ),
               child: Text(
                 actionLabel,
-                style: GoogleFonts.inter(fontWeight: FontWeight.w700, color: Colors.white),
+                style: GoogleFonts.inter(
+                    fontWeight: FontWeight.w700, color: Colors.white),
               ),
             ),
           ],

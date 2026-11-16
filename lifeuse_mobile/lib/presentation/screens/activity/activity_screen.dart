@@ -408,8 +408,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                           child: LinearProgressIndicator(
                             value: _completionRatio,
                             minHeight: 8,
-                            backgroundColor:
-                                borderColor.withValues(alpha: 0.5),
+                            backgroundColor: borderColor.withValues(alpha: 0.5),
                             valueColor: const AlwaysStoppedAnimation<Color>(
                               AppColors.primary,
                             ),

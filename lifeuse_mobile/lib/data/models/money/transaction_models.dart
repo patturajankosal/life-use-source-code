@@ -49,7 +49,8 @@ class TransactionModel {
       currency: json['currency']?.toString() ?? 'INR',
       paymentMethod: json['paymentMethod']?.toString() ?? 'UPI',
       transactionDate: json['transactionDate'] != null
-          ? DateTime.tryParse(json['transactionDate'].toString())?.toLocal() ?? DateTime.now()
+          ? DateTime.tryParse(json['transactionDate'].toString())?.toLocal() ??
+              DateTime.now()
           : DateTime.now(),
       essential: json['essential'] == true,
       idempotencyKey: json['idempotencyKey']?.toString(),
@@ -178,7 +179,8 @@ class TransactionSummaryModel {
       totalRefunds: (json['totalRefunds'] as num?)?.toDouble() ?? 0.0,
       netCashFlow: (json['netCashFlow'] as num?)?.toDouble() ?? 0.0,
       essentialExpenses: (json['essentialExpenses'] as num?)?.toDouble() ?? 0.0,
-      discretionaryExpenses: (json['discretionaryExpenses'] as num?)?.toDouble() ?? 0.0,
+      discretionaryExpenses:
+          (json['discretionaryExpenses'] as num?)?.toDouble() ?? 0.0,
       transactionCount: (json['transactionCount'] as num?)?.toInt() ?? 0,
       expensesByCategory: categoryMap,
     );

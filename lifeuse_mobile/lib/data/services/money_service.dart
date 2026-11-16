@@ -23,7 +23,8 @@ class MoneyService {
   Future<DailySpendingLimitModel> getDailySpendingLimit() async {
     final response = await _apiClient.get<DailySpendingLimitModel>(
       url: ApiConfig.moneyDailyLimit,
-      fromJson: (json) => DailySpendingLimitModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          DailySpendingLimitModel.fromJson(json as Map<String, dynamic>),
     );
     return response.data ?? DailySpendingLimitModel.empty();
   }
@@ -32,7 +33,8 @@ class MoneyService {
   Future<BudgetPressureModel> getBudgetPressure() async {
     final response = await _apiClient.get<BudgetPressureModel>(
       url: ApiConfig.moneyPressure,
-      fromJson: (json) => BudgetPressureModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          BudgetPressureModel.fromJson(json as Map<String, dynamic>),
     );
     return response.data ?? BudgetPressureModel.empty();
   }
@@ -41,7 +43,8 @@ class MoneyService {
   Future<SpendingBreakdownModel?> getSpendingBreakdown() async {
     final response = await _apiClient.get<SpendingBreakdownModel>(
       url: ApiConfig.moneySpendingBreakdown,
-      fromJson: (json) => SpendingBreakdownModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          SpendingBreakdownModel.fromJson(json as Map<String, dynamic>),
     );
     return response.data;
   }
@@ -76,13 +79,17 @@ class MoneyService {
       queryParams['toDate'] = toDate.toUtc().toIso8601String();
     }
 
-    final uri = Uri.parse(ApiConfig.moneyTransactions).replace(queryParameters: queryParams);
+    final uri = Uri.parse(ApiConfig.moneyTransactions)
+        .replace(queryParameters: queryParams);
 
     final response = await _apiClient.get<List<TransactionModel>>(
       url: uri.toString(),
       fromJson: (json) {
         if (json is List) {
-          return json.map((item) => TransactionModel.fromJson(item as Map<String, dynamic>)).toList();
+          return json
+              .map((item) =>
+                  TransactionModel.fromJson(item as Map<String, dynamic>))
+              .toList();
         }
         return <TransactionModel>[];
       },
@@ -91,15 +98,19 @@ class MoneyService {
   }
 
   /// Record a new financial transaction
-  Future<TransactionModel> createTransaction(TransactionCreateRequest request) async {
+  Future<TransactionModel> createTransaction(
+      TransactionCreateRequest request) async {
     final response = await _apiClient.post<TransactionModel>(
       url: ApiConfig.moneyTransactions,
       body: request.toJson(),
-      fromJson: (json) => TransactionModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          TransactionModel.fromJson(json as Map<String, dynamic>),
     );
     if (response.data == null) {
       throw ApiException(
-        message: response.message.isNotEmpty ? response.message : 'Failed to record transaction',
+        message: response.message.isNotEmpty
+            ? response.message
+            : 'Failed to record transaction',
         statusCode: 500,
       );
     }
@@ -132,7 +143,8 @@ class MoneyService {
 
     final response = await _apiClient.get<TransactionSummaryModel>(
       url: uri.toString(),
-      fromJson: (json) => TransactionSummaryModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          TransactionSummaryModel.fromJson(json as Map<String, dynamic>),
     );
     return response.data ?? TransactionSummaryModel.empty();
   }
@@ -147,7 +159,10 @@ class MoneyService {
       url: ApiConfig.moneyCategories,
       fromJson: (json) {
         if (json is List) {
-          return json.map((item) => CategoryModel.fromJson(item as Map<String, dynamic>)).toList();
+          return json
+              .map((item) =>
+                  CategoryModel.fromJson(item as Map<String, dynamic>))
+              .toList();
         }
         return <CategoryModel>[];
       },
@@ -164,7 +179,9 @@ class MoneyService {
     );
     if (response.data == null) {
       throw ApiException(
-        message: response.message.isNotEmpty ? response.message : 'Failed to create category',
+        message: response.message.isNotEmpty
+            ? response.message
+            : 'Failed to create category',
         statusCode: 500,
       );
     }
@@ -181,7 +198,10 @@ class MoneyService {
       url: ApiConfig.moneyBudgetPlans,
       fromJson: (json) {
         if (json is List) {
-          return json.map((item) => BudgetPlanModel.fromJson(item as Map<String, dynamic>)).toList();
+          return json
+              .map((item) =>
+                  BudgetPlanModel.fromJson(item as Map<String, dynamic>))
+              .toList();
         }
         return <BudgetPlanModel>[];
       },
@@ -194,7 +214,8 @@ class MoneyService {
     try {
       final response = await _apiClient.get<BudgetPlanModel>(
         url: ApiConfig.moneyActiveBudgetPlan,
-        fromJson: (json) => BudgetPlanModel.fromJson(json as Map<String, dynamic>),
+        fromJson: (json) =>
+            BudgetPlanModel.fromJson(json as Map<String, dynamic>),
       );
       return response.data;
     } catch (_) {
@@ -208,11 +229,14 @@ class MoneyService {
     final response = await _apiClient.post<BudgetPlanModel>(
       url: ApiConfig.moneyBudgetPlans,
       body: request.toJson(),
-      fromJson: (json) => BudgetPlanModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          BudgetPlanModel.fromJson(json as Map<String, dynamic>),
     );
     if (response.data == null) {
       throw ApiException(
-        message: response.message.isNotEmpty ? response.message : 'Failed to create budget plan',
+        message: response.message.isNotEmpty
+            ? response.message
+            : 'Failed to create budget plan',
         statusCode: 500,
       );
     }
@@ -236,7 +260,10 @@ class MoneyService {
       url: ApiConfig.moneyPlannedExpenses,
       fromJson: (json) {
         if (json is List) {
-          return json.map((item) => PlannedExpenseModel.fromJson(item as Map<String, dynamic>)).toList();
+          return json
+              .map((item) =>
+                  PlannedExpenseModel.fromJson(item as Map<String, dynamic>))
+              .toList();
         }
         return <PlannedExpenseModel>[];
       },
@@ -245,15 +272,19 @@ class MoneyService {
   }
 
   /// Create a planned expense
-  Future<PlannedExpenseModel> createPlannedExpense(PlannedExpenseRequest request) async {
+  Future<PlannedExpenseModel> createPlannedExpense(
+      PlannedExpenseRequest request) async {
     final response = await _apiClient.post<PlannedExpenseModel>(
       url: ApiConfig.moneyPlannedExpenses,
       body: request.toJson(),
-      fromJson: (json) => PlannedExpenseModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          PlannedExpenseModel.fromJson(json as Map<String, dynamic>),
     );
     if (response.data == null) {
       throw ApiException(
-        message: response.message.isNotEmpty ? response.message : 'Failed to schedule planned expense',
+        message: response.message.isNotEmpty
+            ? response.message
+            : 'Failed to schedule planned expense',
         statusCode: 500,
       );
     }
@@ -272,11 +303,14 @@ class MoneyService {
     final response = await _apiClient.post<TransactionModel>(
       url: ApiConfig.moneyExecutePlannedExpense(id),
       body: const {},
-      fromJson: (json) => TransactionModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          TransactionModel.fromJson(json as Map<String, dynamic>),
     );
     if (response.data == null) {
       throw ApiException(
-        message: response.message.isNotEmpty ? response.message : 'Failed to execute planned expense',
+        message: response.message.isNotEmpty
+            ? response.message
+            : 'Failed to execute planned expense',
         statusCode: 500,
       );
     }
@@ -293,7 +327,10 @@ class MoneyService {
       url: ApiConfig.moneyRecurringSchedules,
       fromJson: (json) {
         if (json is List) {
-          return json.map((item) => RecurringScheduleModel.fromJson(item as Map<String, dynamic>)).toList();
+          return json
+              .map((item) =>
+                  RecurringScheduleModel.fromJson(item as Map<String, dynamic>))
+              .toList();
         }
         return <RecurringScheduleModel>[];
       },
@@ -302,15 +339,19 @@ class MoneyService {
   }
 
   /// Create recurring transaction schedule
-  Future<RecurringScheduleModel> createRecurringSchedule(RecurringScheduleRequest request) async {
+  Future<RecurringScheduleModel> createRecurringSchedule(
+      RecurringScheduleRequest request) async {
     final response = await _apiClient.post<RecurringScheduleModel>(
       url: ApiConfig.moneyRecurringSchedules,
       body: request.toJson(),
-      fromJson: (json) => RecurringScheduleModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          RecurringScheduleModel.fromJson(json as Map<String, dynamic>),
     );
     if (response.data == null) {
       throw ApiException(
-        message: response.message.isNotEmpty ? response.message : 'Failed to create recurring schedule',
+        message: response.message.isNotEmpty
+            ? response.message
+            : 'Failed to create recurring schedule',
         statusCode: 500,
       );
     }
@@ -330,7 +371,10 @@ class MoneyService {
       url: ApiConfig.moneyRecurringOccurrences,
       fromJson: (json) {
         if (json is List) {
-          return json.map((item) => RecurringOccurrenceModel.fromJson(item as Map<String, dynamic>)).toList();
+          return json
+              .map((item) => RecurringOccurrenceModel.fromJson(
+                  item as Map<String, dynamic>))
+              .toList();
         }
         return <RecurringOccurrenceModel>[];
       },
@@ -343,11 +387,14 @@ class MoneyService {
     final response = await _apiClient.post<TransactionModel>(
       url: ApiConfig.moneyProcessOccurrence(id),
       body: const {},
-      fromJson: (json) => TransactionModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          TransactionModel.fromJson(json as Map<String, dynamic>),
     );
     if (response.data == null) {
       throw ApiException(
-        message: response.message.isNotEmpty ? response.message : 'Failed to process recurring occurrence',
+        message: response.message.isNotEmpty
+            ? response.message
+            : 'Failed to process recurring occurrence',
         statusCode: 500,
       );
     }
@@ -363,7 +410,8 @@ class MoneyService {
     try {
       final response = await _apiClient.get<FinancialProfileModel>(
         url: ApiConfig.moneyProfile,
-        fromJson: (json) => FinancialProfileModel.fromJson(json as Map<String, dynamic>),
+        fromJson: (json) =>
+            FinancialProfileModel.fromJson(json as Map<String, dynamic>),
       );
       return response.data;
     } catch (_) {
@@ -372,15 +420,19 @@ class MoneyService {
   }
 
   /// Update or save financial profile
-  Future<FinancialProfileModel> updateProfile(FinancialProfileRequest request) async {
+  Future<FinancialProfileModel> updateProfile(
+      FinancialProfileRequest request) async {
     final response = await _apiClient.put<FinancialProfileModel>(
       url: ApiConfig.moneyProfile,
       body: request.toJson(),
-      fromJson: (json) => FinancialProfileModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          FinancialProfileModel.fromJson(json as Map<String, dynamic>),
     );
     if (response.data == null) {
       throw ApiException(
-        message: response.message.isNotEmpty ? response.message : 'Failed to update financial profile',
+        message: response.message.isNotEmpty
+            ? response.message
+            : 'Failed to update financial profile',
         statusCode: 500,
       );
     }

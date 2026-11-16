@@ -42,7 +42,8 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.darkInput,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         labelStyle: textTheme.bodyMedium?.copyWith(
           color: AppColors.darkTextSecondary,
         ),
@@ -131,7 +132,8 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.lightSurface,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         labelStyle: textTheme.bodyMedium?.copyWith(
           color: AppColors.lightTextSecondary,
         ),
@@ -139,11 +141,13 @@ class AppTheme {
         suffixIconColor: AppColors.lightTextSecondary,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.lightBorder, width: 1.2),
+          borderSide:
+              const BorderSide(color: AppColors.lightBorder, width: 1.2),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.lightBorder, width: 1.2),
+          borderSide:
+              const BorderSide(color: AppColors.lightBorder, width: 1.2),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),

@@ -16,12 +16,16 @@ import 'package:lifeuse_mobile/data/services/api_client.dart';
 import 'package:lifeuse_mobile/data/services/auth_service.dart';
 import 'package:lifeuse_mobile/data/services/money_service.dart';
 import 'package:lifeuse_mobile/presentation/screens/dashboard/models/dashboard_module_item.dart';
+import 'package:lifeuse_mobile/presentation/screens/dashboard/widgets/animated_hero_banner.dart';
+import 'package:lifeuse_mobile/presentation/screens/dashboard/widgets/bento_life_overview.dart';
 import 'package:lifeuse_mobile/presentation/state/auth_provider.dart';
 import 'package:lifeuse_mobile/presentation/state/money_provider.dart';
 import 'package:lifeuse_mobile/presentation/state/notification_provider.dart';
 
 void main() {
-  testWidgets('LifeUse app smoke test - opens directly to hardcoded Dashboard in Guest Mode', (WidgetTester tester) async {
+  testWidgets(
+      'LifeUse app smoke test - opens directly to hardcoded Dashboard in Guest Mode',
+      (WidgetTester tester) async {
     final apiClient = ApiClient();
     final authService = AuthService(apiClient);
     final authProvider = AuthProvider(authService);
@@ -39,7 +43,8 @@ void main() {
           ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
           ChangeNotifierProvider<MoneyProvider>.value(value: moneyProvider),
           ChangeNotifierProvider<ThemeProvider>.value(value: themeProvider),
-          ChangeNotifierProvider<NotificationProvider>.value(value: notificationProvider),
+          ChangeNotifierProvider<NotificationProvider>.value(
+              value: notificationProvider),
         ],
         child: const LifeUseApp(),
       ),
@@ -48,13 +53,13 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verify application starts directly on Dashboard with hardcoded modules in Guest Mode
-    expect(find.text('Life Modules'), findsOneWidget);
+    expect(find.textContaining('Guest Explorer'), findsOneWidget);
     expect(find.text('Money Manager'), findsWidgets);
-    expect(find.text('Home Management'), findsOneWidget);
-    expect(find.text('GUEST MODE'), findsOneWidget);
+    expect(find.text('Explore modules'), findsOneWidget);
   });
 
-  testWidgets('Reusable UI Components render smoothly across variants', (WidgetTester tester) async {
+  testWidgets('Reusable UI Components render smoothly across variants',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -62,9 +67,11 @@ void main() {
             child: Column(
               children: [
                 AppButton(title: 'Primary Action', onPressed: () {}),
-                AppButton.secondary(title: 'Secondary Action', onPressed: () {}),
+                AppButton.secondary(
+                    title: 'Secondary Action', onPressed: () {}),
                 AppButton.outlined(title: 'Outlined Action', onPressed: () {}),
-                AppButton.destructive(title: 'Destructive Action', onPressed: () {}),
+                AppButton.destructive(
+                    title: 'Destructive Action', onPressed: () {}),
                 const AppLoading(message: 'Loading financial profile...'),
                 const AppEmptyState(
                   icon: LucideIcons.receipt,
@@ -103,18 +110,20 @@ void main() {
     expect(modules.length, equals(10));
 
     final ids = modules.map((m) => m.id).toList();
-    expect(ids, containsAll([
-      'money_manager',
-      'home_management',
-      'daily_tasks',
-      'health_wellness',
-      'bills_payments',
-      'notifications',
-      'tickets_travel',
-      'exams_learning',
-      'documents_vault',
-      'personal_planning',
-    ]));
+    expect(
+        ids,
+        containsAll([
+          'money_manager',
+          'home_management',
+          'daily_tasks',
+          'health_wellness',
+          'bills_payments',
+          'notifications',
+          'tickets_travel',
+          'exams_learning',
+          'documents_vault',
+          'personal_planning',
+        ]));
   });
 
   test('ApiResponse parses double timestamp without TypeError', () {
@@ -147,7 +156,9 @@ void main() {
     expect(response.data?.user.id, equals(1));
   });
 
-  testWidgets('MainNavigationShell renders 5 items and reactively updates Alerts notification dot', (WidgetTester tester) async {
+  testWidgets(
+      'MainNavigationShell renders 5 items and reactively updates Alerts notification dot',
+      (WidgetTester tester) async {
     final apiClient = ApiClient();
     final authService = AuthService(apiClient);
     final authProvider = AuthProvider(authService);
@@ -165,7 +176,8 @@ void main() {
           ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
           ChangeNotifierProvider<MoneyProvider>.value(value: moneyProvider),
           ChangeNotifierProvider<ThemeProvider>.value(value: themeProvider),
-          ChangeNotifierProvider<NotificationProvider>.value(value: notificationProvider),
+          ChangeNotifierProvider<NotificationProvider>.value(
+              value: notificationProvider),
         ],
         child: const LifeUseApp(),
       ),
@@ -200,7 +212,9 @@ void main() {
     expect(find.text('Mark All Read'), findsNothing);
   });
 
-  testWidgets('Intelligent Dashboard renders Google Pay inspired quick actions and contextual category filters', (WidgetTester tester) async {
+  testWidgets(
+      'Intelligent Dashboard renders Direct Controls and handles Search filtering',
+      (WidgetTester tester) async {
     final apiClient = ApiClient();
     final authService = AuthService(apiClient);
     final authProvider = AuthProvider(authService);
@@ -218,7 +232,8 @@ void main() {
           ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
           ChangeNotifierProvider<MoneyProvider>.value(value: moneyProvider),
           ChangeNotifierProvider<ThemeProvider>.value(value: themeProvider),
-          ChangeNotifierProvider<NotificationProvider>.value(value: notificationProvider),
+          ChangeNotifierProvider<NotificationProvider>.value(
+              value: notificationProvider),
         ],
         child: const LifeUseApp(),
       ),
@@ -226,36 +241,30 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    // Verify Google Pay inspired quick actions exist
+    // Verify Direct Controls quick actions exist
     expect(find.text('Record'), findsOneWidget);
     expect(find.text('Add Task'), findsOneWidget);
     expect(find.text('Set Alert'), findsOneWidget);
     expect(find.text('Pay Bills'), findsOneWidget);
 
-    // Verify Financial & Life Overview hero card
-    expect(find.text('FINANCIAL & LIFE OVERVIEW'), findsOneWidget);
-
-    // Verify PhonePe contextual category filter chips exist
-    expect(find.text('All (10)'), findsOneWidget);
-    expect(find.text('Finance (2)'), findsOneWidget);
-    expect(find.text('Productivity (4)'), findsOneWidget);
-    expect(find.text('Lifestyle (4)'), findsOneWidget);
-
-    // Initial state displays all 10 modules
-    expect(find.text('10 Apps'), findsOneWidget);
+    // Verify Hero Zone greeting and banner
+    expect(find.textContaining('Guest Explorer'), findsOneWidget);
+    expect(find.text('Explore modules'), findsOneWidget);
 
     // Test Search input filtering by typing 'bills'
     await tester.enterText(find.byType(TextField), 'bills');
     await tester.pumpAndSettle();
-    expect(find.text('1 Apps'), findsOneWidget);
+    expect(find.text('Bills & Payments'), findsWidgets);
 
-    // Clear search and verify it returns to 10 apps
+    // Clear search and verify it returns to main view
     await tester.enterText(find.byType(TextField), '');
     await tester.pumpAndSettle();
-    expect(find.text('10 Apps'), findsOneWidget);
+    expect(find.text('Record'), findsOneWidget);
   });
 
-  testWidgets('LifeUseFloatingNavigation renders floating capsule and handles item selection', (WidgetTester tester) async {
+  testWidgets(
+      'LifeUseFloatingNavigation renders floating capsule and handles item selection',
+      (WidgetTester tester) async {
     int selectedIndex = 0;
 
     await tester.pumpWidget(
@@ -270,11 +279,16 @@ void main() {
                   setState(() => selectedIndex = idx);
                 },
                 items: const [
-                  LifeUseNavigationItemData(label: 'Home', icon: LucideIcons.home),
-                  LifeUseNavigationItemData(label: 'Modules', icon: LucideIcons.layoutGrid),
-                  LifeUseNavigationItemData(label: 'Activity', icon: LucideIcons.activity),
-                  LifeUseNavigationItemData(label: 'Alerts', icon: LucideIcons.bell, showDot: true),
-                  LifeUseNavigationItemData(label: 'Profile', icon: LucideIcons.user),
+                  LifeUseNavigationItemData(
+                      label: 'Home', icon: LucideIcons.home),
+                  LifeUseNavigationItemData(
+                      label: 'Modules', icon: LucideIcons.layoutGrid),
+                  LifeUseNavigationItemData(
+                      label: 'Activity', icon: LucideIcons.activity),
+                  LifeUseNavigationItemData(
+                      label: 'Alerts', icon: LucideIcons.bell, showDot: true),
+                  LifeUseNavigationItemData(
+                      label: 'Profile', icon: LucideIcons.user),
                 ],
               );
             },
@@ -301,5 +315,89 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(selectedIndex, equals(1));
+  });
+
+  testWidgets('BentoLifeOverview renders 4-pillar asymmetric life matrix',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: BentoLifeOverview(
+              isDark: false,
+              surfaceColor: Colors.white,
+              borderColor: Color(0xFFE2E8F0),
+              textPrimary: Color(0xFF0F172A),
+              textSecondary: Color(0xFF64748B),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    expect(find.text('Daily Life Overview'), findsOneWidget);
+    expect(find.text('Health & Body'), findsOneWidget);
+    expect(find.text('Upcoming Bills'), findsOneWidget);
+    expect(find.text('Home Sanctuary'), findsOneWidget);
+    expect(find.text('Tasks & Routine'), findsOneWidget);
+  });
+
+  testWidgets(
+      'AnimatedHeroBanner renders 5 unique slides and handles navigation triggers',
+      (WidgetTester tester) async {
+    bool moneyTapped = false;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: AnimatedHeroBanner(
+              isDark: false,
+              autoPlay: false,
+              onMoneyManagerTap: () => moneyTapped = true,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    // Slide 0: Smart Financial Autopilot is default
+    expect(find.text('FINANCIAL & LIFE OVERVIEW'), findsOneWidget);
+    expect(find.text('Open Money Manager'), findsOneWidget);
+    expect(find.text('₹1,200/day safe'), findsOneWidget);
+
+    // Tap Open Money Manager
+    await tester.tap(find.text('Open Money Manager'));
+    await tester.pumpAndSettle();
+    expect(moneyTapped, isTrue);
+
+    // Swipe to Slide 1: Master Brand OS
+    await tester.drag(find.byType(PageView), const Offset(-450, 0));
+    await tester.pumpAndSettle();
+    expect(find.text('LIFE INTELLIGENCE OS • 2026'), findsOneWidget);
+    expect(find.text('Explore All 10 Modules'), findsOneWidget);
+
+    // Swipe to Slide 2: 7-Day Habit Streak
+    await tester.drag(find.byType(PageView), const Offset(-450, 0));
+    await tester.pumpAndSettle();
+    expect(find.text('DAILY HABITS • 7D STREAK'), findsOneWidget);
+    expect(find.text('7'), findsOneWidget);
+    expect(find.text('Days 🔥'), findsOneWidget);
+
+    // Swipe to Slide 3: Smart Sanctuary & IoT Hub
+    await tester.drag(find.byType(PageView), const Offset(-450, 0));
+    await tester.pumpAndSettle();
+    expect(find.text('SMART SANCTUARY'), findsOneWidget);
+    expect(find.text('Manage Sanctuary'), findsOneWidget);
+
+    // Swipe to Slide 4: Zero Penalty Utility Due Dates Radar
+    await tester.drag(find.byType(PageView), const Offset(-450, 0));
+    await tester.pumpAndSettle();
+    expect(find.text('ZERO PENALTY RADAR'), findsOneWidget);
+    expect(find.text('Pay & Schedule'), findsOneWidget);
   });
 }

@@ -71,7 +71,8 @@ class HardcodedModuleItem {
           id: 'money_manager',
           title: 'Money Manager',
           subtitle: 'Budgets, income & expenses',
-          description: 'Manage personal finances, budgets, transactions, and cash flow.',
+          description:
+              'Manage personal finances, budgets, transactions, and cash flow.',
           icon: LucideIcons.wallet,
           navIcon: LucideIcons.wallet,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
@@ -85,7 +86,8 @@ class HardcodedModuleItem {
           id: 'home_management',
           title: 'Home Management',
           subtitle: 'Appliances, inventory & utilities',
-          description: 'Control smart devices, track home supplies, and equipment warranties.',
+          description:
+              'Control smart devices, track home supplies, and equipment warranties.',
           icon: LucideIcons.home,
           navIcon: LucideIcons.home,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
@@ -99,7 +101,8 @@ class HardcodedModuleItem {
           id: 'daily_tasks',
           title: 'Daily Tasks',
           subtitle: 'To-dos, routines & checklists',
-          description: 'Organize tasks, recurring habits, and daily priorities.',
+          description:
+              'Organize tasks, recurring habits, and daily priorities.',
           icon: LucideIcons.checkSquare,
           navIcon: LucideIcons.checkSquare,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
@@ -127,7 +130,8 @@ class HardcodedModuleItem {
           id: 'bills_payments',
           title: 'Bills & Payments',
           subtitle: 'Upcoming dues & subscriptions',
-          description: 'Monitor recurring bills, due dates, and auto-pay services.',
+          description:
+              'Monitor recurring bills, due dates, and auto-pay services.',
           icon: LucideIcons.receipt,
           navIcon: LucideIcons.receipt,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
@@ -141,7 +145,8 @@ class HardcodedModuleItem {
           id: 'notifications',
           title: 'Reminders & Alerts',
           subtitle: 'Timely alerts & deadlines',
-          description: 'Stay on top of critical reminders, notifications, and alarms.',
+          description:
+              'Stay on top of critical reminders, notifications, and alarms.',
           icon: LucideIcons.bellRing,
           navIcon: LucideIcons.bell,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
@@ -181,7 +186,8 @@ class HardcodedModuleItem {
           id: 'documents_vault',
           title: 'Documents Vault',
           subtitle: 'Encrypted IDs & policies',
-          description: 'Secure hardware-encrypted document storage for important IDs and certificates.',
+          description:
+              'Secure hardware-encrypted document storage for important IDs and certificates.',
           icon: LucideIcons.shieldCheck,
           navIcon: LucideIcons.shield,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple
@@ -195,7 +201,8 @@ class HardcodedModuleItem {
           id: 'personal_planning',
           title: 'Personal Planning',
           subtitle: 'Milestones, vision & goals',
-          description: 'Life roadmap, yearly milestones, and personal bucket list.',
+          description:
+              'Life roadmap, yearly milestones, and personal bucket list.',
           icon: LucideIcons.compass,
           navIcon: LucideIcons.target,
           accentColor: const Color(0xFF7F35AD), // Deepened Amethyst Purple

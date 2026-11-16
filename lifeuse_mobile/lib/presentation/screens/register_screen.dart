@@ -136,14 +136,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                     borderRadius: BorderRadius.circular(12),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         color: surfaceColor,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: borderColor),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+                            color: Colors.black
+                                .withValues(alpha: isDark ? 0.3 : 0.05),
                             blurRadius: 8,
                           ),
                         ],
@@ -172,19 +174,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   // Theme Toggle
                   Tooltip(
-                    message: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+                    message:
+                        isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
                     child: InkWell(
                       onTap: () => theme.toggleTheme(),
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
                           color: surfaceColor,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: borderColor),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+                              color: Colors.black
+                                  .withValues(alpha: isDark ? 0.3 : 0.05),
                               blurRadius: 8,
                             ),
                           ],
@@ -195,7 +200,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             Icon(
                               isDark ? AppIcons.lightMode : AppIcons.darkMode,
                               size: 16,
-                              color: isDark ? AppColors.amberGold : AppColors.primary,
+                              color: isDark
+                                  ? AppColors.amberGold
+                                  : AppColors.primary,
                             ),
                             const SizedBox(width: 6),
                             Text(
@@ -220,7 +227,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 48),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 48),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 440),
                   child: Column(
@@ -237,7 +245,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: isDark ? 0.45 : 0.08),
+                              color: Colors.black
+                                  .withValues(alpha: isDark ? 0.45 : 0.08),
                               blurRadius: 36,
                               offset: const Offset(0, 10),
                             ),
@@ -351,7 +360,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 controller: _confirmPasswordController,
                                 prefixIcon: AppIcons.password,
                                 isPassword: true,
-                                validator: (val) => Validators.validateConfirmPassword(
+                                validator: (val) =>
+                                    Validators.validateConfirmPassword(
                                   val,
                                   _passwordController.text,
                                 ),

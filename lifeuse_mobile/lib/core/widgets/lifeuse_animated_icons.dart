@@ -5,9 +5,9 @@ import '../theme/app_icons.dart';
 
 /// The 4 unique 3D animation modes for the LifeUse Brand Icon.
 enum LifeUseIconAnimMode {
-  hyperVortex,      // Mode 0: Swirling Cosmic Spiral Flow with Flowing Star Sparks & Vortex Flux
-  orbital3D,        // Mode 1: 3D Keplerian Celestial Orbit with Radiant Comet Star Tails & Z-Depth
-  quantumPulse,     // Mode 2: Bioluminescent Expanding Energy Shockwaves & Heartbeat Glow
+  hyperVortex, // Mode 0: Swirling Cosmic Spiral Flow with Flowing Star Sparks & Vortex Flux
+  orbital3D, // Mode 1: 3D Keplerian Celestial Orbit with Radiant Comet Star Tails & Z-Depth
+  quantumPulse, // Mode 2: Bioluminescent Expanding Energy Shockwaves & Heartbeat Glow
   holographicSheen, // Mode 3: 3D Prismatic Metallic Light Sweep & Specular Beam
 }
 
@@ -137,14 +137,16 @@ class _LifeUse3DIconState extends State<LifeUse3DIcon>
             final hoverFactor = _hoverTransitionController.value;
 
             // Idle levitation active AT ALL TIMES (±4.0px)
-            final floatY = math.sin(_levitateController.value * math.pi * 2) * 4.0;
+            final floatY =
+                math.sin(_levitateController.value * math.pi * 2) * 4.0;
             // Additional lift on hover (-5.0px)
             final hoverLift = -5.0 * hoverFactor;
 
             // Idle breathing scale (1.0 -> 1.025), plus extra expansion on hover (1.07x)
             final idleBreathScale = 1.0 + (0.025 * _levitateController.value);
             final hoverScale = 1.0 + (0.05 * hoverFactor);
-            final totalScale = _tapBounceController.value * idleBreathScale * hoverScale;
+            final totalScale =
+                _tapBounceController.value * idleBreathScale * hoverScale;
 
             // 3D Perspective Tilt Matrix
             final transformMatrix = Matrix4.identity()
@@ -224,7 +226,8 @@ class _LifeUse3DIconState extends State<LifeUse3DIcon>
             shape: BoxShape.circle,
             gradient: RadialGradient(
               colors: [
-                AppColors.primaryGlow.withValues(alpha: 0.35 + 0.25 * hoverFactor),
+                AppColors.primaryGlow
+                    .withValues(alpha: 0.35 + 0.25 * hoverFactor),
                 Colors.transparent,
               ],
             ),
@@ -252,13 +255,15 @@ class _LifeUse3DIconState extends State<LifeUse3DIcon>
           ),
           // 2. Primary Bioluminescent Corona Glow (active at all times, flares on hover)
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.45 + 0.35 * hoverFactor),
+            color:
+                AppColors.primary.withValues(alpha: 0.45 + 0.35 * hoverFactor),
             blurRadius: 26.0 + 16.0 * hoverFactor,
             spreadRadius: 2.0 + 3.0 * hoverFactor,
           ),
           // 3. Electric Cyan Floor Bounce Glow
           BoxShadow(
-            color: AppColors.neonCyan.withValues(alpha: 0.30 + 0.25 * hoverFactor),
+            color:
+                AppColors.neonCyan.withValues(alpha: 0.30 + 0.25 * hoverFactor),
             blurRadius: 24.0 + 12.0 * hoverFactor,
             offset: const Offset(0, 6),
           ),
@@ -440,9 +445,11 @@ class _Orbital3DPainter extends CustomPainter {
         final tAngle = (i * (math.pi * 2 / trackStars)) + (progress * math.pi);
         final sx = rx * math.cos(tAngle);
         final sy = ry * math.sin(tAngle);
-        final starFade = (math.sin(tAngle * 2 + progress * 6).abs() * 0.5 + 0.5) * 0.7;
+        final starFade =
+            (math.sin(tAngle * 2 + progress * 6).abs() * 0.5 + 0.5) * 0.7;
         final starPaint = Paint()
-          ..color = (i % 2 == 0 ? AppColors.neonCyan : AppColors.amberGold).withValues(alpha: starFade)
+          ..color = (i % 2 == 0 ? AppColors.neonCyan : AppColors.amberGold)
+              .withValues(alpha: starFade)
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.5);
         canvas.drawCircle(Offset(sx, sy), 1.6, starPaint);
       }
@@ -506,12 +513,18 @@ class _Orbital3DPainter extends CustomPainter {
       final rotY = rawX * math.sin(tilt) + rawY * math.cos(tilt);
       final pt = center + Offset(rotX, rotY);
 
-      final tailAlpha = (1.0 - tailT) * (zDepth >= 0 ? (0.95 + 0.05 * hoverFactor) : (0.55 + 0.20 * hoverFactor));
-      final tailRadius = (1.0 - tailT * 0.65) * (zDepth >= 0 ? 5.4 : 3.2) * (1.0 + 0.25 * hoverFactor);
+      final tailAlpha = (1.0 - tailT) *
+          (zDepth >= 0
+              ? (0.95 + 0.05 * hoverFactor)
+              : (0.55 + 0.20 * hoverFactor));
+      final tailRadius = (1.0 - tailT * 0.65) *
+          (zDepth >= 0 ? 5.4 : 3.2) *
+          (1.0 + 0.25 * hoverFactor);
 
       final tailPaint = Paint()
         ..color = primaryColor.withValues(alpha: tailAlpha)
-        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 2.5 + 1.0 * hoverFactor);
+        ..maskFilter =
+            MaskFilter.blur(BlurStyle.normal, 2.5 + 1.0 * hoverFactor);
 
       canvas.drawCircle(pt, tailRadius, tailPaint);
     }
@@ -528,8 +541,10 @@ class _Orbital3DPainter extends CustomPainter {
 
     // Outer Glow Bloom
     final glowPaint = Paint()
-      ..color = primaryColor.withValues(alpha: (0.80 + 0.20 * hoverFactor) * brightness)
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, (zDepth >= 0 ? 12.0 : 6.0) * (1.0 + 0.4 * hoverFactor));
+      ..color = primaryColor.withValues(
+          alpha: (0.80 + 0.20 * hoverFactor) * brightness)
+      ..maskFilter = MaskFilter.blur(BlurStyle.normal,
+          (zDepth >= 0 ? 12.0 : 6.0) * (1.0 + 0.4 * hoverFactor));
     canvas.drawCircle(headPt, headRadius * 2.6, glowPaint);
 
     // Color Body
@@ -549,8 +564,10 @@ class _Orbital3DPainter extends CustomPainter {
       ..strokeWidth = 1.3
       ..style = PaintingStyle.stroke;
     final spLength = headRadius * (1.4 + 0.8 * hoverFactor);
-    canvas.drawLine(headPt - Offset(spLength, 0), headPt + Offset(spLength, 0), sparklePaint);
-    canvas.drawLine(headPt - Offset(0, spLength), headPt + Offset(0, spLength), sparklePaint);
+    canvas.drawLine(headPt - Offset(spLength, 0), headPt + Offset(spLength, 0),
+        sparklePaint);
+    canvas.drawLine(headPt - Offset(0, spLength), headPt + Offset(0, spLength),
+        sparklePaint);
   }
 
   @override
@@ -576,16 +593,19 @@ class _QuantumPulsePainter extends CustomPainter {
 
     for (int ring = 0; ring < 3; ring++) {
       final ringProgress = (progress + (ring / 3.0)) % 1.0;
-      final currentRadius = size.width * 0.28 + ringProgress * (maxRadius - size.width * 0.28);
+      final currentRadius =
+          size.width * 0.28 + ringProgress * (maxRadius - size.width * 0.28);
       final fade = math.sin(ringProgress * math.pi);
 
       final ringColor = ring % 2 == 0 ? AppColors.neonCyan : AppColors.primary;
 
       final ringPaint = Paint()
-        ..color = ringColor.withValues(alpha: (0.60 + 0.25 * hoverFactor) * fade)
+        ..color =
+            ringColor.withValues(alpha: (0.60 + 0.25 * hoverFactor) * fade)
         ..style = PaintingStyle.stroke
         ..strokeWidth = (2.4 + 1.0 * hoverFactor) * fade + 0.6
-        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 3.8 + 2.0 * hoverFactor);
+        ..maskFilter =
+            MaskFilter.blur(BlurStyle.normal, 3.8 + 2.0 * hoverFactor);
 
       canvas.drawCircle(center, currentRadius, ringPaint);
     }
@@ -593,7 +613,8 @@ class _QuantumPulsePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _QuantumPulsePainter oldDelegate) =>
-      oldDelegate.progress != progress || oldDelegate.hoverFactor != hoverFactor;
+      oldDelegate.progress != progress ||
+      oldDelegate.hoverFactor != hoverFactor;
 }
 
 // =============================================================================
@@ -613,8 +634,10 @@ class _HyperVortexPainter extends CustomPainter {
 
     // 1. Soft Coronal Background Halo
     final haloPaint = Paint()
-      ..color = AppColors.primaryGlow.withValues(alpha: 0.35 + 0.20 * hoverFactor)
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, 20.0 + 8.0 * hoverFactor);
+      ..color =
+          AppColors.primaryGlow.withValues(alpha: 0.35 + 0.20 * hoverFactor)
+      ..maskFilter =
+          MaskFilter.blur(BlurStyle.normal, 20.0 + 8.0 * hoverFactor);
     canvas.drawCircle(center, size.width * 0.32, haloPaint);
 
     // 2. Cosmic Galactic Spiral Streams (Flowing arms rotating continuously)
@@ -628,7 +651,8 @@ class _HyperVortexPainter extends CustomPainter {
 
       for (int step = 0; step <= steps; step++) {
         final t = step / steps.toDouble();
-        final r = size.width * 0.22 + t * (size.width * (0.26 + 0.08 * hoverFactor));
+        final r =
+            size.width * 0.22 + t * (size.width * (0.26 + 0.08 * hoverFactor));
         final theta = armAngle + (t * math.pi * (1.30 + 0.35 * hoverFactor));
         final x = center.dx + r * math.cos(theta);
         final y = center.dy + r * math.sin(theta);
@@ -648,7 +672,8 @@ class _HyperVortexPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3.6 + 1.4 * hoverFactor
         ..strokeCap = StrokeCap.round
-        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 3.2 + 1.2 * hoverFactor);
+        ..maskFilter =
+            MaskFilter.blur(BlurStyle.normal, 3.2 + 1.2 * hoverFactor);
       canvas.drawPath(path, glowPaint);
 
       // Core sharp ribbon
@@ -679,14 +704,17 @@ class _HyperVortexPainter extends CustomPainter {
 
       // 3. Flowing Star Node travelling along the stream
       final starT = ((progress * 1.2) + (arm / numArms.toDouble())) % 1.0;
-      final starIndex = (starT * (points.length - 1)).clamp(0, points.length - 1).toInt();
+      final starIndex =
+          (starT * (points.length - 1)).clamp(0, points.length - 1).toInt();
       final starPt = points[starIndex];
-      final starScale = (0.7 + 0.3 * math.sin(starT * math.pi)) * (1.0 + 0.25 * hoverFactor);
+      final starScale =
+          (0.7 + 0.3 * math.sin(starT * math.pi)) * (1.0 + 0.25 * hoverFactor);
 
       // Star Glow
       final starGlowPaint = Paint()
         ..color = color.withValues(alpha: 0.75 + 0.25 * hoverFactor)
-        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 5.0 + 2.0 * hoverFactor);
+        ..maskFilter =
+            MaskFilter.blur(BlurStyle.normal, 5.0 + 2.0 * hoverFactor);
       canvas.drawCircle(starPt, 4.5 * starScale, starGlowPaint);
 
       // Star Body
@@ -703,8 +731,10 @@ class _HyperVortexPainter extends CustomPainter {
         ..strokeWidth = 1.1
         ..style = PaintingStyle.stroke;
       final flLen = 3.8 * starScale;
-      canvas.drawLine(starPt - Offset(flLen, 0), starPt + Offset(flLen, 0), flarePaint);
-      canvas.drawLine(starPt - Offset(0, flLen), starPt + Offset(0, flLen), flarePaint);
+      canvas.drawLine(
+          starPt - Offset(flLen, 0), starPt + Offset(flLen, 0), flarePaint);
+      canvas.drawLine(
+          starPt - Offset(0, flLen), starPt + Offset(0, flLen), flarePaint);
     }
 
     // 4. Subtle Drifting Stardust Embers
@@ -714,7 +744,9 @@ class _HyperVortexPainter extends CustomPainter {
       final dustRadius = size.width * (0.34 + 0.12 * math.sin(i * 1.7));
       final dustX = center.dx + dustRadius * math.cos(dustAngle);
       final dustY = center.dy + dustRadius * math.sin(dustAngle);
-      final dustFade = (math.sin((progress * 4.0 + i) * math.pi).abs() * 0.70 + 0.30) * (0.60 + 0.40 * hoverFactor);
+      final dustFade =
+          (math.sin((progress * 4.0 + i) * math.pi).abs() * 0.70 + 0.30) *
+              (0.60 + 0.40 * hoverFactor);
       final dustColor = i % 2 == 0 ? AppColors.neonCyan : AppColors.amberGold;
 
       final dustPaint = Paint()
@@ -722,14 +754,16 @@ class _HyperVortexPainter extends CustomPainter {
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.8);
       canvas.drawCircle(Offset(dustX, dustY), 1.8, dustPaint);
 
-      final dustCore = Paint()..color = Colors.white.withValues(alpha: dustFade * 0.9);
+      final dustCore = Paint()
+        ..color = Colors.white.withValues(alpha: dustFade * 0.9);
       canvas.drawCircle(Offset(dustX, dustY), 0.9, dustCore);
     }
   }
 
   @override
   bool shouldRepaint(covariant _HyperVortexPainter oldDelegate) =>
-      oldDelegate.progress != progress || oldDelegate.hoverFactor != hoverFactor;
+      oldDelegate.progress != progress ||
+      oldDelegate.hoverFactor != hoverFactor;
 }
 
 // =============================================================================

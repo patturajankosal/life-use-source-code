@@ -38,7 +38,8 @@ class BudgetPlanModel {
   final DateTime startDate;
   final DateTime endDate;
   final double totalBudget;
-  final String carryForwardRule; // RESET, CARRY_POSITIVE, CARRY_NEGATIVE, CARRY_ALL
+  final String
+      carryForwardRule; // RESET, CARRY_POSITIVE, CARRY_NEGATIVE, CARRY_ALL
   final double carriedForwardAmount;
   final double actualExpenses;
   final double remainingBudget;
@@ -92,11 +93,14 @@ class BudgetPlanModel {
       endDate: parseDate(json['endDate']),
       totalBudget: (json['totalBudget'] as num?)?.toDouble() ?? 0.0,
       carryForwardRule: json['carryForwardRule']?.toString() ?? 'RESET',
-      carriedForwardAmount: (json['carriedForwardAmount'] as num?)?.toDouble() ?? 0.0,
+      carriedForwardAmount:
+          (json['carriedForwardAmount'] as num?)?.toDouble() ?? 0.0,
       actualExpenses: (json['actualExpenses'] as num?)?.toDouble() ?? 0.0,
       remainingBudget: (json['remainingBudget'] as num?)?.toDouble() ?? 0.0,
-      dailyRecommendedSpending: (json['dailyRecommendedSpending'] as num?)?.toDouble() ?? 0.0,
-      periodUtilizationPercent: (json['periodUtilizationPercent'] as num?)?.toDouble() ?? 0.0,
+      dailyRecommendedSpending:
+          (json['dailyRecommendedSpending'] as num?)?.toDouble() ?? 0.0,
+      periodUtilizationPercent:
+          (json['periodUtilizationPercent'] as num?)?.toDouble() ?? 0.0,
       active: json['active'] == true,
       notes: json['notes']?.toString(),
       categoryLimits: limitsList,
@@ -112,7 +116,8 @@ class BudgetPlanRequest {
   final DateTime startDate;
   final DateTime endDate;
   final double totalBudget;
-  final String carryForwardRule; // RESET, CARRY_POSITIVE, CARRY_NEGATIVE, CARRY_ALL
+  final String
+      carryForwardRule; // RESET, CARRY_POSITIVE, CARRY_NEGATIVE, CARRY_ALL
   final String? notes;
   final List<BudgetCategoryLimitModel> categoryLimits;
 

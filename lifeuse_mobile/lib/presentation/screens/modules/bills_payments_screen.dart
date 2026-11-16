@@ -112,7 +112,8 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
               decoration: InputDecoration(
                 labelText: 'Bill Name',
                 hintText: 'e.g. Water Supply Bill',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
             const SizedBox(height: 12),
@@ -121,7 +122,8 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
               decoration: InputDecoration(
                 labelText: 'Provider',
                 hintText: 'e.g. Municipal Corp',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
             const SizedBox(height: 12),
@@ -131,7 +133,8 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
               decoration: InputDecoration(
                 labelText: 'Amount (₹)',
                 hintText: 'e.g. 550.00',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
             const SizedBox(height: 12),
@@ -140,7 +143,8 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
               decoration: InputDecoration(
                 labelText: 'Due Date',
                 hintText: 'e.g. Due Oct 28',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
           ],
@@ -163,9 +167,13 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                     _BillItem(
                       id: 'bill_${DateTime.now().millisecondsSinceEpoch}',
                       title: titleCtrl.text.trim(),
-                      provider: provCtrl.text.trim().isEmpty ? 'Direct Provider' : provCtrl.text.trim(),
+                      provider: provCtrl.text.trim().isEmpty
+                          ? 'Direct Provider'
+                          : provCtrl.text.trim(),
                       amount: double.tryParse(amountCtrl.text) ?? 500.0,
-                      dueDate: dateCtrl.text.trim().isEmpty ? 'Due this month' : dateCtrl.text.trim(),
+                      dueDate: dateCtrl.text.trim().isEmpty
+                          ? 'Due this month'
+                          : dateCtrl.text.trim(),
                       icon: LucideIcons.receipt,
                       isPaid: false,
                     ),
@@ -194,16 +202,16 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
     final paidBills = _bills.where((b) => b.isPaid).toList();
     final totalDue = dueBills.fold(0.0, (sum, b) => sum + b.amount);
 
-    final filtered = _filter == 'DUE'
-        ? dueBills
-        : (_filter == 'PAID' ? paidBills : _bills);
+    final filtered =
+        _filter == 'DUE' ? dueBills : (_filter == 'PAID' ? paidBills : _bills);
 
     return Scaffold(
       backgroundColor: AppColors.backgroundOf(context),
       appBar: AppBar(
         title: Text(
           'Bills & Payments',
-          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
+          style: GoogleFonts.plusJakartaSans(
+              fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
@@ -231,7 +239,8 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                       border: Border.all(color: borderColor),
                       boxShadow: [
                         BoxShadow(
-                          color: accentColor.withValues(alpha: isDark ? 0.2 : 0.05),
+                          color: accentColor.withValues(
+                              alpha: isDark ? 0.2 : 0.05),
                           blurRadius: 16,
                           offset: const Offset(0, 4),
                         ),
@@ -245,7 +254,8 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                             color: accentColor.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(14),
                           ),
-                          child: const Icon(LucideIcons.receipt, color: accentColor, size: 24),
+                          child: const Icon(LucideIcons.receipt,
+                              color: accentColor, size: 24),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -254,7 +264,8 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                             children: [
                               Text(
                                 'Pending Outflow Due',
-                                style: GoogleFonts.inter(fontSize: 12.5, color: textSecondary),
+                                style: GoogleFonts.inter(
+                                    fontSize: 12.5, color: textSecondary),
                               ),
                               const SizedBox(height: 2),
                               Text(
@@ -262,7 +273,9 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                                 style: GoogleFonts.inter(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w800,
-                                  color: totalDue > 0 ? accentColor : AppColors.success,
+                                  color: totalDue > 0
+                                      ? accentColor
+                                      : AppColors.success,
                                 ),
                               ),
                             ],
@@ -318,7 +331,8 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                               ),
                               child: Icon(
                                 b.icon,
-                                color: b.isPaid ? AppColors.success : accentColor,
+                                color:
+                                    b.isPaid ? AppColors.success : accentColor,
                                 size: 22,
                               ),
                             ),
@@ -342,10 +356,13 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                                       if (b.isAutoPay) ...[
                                         const SizedBox(width: 6),
                                         Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 6, vertical: 2),
                                           decoration: BoxDecoration(
-                                            color: AppColors.primary.withValues(alpha: 0.1),
-                                            borderRadius: BorderRadius.circular(4),
+                                            color: AppColors.primary
+                                                .withValues(alpha: 0.1),
+                                            borderRadius:
+                                                BorderRadius.circular(4),
                                           ),
                                           child: Text(
                                             'AUTO-PAY',
@@ -362,7 +379,8 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                                   const SizedBox(height: 2),
                                   Text(
                                     '${b.provider} • ${b.dueDate}',
-                                    style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
+                                    style: GoogleFonts.inter(
+                                        fontSize: 12, color: textSecondary),
                                   ),
                                 ],
                               ),
@@ -386,13 +404,16 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                                   },
                                   borderRadius: BorderRadius.circular(6),
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 2),
                                     child: Text(
                                       b.isPaid ? 'Mark Due' : 'Mark Paid',
                                       style: GoogleFonts.inter(
                                         fontSize: 11.5,
                                         fontWeight: FontWeight.w700,
-                                        color: b.isPaid ? textSecondary : AppColors.primary,
+                                        color: b.isPaid
+                                            ? textSecondary
+                                            : AppColors.primary,
                                       ),
                                     ),
                                   ),
@@ -428,7 +449,9 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
               : AppColors.surfaceOf(context),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected ? const Color(0xFFF59E0B) : AppColors.borderOf(context),
+            color: isSelected
+                ? const Color(0xFFF59E0B)
+                : AppColors.borderOf(context),
           ),
         ),
         child: Text(
@@ -436,7 +459,9 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
           style: GoogleFonts.inter(
             fontSize: 12.5,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-            color: isSelected ? const Color(0xFFF59E0B) : AppColors.textSecondaryOf(context),
+            color: isSelected
+                ? const Color(0xFFF59E0B)
+                : AppColors.textSecondaryOf(context),
           ),
         ),
       ),

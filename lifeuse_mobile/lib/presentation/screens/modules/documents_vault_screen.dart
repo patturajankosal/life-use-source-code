@@ -78,7 +78,8 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surfaceOf(ctx),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: Text('Store Encrypted Document', style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
+        title: Text('Store Encrypted Document',
+            style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -87,7 +88,8 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
               decoration: InputDecoration(
                 labelText: 'Document Name',
                 hintText: 'e.g. Life Insurance Policy',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
             const SizedBox(height: 12),
@@ -96,7 +98,8 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
               decoration: InputDecoration(
                 labelText: 'Category',
                 hintText: 'e.g. Insurance / Identity',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
             const SizedBox(height: 12),
@@ -105,13 +108,15 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
               decoration: InputDecoration(
                 labelText: 'Document / Policy Number',
                 hintText: 'e.g. #9021849',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF6366F1),
@@ -121,7 +126,8 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
               Navigator.pop(ctx);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Document encrypted & stored in local AES-256 vault'),
+                  content: Text(
+                      'Document encrypted & stored in local AES-256 vault'),
                   behavior: SnackBarBehavior.floating,
                 ),
               );
@@ -147,7 +153,8 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
       appBar: AppBar(
         title: Text(
           'Documents Vault',
-          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
+          style: GoogleFonts.plusJakartaSans(
+              fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
@@ -175,7 +182,8 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                       border: Border.all(color: borderColor),
                       boxShadow: [
                         BoxShadow(
-                          color: accentColor.withValues(alpha: isDark ? 0.2 : 0.05),
+                          color: accentColor.withValues(
+                              alpha: isDark ? 0.2 : 0.05),
                           blurRadius: 16,
                           offset: const Offset(0, 4),
                         ),
@@ -189,7 +197,8 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                             color: accentColor.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(14),
                           ),
-                          child: const Icon(LucideIcons.lock, color: accentColor, size: 24),
+                          child: const Icon(LucideIcons.lock,
+                              color: accentColor, size: 24),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -207,12 +216,15 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                               const SizedBox(height: 2),
                               Text(
                                 'All records secured with AES-256 bit client-side keys.',
-                                style: GoogleFonts.inter(fontSize: 12.5, color: textSecondary),
+                                style: GoogleFonts.inter(
+                                    fontSize: 12.5, color: textSecondary),
                               ),
                             ],
                           ),
                         ),
-                        const LifeUseBadge(text: 'AES-256', variant: LifeUseBadgeVariant.active),
+                        const LifeUseBadge(
+                            text: 'AES-256',
+                            variant: LifeUseBadgeVariant.active),
                       ],
                     ),
                   ),
@@ -221,7 +233,10 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                   // 2. Documents List
                   Text(
                     'Stored Credentials & Documents',
-                    style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: textPrimary),
+                    style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: textPrimary),
                   ),
                   const SizedBox(height: 12),
 
@@ -247,7 +262,8 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                                 color: accentColor.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: Icon(doc.icon, color: accentColor, size: 22),
+                              child:
+                                  Icon(doc.icon, color: accentColor, size: 22),
                             ),
                             const SizedBox(width: 14),
                             Expanded(
@@ -265,7 +281,8 @@ class _DocumentsVaultScreenState extends State<DocumentsVaultScreen> {
                                   const SizedBox(height: 2),
                                   Text(
                                     '${doc.category} • ${doc.docNumber}',
-                                    style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
+                                    style: GoogleFonts.inter(
+                                        fontSize: 12, color: textSecondary),
                                   ),
                                   const SizedBox(height: 2),
                                   Text(

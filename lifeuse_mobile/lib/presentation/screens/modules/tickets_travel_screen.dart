@@ -84,10 +84,14 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
 
   final List<_PackingItem> _packing = [
     _PackingItem(id: 'p_1', name: 'MacBook Pro & 96W Charger', isPacked: true),
-    _PackingItem(id: 'p_2', name: 'National ID & Conference Passes', isPacked: true),
-    _PackingItem(id: 'p_3', name: 'Noise Cancelling Headphones', isPacked: false),
-    _PackingItem(id: 'p_4', name: 'Emergency Medications & First-Aid', isPacked: false),
-    _PackingItem(id: 'p_5', name: 'Universal Travel Adapter & Cables', isPacked: false),
+    _PackingItem(
+        id: 'p_2', name: 'National ID & Conference Passes', isPacked: true),
+    _PackingItem(
+        id: 'p_3', name: 'Noise Cancelling Headphones', isPacked: false),
+    _PackingItem(
+        id: 'p_4', name: 'Emergency Medications & First-Aid', isPacked: false),
+    _PackingItem(
+        id: 'p_5', name: 'Universal Travel Adapter & Cables', isPacked: false),
   ];
 
   void _showAddPackingItemDialog() {
@@ -97,7 +101,8 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surfaceOf(ctx),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: Text('Add Packing Item', style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
+        title: Text('Add Packing Item',
+            style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
         content: TextField(
           controller: ctrl,
           decoration: InputDecoration(
@@ -106,7 +111,8 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF06B6D4),
@@ -146,7 +152,8 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
       appBar: AppBar(
         title: Text(
           'Tickets & Travel',
-          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
+          style: GoogleFonts.plusJakartaSans(
+              fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
@@ -174,7 +181,8 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                       border: Border.all(color: borderColor),
                       boxShadow: [
                         BoxShadow(
-                          color: accentColor.withValues(alpha: isDark ? 0.2 : 0.05),
+                          color: accentColor.withValues(
+                              alpha: isDark ? 0.2 : 0.05),
                           blurRadius: 16,
                           offset: const Offset(0, 4),
                         ),
@@ -188,7 +196,8 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                             color: accentColor.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(14),
                           ),
-                          child: const Icon(LucideIcons.plane, color: accentColor, size: 24),
+                          child: const Icon(LucideIcons.plane,
+                              color: accentColor, size: 24),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -197,7 +206,8 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                             children: [
                               Text(
                                 'Upcoming Travel Itinerary',
-                                style: GoogleFonts.inter(fontSize: 12.5, color: textSecondary),
+                                style: GoogleFonts.inter(
+                                    fontSize: 12.5, color: textSecondary),
                               ),
                               const SizedBox(height: 2),
                               Text(
@@ -210,12 +220,17 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                               ),
                               Text(
                                 'Starts in 16 days • Nov 02, 2026',
-                                style: GoogleFonts.inter(fontSize: 12, color: accentColor, fontWeight: FontWeight.w600),
+                                style: GoogleFonts.inter(
+                                    fontSize: 12,
+                                    color: accentColor,
+                                    fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
                         ),
-                        const LifeUseBadge(text: 'CONFIRMED', variant: LifeUseBadgeVariant.active),
+                        const LifeUseBadge(
+                            text: 'CONFIRMED',
+                            variant: LifeUseBadgeVariant.active),
                       ],
                     ),
                   ),
@@ -224,7 +239,10 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                   // 2. Tickets List
                   Text(
                     'Travel Bookings & Wallet',
-                    style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: textPrimary),
+                    style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: textPrimary),
                   ),
                   const SizedBox(height: 12),
 
@@ -272,7 +290,8 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                                   const SizedBox(height: 2),
                                   Text(
                                     t.date,
-                                    style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
+                                    style: GoogleFonts.inter(
+                                        fontSize: 12, color: textSecondary),
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
@@ -301,7 +320,10 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                         children: [
                           Text(
                             'Packing Checklist',
-                            style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: textPrimary),
+                            style: GoogleFonts.inter(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: textPrimary),
                           ),
                           const SizedBox(width: 8),
                           LifeUseBadge(
@@ -329,7 +351,8 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                     itemBuilder: (ctx, i) {
                       final p = _packing[i];
                       return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 10),
                         decoration: BoxDecoration(
                           color: surfaceColor,
                           borderRadius: BorderRadius.circular(14),
@@ -351,8 +374,11 @@ class _TicketsTravelScreenState extends State<TicketsTravelScreen> {
                                 style: GoogleFonts.inter(
                                   fontSize: 13.5,
                                   fontWeight: FontWeight.w600,
-                                  color: p.isPacked ? textSecondary : textPrimary,
-                                  decoration: p.isPacked ? TextDecoration.lineThrough : null,
+                                  color:
+                                      p.isPacked ? textSecondary : textPrimary,
+                                  decoration: p.isPacked
+                                      ? TextDecoration.lineThrough
+                                      : null,
                                 ),
                               ),
                             ),

@@ -41,30 +41,41 @@ class ApiConfig {
 
   // Money Manager endpoints (matching com.lifeuse.AppRoutes.Money)
   static String get moneyProfile => '$baseUrl/money/profile';
-  static String get moneyIncomeSources => '$baseUrl/money/profile/income-sources';
+  static String get moneyIncomeSources =>
+      '$baseUrl/money/profile/income-sources';
   static String get moneyCommitments => '$baseUrl/money/profile/commitments';
   static String get moneySavingsGoals => '$baseUrl/money/profile/savings-goals';
   static String get moneyTransactions => '$baseUrl/money/transactions';
-  static String get moneyTransactionSummary => '$baseUrl/money/transactions/summary';
+  static String get moneyTransactionSummary =>
+      '$baseUrl/money/transactions/summary';
   static String get moneyCategories => '$baseUrl/money/categories';
   static String get moneyDailyLimit => '$baseUrl/money/plan/daily-limit';
-  static String get moneySpendingBreakdown => '$baseUrl/money/plan/spending-breakdown';
+  static String get moneySpendingBreakdown =>
+      '$baseUrl/money/plan/spending-breakdown';
   static String get moneyPressure => '$baseUrl/money/plan/pressure';
   static String get moneyBudgetPlans => '$baseUrl/money/budget-plans';
-  static String get moneyActiveBudgetPlan => '$baseUrl/money/budget-plans/active';
+  static String get moneyActiveBudgetPlan =>
+      '$baseUrl/money/budget-plans/active';
   static String get moneyPlannedExpenses => '$baseUrl/money/planned-expenses';
-  static String get moneyRecurringSchedules => '$baseUrl/money/recurring-schedules';
-  static String get moneyRecurringOccurrences => '$baseUrl/money/recurring-schedules/occurrences';
-  static String get moneyReminderPreferences => '$baseUrl/money/reminders/preferences';
-  static String get moneyNotifications => '$baseUrl/money/reminders/notifications';
+  static String get moneyRecurringSchedules =>
+      '$baseUrl/money/recurring-schedules';
+  static String get moneyRecurringOccurrences =>
+      '$baseUrl/money/recurring-schedules/occurrences';
+  static String get moneyReminderPreferences =>
+      '$baseUrl/money/reminders/preferences';
+  static String get moneyNotifications =>
+      '$baseUrl/money/reminders/notifications';
 
   // ID-based resource routes
   static String moneyTransaction(dynamic id) => '$moneyTransactions/$id';
   static String moneyBudgetPlan(dynamic id) => '$moneyBudgetPlans/$id';
   static String moneyPlannedExpense(dynamic id) => '$moneyPlannedExpenses/$id';
-  static String moneyExecutePlannedExpense(dynamic id) => '$moneyPlannedExpenses/$id/execute';
-  static String moneyRecurringSchedule(dynamic id) => '$moneyRecurringSchedules/$id';
-  static String moneyProcessOccurrence(dynamic id) => '$baseUrl/money/recurring-schedules/occurrences/$id/process';
+  static String moneyExecutePlannedExpense(dynamic id) =>
+      '$moneyPlannedExpenses/$id/execute';
+  static String moneyRecurringSchedule(dynamic id) =>
+      '$moneyRecurringSchedules/$id';
+  static String moneyProcessOccurrence(dynamic id) =>
+      '$baseUrl/money/recurring-schedules/occurrences/$id/process';
   static String moneyIncomeSource(dynamic id) => '$moneyIncomeSources/$id';
   static String moneyCommitment(dynamic id) => '$moneyCommitments/$id';
   static String moneySavingsGoal(dynamic id) => '$moneySavingsGoals/$id';
@@ -73,7 +84,8 @@ class ApiConfig {
   // Application ID: 1154191
   static const String unsplashApplicationId = '1154191';
   static const String unsplashAccessKey = 'YOUR_UNSPLASH_ACCESS_KEY';
-  static const String unsplashSecretKey = '8OyFk9cZ2CLKhXTVXJt2jt7eX1G9WwmR8GpM-8Abrt4';
+  static const String unsplashSecretKey =
+      '8OyFk9cZ2CLKhXTVXJt2jt7eX1G9WwmR8GpM-8Abrt4';
   static const String unsplashApiBase = 'https://api.unsplash.com';
 
   // Timeout settings

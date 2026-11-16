@@ -12,7 +12,8 @@ class AppTypography {
   AppTypography._();
 
   /// Primary Display & Headline Font Family: Plus Jakarta Sans
-  static String get headingFontFamily => GoogleFonts.plusJakartaSans().fontFamily!;
+  static String get headingFontFamily =>
+      GoogleFonts.plusJakartaSans().fontFamily!;
 
   /// Primary Body & Tabular Font Family: Inter
   static String get bodyFontFamily => GoogleFonts.inter().fontFamily!;

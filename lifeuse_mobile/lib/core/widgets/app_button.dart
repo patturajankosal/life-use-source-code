@@ -105,7 +105,8 @@ class AppButton extends StatelessWidget {
             onPressed: isLoading ? null : onPressed,
             style: ElevatedButton.styleFrom(
               minimumSize: Size(width ?? 0, height),
-              backgroundColor: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
+              backgroundColor:
+                  isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
               foregroundColor: textPrimary,
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -161,7 +162,8 @@ class AppButton extends StatelessWidget {
             onPressed: isLoading ? null : onPressed,
             style: ElevatedButton.styleFrom(
               minimumSize: Size(width ?? 0, height),
-              backgroundColor: AppColors.primary.withValues(alpha: isDark ? 0.2 : 0.1),
+              backgroundColor:
+                  AppColors.primary.withValues(alpha: isDark ? 0.2 : 0.1),
               foregroundColor: AppColors.primary,
               elevation: 0,
               shape: RoundedRectangleBorder(

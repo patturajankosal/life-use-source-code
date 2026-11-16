@@ -75,7 +75,8 @@ class NotificationProvider extends ChangeNotifier {
     ),
   ];
 
-  List<NotificationModel> get notifications => List.unmodifiable(_notifications);
+  List<NotificationModel> get notifications =>
+      List.unmodifiable(_notifications);
 
   int get unreadCount => _notifications.where((n) => !n.isRead).length;
 

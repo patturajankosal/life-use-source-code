@@ -98,8 +98,8 @@ class AppIcon extends StatelessWidget {
       iconWidget = Container(
         padding: pillPadding ?? const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: pillBackgroundColor ??
-              AppColors.primary.withValues(alpha: 0.10),
+          color:
+              pillBackgroundColor ?? AppColors.primary.withValues(alpha: 0.10),
           borderRadius: BorderRadius.circular(pillRadius ?? 10),
           border: pillBorderColor != null
               ? Border.all(color: pillBorderColor!, width: 1)

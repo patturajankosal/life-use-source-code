@@ -198,7 +198,8 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
               decoration: InputDecoration(
                 labelText: 'Device Name',
                 hintText: 'e.g. Master Bedroom Fan',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
             const SizedBox(height: 12),
@@ -207,7 +208,8 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
               decoration: InputDecoration(
                 labelText: 'Room / Area',
                 hintText: 'e.g. Bedroom',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
           ],
@@ -229,7 +231,9 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                     _SmartDeviceItem(
                       id: 'dev_${DateTime.now().millisecondsSinceEpoch}',
                       name: nameCtrl.text.trim(),
-                      room: roomCtrl.text.trim().isEmpty ? 'General' : roomCtrl.text.trim(),
+                      room: roomCtrl.text.trim().isEmpty
+                          ? 'General'
+                          : roomCtrl.text.trim(),
                       icon: Icons.devices_rounded,
                       isOn: false,
                     ),
@@ -259,7 +263,8 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
       appBar: AppBar(
         title: Text(
           'Home Management',
-          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
+          style: GoogleFonts.plusJakartaSans(
+              fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
@@ -273,8 +278,10 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
           labelColor: accentColor,
           indicatorColor: accentColor,
           unselectedLabelColor: textSecondary,
-          labelStyle: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w700),
-          unselectedLabelStyle: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500),
+          labelStyle:
+              GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w700),
+          unselectedLabelStyle:
+              GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500),
           tabs: const [
             Tab(text: 'Smart Devices'),
             Tab(text: 'Inventory'),
@@ -289,9 +296,12 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
             child: TabBarView(
               controller: _tabController,
               children: [
-                _buildDevicesTab(context, surfaceColor, borderColor, textPrimary, textSecondary, accentColor, isDark),
-                _buildInventoryTab(context, surfaceColor, borderColor, textPrimary, textSecondary, isDark),
-                _buildWarrantiesTab(context, surfaceColor, borderColor, textPrimary, textSecondary, accentColor),
+                _buildDevicesTab(context, surfaceColor, borderColor,
+                    textPrimary, textSecondary, accentColor, isDark),
+                _buildInventoryTab(context, surfaceColor, borderColor,
+                    textPrimary, textSecondary, isDark),
+                _buildWarrantiesTab(context, surfaceColor, borderColor,
+                    textPrimary, textSecondary, accentColor),
               ],
             ).animate().fadeIn(duration: 250.ms),
           ),
@@ -331,7 +341,8 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                   color: accentColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(Icons.home_work_rounded, color: accentColor, size: 24),
+                child:
+                    Icon(Icons.home_work_rounded, color: accentColor, size: 24),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -340,17 +351,22 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                   children: [
                     Text(
                       'Smart Home Ecosystem',
-                      style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w700, color: textPrimary),
+                      style: GoogleFonts.inter(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: textPrimary),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       '$onlineCount of ${_devices.length} appliances currently active',
-                      style: GoogleFonts.inter(fontSize: 12.5, color: textSecondary),
+                      style: GoogleFonts.inter(
+                          fontSize: 12.5, color: textSecondary),
                     ),
                   ],
                 ),
               ),
-              const LifeUseBadge(text: 'ONLINE', variant: LifeUseBadgeVariant.active),
+              const LifeUseBadge(
+                  text: 'ONLINE', variant: LifeUseBadgeVariant.active),
             ],
           ),
         ),
@@ -373,7 +389,8 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
               itemBuilder: (ctx, i) {
                 final dev = _devices[i];
                 return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
                     color: dev.isOn
                         ? accentColor.withValues(alpha: isDark ? 0.15 : 0.08)
@@ -390,7 +407,9 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: dev.isOn ? accentColor : borderColor.withValues(alpha: 0.3),
+                          color: dev.isOn
+                              ? accentColor
+                              : borderColor.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
@@ -416,7 +435,8 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                             const SizedBox(height: 2),
                             Text(
                               dev.room,
-                              style: GoogleFonts.inter(fontSize: 11.5, color: textSecondary),
+                              style: GoogleFonts.inter(
+                                  fontSize: 11.5, color: textSecondary),
                             ),
                           ],
                         ),
@@ -476,9 +496,13 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
-                  item.isLowStock ? Icons.warning_amber_rounded : Icons.inventory_2_outlined,
+                  item.isLowStock
+                      ? Icons.warning_amber_rounded
+                      : Icons.inventory_2_outlined,
                   size: 20,
-                  color: item.isLowStock ? AppColors.error : const Color(0xFF0284C7),
+                  color: item.isLowStock
+                      ? AppColors.error
+                      : const Color(0xFF0284C7),
                 ),
               ),
               const SizedBox(width: 14),
@@ -488,12 +512,16 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                   children: [
                     Text(
                       item.name,
-                      style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700, color: textPrimary),
+                      style: GoogleFonts.inter(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: textPrimary),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       item.location,
-                      style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
+                      style:
+                          GoogleFonts.inter(fontSize: 12, color: textSecondary),
                     ),
                   ],
                 ),
@@ -558,12 +586,17 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
                   Expanded(
                     child: Text(
                       m.appliance,
-                      style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w700, color: textPrimary),
+                      style: GoogleFonts.inter(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: textPrimary),
                     ),
                   ),
                   LifeUseBadge(
                     text: m.isCompleted ? 'COMPLETED' : 'SCHEDULED',
-                    variant: m.isCompleted ? LifeUseBadgeVariant.active : LifeUseBadgeVariant.pending,
+                    variant: m.isCompleted
+                        ? LifeUseBadgeVariant.active
+                        : LifeUseBadgeVariant.pending,
                   ),
                 ],
               ),
@@ -575,18 +608,24 @@ class _HomeManagementScreenState extends State<HomeManagementScreen>
               const SizedBox(height: 10),
               Row(
                 children: [
-                  Icon(Icons.calendar_today_rounded, size: 14, color: accentColor),
+                  Icon(Icons.calendar_today_rounded,
+                      size: 14, color: accentColor),
                   const SizedBox(width: 6),
                   Text(
                     m.dueDate,
-                    style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: accentColor),
+                    style: GoogleFonts.inter(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: accentColor),
                   ),
                   const Spacer(),
-                  Icon(Icons.verified_user_outlined, size: 14, color: textSecondary),
+                  Icon(Icons.verified_user_outlined,
+                      size: 14, color: textSecondary),
                   const SizedBox(width: 4),
                   Text(
                     m.warrantyPeriod,
-                    style: GoogleFonts.inter(fontSize: 11.5, color: textSecondary),
+                    style:
+                        GoogleFonts.inter(fontSize: 11.5, color: textSecondary),
                   ),
                 ],
               ),

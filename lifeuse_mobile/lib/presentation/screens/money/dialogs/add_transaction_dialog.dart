@@ -85,7 +85,9 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
         paymentMethod: _selectedPaymentMethod,
         transactionDate: _selectedDate,
         essential: _isEssential,
-        notes: _notesController.text.trim().isNotEmpty ? _notesController.text.trim() : null,
+        notes: _notesController.text.trim().isNotEmpty
+            ? _notesController.text.trim()
+            : null,
       );
 
       final moneyProvider = context.read<MoneyProvider>();
@@ -96,7 +98,8 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
         SweetAlert.showSuccess(
           context,
           title: 'Transaction Saved',
-          message: 'Recorded ₹${amount.toStringAsFixed(2)} for $_selectedCategory.',
+          message:
+              'Recorded ₹${amount.toStringAsFixed(2)} for $_selectedCategory.',
         );
       }
     } catch (e) {
@@ -207,11 +210,14 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 label: 'Amount (₹)',
                 hint: '0.00',
                 controller: _amountController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
                 prefixIcon: Icons.currency_rupee_rounded,
                 validator: (val) {
                   if (val == null || val.trim().isEmpty) return 'Enter amount';
-                  if (double.tryParse(val.trim()) == null) return 'Enter a valid number';
+                  if (double.tryParse(val.trim()) == null) {
+                    return 'Enter a valid number';
+                  }
                   return null;
                 },
               ),
@@ -224,7 +230,8 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 decoration: InputDecoration(
                   labelText: 'Category',
                   labelStyle: GoogleFonts.inter(color: textSecondary),
-                  prefixIcon: Icon(Icons.category_outlined, color: textSecondary, size: 20),
+                  prefixIcon: Icon(Icons.category_outlined,
+                      color: textSecondary, size: 20),
                   filled: true,
                   fillColor: isDark
                       ? Colors.white.withValues(alpha: 0.04)
@@ -258,7 +265,8 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                       decoration: InputDecoration(
                         labelText: 'Payment Method',
                         labelStyle: GoogleFonts.inter(color: textSecondary),
-                        prefixIcon: Icon(Icons.payment_rounded, color: textSecondary, size: 20),
+                        prefixIcon: Icon(Icons.payment_rounded,
+                            color: textSecondary, size: 20),
                         filled: true,
                         fillColor: isDark
                             ? Colors.white.withValues(alpha: 0.04)
@@ -272,12 +280,15 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                           borderSide: BorderSide(color: borderColor),
                         ),
                       ),
-                      style: GoogleFonts.inter(fontSize: 14, color: textPrimary),
+                      style:
+                          GoogleFonts.inter(fontSize: 14, color: textPrimary),
                       items: _paymentMethods.map((pm) {
                         return DropdownMenuItem(value: pm, child: Text(pm));
                       }).toList(),
                       onChanged: (val) {
-                        if (val != null) setState(() => _selectedPaymentMethod = val);
+                        if (val != null) {
+                          setState(() => _selectedPaymentMethod = val);
+                        }
                       },
                     ),
                   ),
@@ -289,7 +300,8 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                           context: context,
                           initialDate: _selectedDate,
                           firstDate: DateTime(2020),
-                          lastDate: DateTime.now().add(const Duration(days: 365)),
+                          lastDate:
+                              DateTime.now().add(const Duration(days: 365)),
                         );
                         if (picked != null) {
                           setState(() => _selectedDate = picked);
@@ -297,7 +309,8 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                       },
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 14),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: borderColor),
@@ -307,12 +320,14 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                         ),
                         child: Row(
                           children: [
-                            Icon(LucideIcons.calendar, size: 18, color: textSecondary),
+                            Icon(LucideIcons.calendar,
+                                size: 18, color: textSecondary),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                                style: GoogleFonts.inter(fontSize: 13, color: textPrimary),
+                                style: GoogleFonts.inter(
+                                    fontSize: 13, color: textPrimary),
                               ),
                             ),
                           ],
@@ -326,23 +341,27 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
 
               // 5. Essential Toggle (for expenses)
               if (_selectedType == 'EXPENSE')
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    'Essential Expense',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: textPrimary,
+                Material(
+                  color: Colors.transparent,
+                  child: SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(
+                      'Essential Expense',
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: textPrimary,
+                      ),
                     ),
+                    subtitle: Text(
+                      'Categorize as necessity (food, rent, medicine) vs discretionary',
+                      style:
+                          GoogleFonts.inter(fontSize: 12, color: textSecondary),
+                    ),
+                    value: _isEssential,
+                    activeThumbColor: AppColors.primary,
+                    onChanged: (val) => setState(() => _isEssential = val),
                   ),
-                  subtitle: Text(
-                    'Categorize as necessity (food, rent, medicine) vs discretionary',
-                    style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
-                  ),
-                  value: _isEssential,
-                  activeThumbColor: AppColors.primary,
-                  onChanged: (val) => setState(() => _isEssential = val),
                 ),
               const SizedBox(height: 10),
 
@@ -378,7 +397,9 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? activeColor.withValues(alpha: 0.15) : Colors.transparent,
+            color: isSelected
+                ? activeColor.withValues(alpha: 0.15)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
               color: isSelected ? activeColor : Colors.transparent,
@@ -391,7 +412,9 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
               style: GoogleFonts.inter(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                color: isSelected ? activeColor : AppColors.textSecondaryOf(context),
+                color: isSelected
+                    ? activeColor
+                    : AppColors.textSecondaryOf(context),
               ),
             ),
           ),

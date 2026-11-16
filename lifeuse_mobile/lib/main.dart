@@ -33,7 +33,8 @@ void main() async {
         ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
         ChangeNotifierProvider<MoneyProvider>.value(value: moneyProvider),
         ChangeNotifierProvider<ThemeProvider>.value(value: themeProvider),
-        ChangeNotifierProvider<NotificationProvider>.value(value: notificationProvider),
+        ChangeNotifierProvider<NotificationProvider>.value(
+            value: notificationProvider),
       ],
       child: const LifeUseApp(),
     ),

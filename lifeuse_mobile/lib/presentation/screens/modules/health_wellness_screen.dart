@@ -91,7 +91,8 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
               decoration: InputDecoration(
                 labelText: 'Activity Name',
                 hintText: 'e.g. Cycling / Swimming',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
             const SizedBox(height: 12),
@@ -100,7 +101,8 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
               decoration: InputDecoration(
                 labelText: 'Duration',
                 hintText: 'e.g. 30 mins',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
             const SizedBox(height: 12),
@@ -110,7 +112,8 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
               decoration: InputDecoration(
                 labelText: 'Estimated Calories',
                 hintText: 'e.g. 250',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
           ],
@@ -132,7 +135,9 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                     _WorkoutLog(
                       id: 'w_${DateTime.now().millisecondsSinceEpoch}',
                       activity: nameCtrl.text.trim(),
-                      duration: durCtrl.text.trim().isEmpty ? '20 mins' : durCtrl.text.trim(),
+                      duration: durCtrl.text.trim().isEmpty
+                          ? '20 mins'
+                          : durCtrl.text.trim(),
                       calories: int.tryParse(calCtrl.text) ?? 150,
                       icon: LucideIcons.activity,
                       isCompleted: true,
@@ -168,7 +173,8 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
       appBar: AppBar(
         title: Text(
           'Health & Wellness',
-          style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w700),
+          style: GoogleFonts.plusJakartaSans(
+              fontSize: 18, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
@@ -196,7 +202,8 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                       border: Border.all(color: borderColor),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.blue.withValues(alpha: isDark ? 0.2 : 0.05),
+                          color: Colors.blue
+                              .withValues(alpha: isDark ? 0.2 : 0.05),
                           blurRadius: 16,
                           offset: const Offset(0, 4),
                         ),
@@ -216,7 +223,8 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                                     color: Colors.blue.withValues(alpha: 0.12),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  child: const Icon(LucideIcons.droplets, color: Colors.blue, size: 22),
+                                  child: const Icon(LucideIcons.droplets,
+                                      color: Colors.blue, size: 22),
                                 ),
                                 const SizedBox(width: 12),
                                 Column(
@@ -232,7 +240,8 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                                     ),
                                     Text(
                                       'Target: 3,000 ml',
-                                      style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
+                                      style: GoogleFonts.inter(
+                                          fontSize: 12, color: textSecondary),
                                     ),
                                   ],
                                 ),
@@ -240,7 +249,9 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                             ),
                             LifeUseBadge(
                               text: '${(waterRatio * 100).toInt()}% REACHED',
-                              variant: waterRatio >= 1.0 ? LifeUseBadgeVariant.active : LifeUseBadgeVariant.pending,
+                              variant: waterRatio >= 1.0
+                                  ? LifeUseBadgeVariant.active
+                                  : LifeUseBadgeVariant.pending,
                             ),
                           ],
                         ),
@@ -253,7 +264,8 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                             value: waterRatio,
                             minHeight: 12,
                             backgroundColor: borderColor,
-                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.blue),
                           ),
                         ),
                         const SizedBox(height: 14),
@@ -276,20 +288,25 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                                 OutlinedButton(
                                   onPressed: () => _addWater(250),
                                   style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 6),
                                   ),
                                   child: const Text('+250 ml'),
                                 ),
                                 OutlinedButton(
                                   onPressed: () => _addWater(500),
                                   style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 6),
                                   ),
                                   child: const Text('+500 ml'),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.remove_circle_outline, size: 20),
-                                  onPressed: _waterIntakeMl > 0 ? () => _addWater(-250) : null,
+                                  icon: const Icon(Icons.remove_circle_outline,
+                                      size: 20),
+                                  onPressed: _waterIntakeMl > 0
+                                      ? () => _addWater(-250)
+                                      : null,
                                 ),
                               ],
                             ),
@@ -404,13 +421,16 @@ class _HealthWellnessScreenState extends State<HealthWellnessScreen> {
                                       fontSize: 14.5,
                                       fontWeight: FontWeight.w700,
                                       color: textPrimary,
-                                      decoration: w.isCompleted ? TextDecoration.lineThrough : null,
+                                      decoration: w.isCompleted
+                                          ? TextDecoration.lineThrough
+                                          : null,
                                     ),
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
                                     '${w.duration} • ${w.calories} kcal burned',
-                                    style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
+                                    style: GoogleFonts.inter(
+                                        fontSize: 12, color: textSecondary),
                                   ),
                                 ],
                               ),

@@ -139,7 +139,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 final email = emailController.text.trim();
                 if (email.isEmpty || !email.contains('@')) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please enter a valid email address')),
+                    const SnackBar(
+                        content: Text('Please enter a valid email address')),
                   );
                   return;
                 }
@@ -213,14 +214,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     borderRadius: BorderRadius.circular(12),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         color: surfaceColor,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: borderColor),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+                            color: Colors.black
+                                .withValues(alpha: isDark ? 0.3 : 0.05),
                             blurRadius: 8,
                           ),
                         ],
@@ -249,19 +252,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // Theme Toggle
                   Tooltip(
-                    message: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+                    message:
+                        isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
                     child: InkWell(
                       onTap: () => theme.toggleTheme(),
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
                           color: surfaceColor,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: borderColor),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+                              color: Colors.black
+                                  .withValues(alpha: isDark ? 0.3 : 0.05),
                               blurRadius: 8,
                             ),
                           ],
@@ -272,7 +278,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             Icon(
                               isDark ? AppIcons.lightMode : AppIcons.darkMode,
                               size: 16,
-                              color: isDark ? AppColors.amberGold : AppColors.primary,
+                              color: isDark
+                                  ? AppColors.amberGold
+                                  : AppColors.primary,
                             ),
                             const SizedBox(width: 6),
                             Text(
@@ -297,7 +305,8 @@ class _LoginScreenState extends State<LoginScreen> {
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 48),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 48),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 440),
                   child: Column(
@@ -314,7 +323,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: isDark ? 0.45 : 0.08),
+                              color: Colors.black
+                                  .withValues(alpha: isDark ? 0.45 : 0.08),
                               blurRadius: 36,
                               offset: const Offset(0, 10),
                             ),
@@ -346,7 +356,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Text(
                                   'Welcome Back',
                                   style: GoogleFonts.plusJakartaSans(
-                                    fontSize: AppTypography.adaptiveSize(context, 20),
+                                    fontSize:
+                                        AppTypography.adaptiveSize(context, 20),
                                     fontWeight: FontWeight.w700,
                                     letterSpacing: -0.3,
                                     color: textPrimary,
@@ -457,7 +468,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       auth.clearMessages();
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (_) => const RegisterScreen(),
+                                          builder: (_) =>
+                                              const RegisterScreen(),
                                         ),
                                       );
                                     },
@@ -491,7 +503,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                         ),
-                      ).animate().fadeIn(duration: 250.ms).slideY(begin: 0.04, end: 0, duration: 250.ms),
+                      )
+                          .animate()
+                          .fadeIn(duration: 250.ms)
+                          .slideY(begin: 0.04, end: 0, duration: 250.ms),
                     ],
                   ),
                 ),

@@ -23,10 +23,12 @@ class AddRecurringScheduleDialog extends StatefulWidget {
   }
 
   @override
-  State<AddRecurringScheduleDialog> createState() => _AddRecurringScheduleDialogState();
+  State<AddRecurringScheduleDialog> createState() =>
+      _AddRecurringScheduleDialogState();
 }
 
-class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog> {
+class _AddRecurringScheduleDialogState
+    extends State<AddRecurringScheduleDialog> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
@@ -40,7 +42,13 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
   bool _isEssential = true;
   bool _isSubmitting = false;
 
-  final List<String> _frequencies = ['DAILY', 'WEEKLY', 'MONTHLY', 'QUARTERLY', 'YEARLY'];
+  final List<String> _frequencies = [
+    'DAILY',
+    'WEEKLY',
+    'MONTHLY',
+    'QUARTERLY',
+    'YEARLY'
+  ];
   final List<String> _paymentMethods = ['UPI', 'CASH', 'CARD', 'NET_BANKING'];
   final List<String> _defaultCategories = [
     'Rent & Utilities',
@@ -96,7 +104,8 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
         SweetAlert.showSuccess(
           context,
           title: 'Schedule Created',
-          message: '"${_titleController.text.trim()}" ($_frequency) has been scheduled.',
+          message:
+              '"${_titleController.text.trim()}" ($_frequency) has been scheduled.',
         );
       }
     } catch (e) {
@@ -186,9 +195,11 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
               // Transaction Type Selector
               Row(
                 children: [
-                  _buildTypeChoice('EXPENSE', 'Expense Schedule', AppColors.error),
+                  _buildTypeChoice(
+                      'EXPENSE', 'Expense Schedule', AppColors.error),
                   const SizedBox(width: 10),
-                  _buildTypeChoice('INCOME', 'Income Schedule', AppColors.success),
+                  _buildTypeChoice(
+                      'INCOME', 'Income Schedule', AppColors.success),
                 ],
               ),
               const SizedBox(height: 16),
@@ -199,7 +210,8 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                 hint: 'e.g., Netflix subscription, Home rent, Gym membership',
                 controller: _titleController,
                 prefixIcon: LucideIcons.repeat,
-                validator: (val) => val == null || val.trim().isEmpty ? 'Enter title' : null,
+                validator: (val) =>
+                    val == null || val.trim().isEmpty ? 'Enter title' : null,
               ),
               const SizedBox(height: 16),
 
@@ -212,11 +224,16 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                       label: 'Amount (₹)',
                       hint: '0.00',
                       controller: _amountController,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       prefixIcon: Icons.currency_rupee_rounded,
                       validator: (val) {
-                        if (val == null || val.trim().isEmpty) return 'Required';
-                        if (double.tryParse(val.trim()) == null) return 'Invalid';
+                        if (val == null || val.trim().isEmpty) {
+                          return 'Required';
+                        }
+                        if (double.tryParse(val.trim()) == null) {
+                          return 'Invalid';
+                        }
                         return null;
                       },
                     ),
@@ -243,7 +260,8 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                           borderSide: BorderSide(color: borderColor),
                         ),
                       ),
-                      style: GoogleFonts.inter(fontSize: 13, color: textPrimary),
+                      style:
+                          GoogleFonts.inter(fontSize: 13, color: textPrimary),
                       items: _frequencies.map((f) {
                         return DropdownMenuItem(value: f, child: Text(f));
                       }).toList(),
@@ -279,12 +297,15 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                           borderSide: BorderSide(color: borderColor),
                         ),
                       ),
-                      style: GoogleFonts.inter(fontSize: 13, color: textPrimary),
+                      style:
+                          GoogleFonts.inter(fontSize: 13, color: textPrimary),
                       items: categories.map((cat) {
                         return DropdownMenuItem(value: cat, child: Text(cat));
                       }).toList(),
                       onChanged: (val) {
-                        if (val != null) setState(() => _selectedCategory = val);
+                        if (val != null) {
+                          setState(() => _selectedCategory = val);
+                        }
                       },
                     ),
                   ),
@@ -309,7 +330,8 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
                           borderSide: BorderSide(color: borderColor),
                         ),
                       ),
-                      style: GoogleFonts.inter(fontSize: 13, color: textPrimary),
+                      style:
+                          GoogleFonts.inter(fontSize: 13, color: textPrimary),
                       items: _paymentMethods.map((pm) {
                         return DropdownMenuItem(value: pm, child: Text(pm));
                       }).toList(),
@@ -323,23 +345,27 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
               const SizedBox(height: 14),
 
               // Essential Switch
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(
-                  'Essential Schedule',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: textPrimary,
+              Material(
+                color: Colors.transparent,
+                child: SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(
+                    'Essential Schedule',
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: textPrimary,
+                    ),
                   ),
+                  subtitle: Text(
+                    'Marks commitment as non-negotiable obligation',
+                    style:
+                        GoogleFonts.inter(fontSize: 12, color: textSecondary),
+                  ),
+                  value: _isEssential,
+                  activeThumbColor: AppColors.primary,
+                  onChanged: (val) => setState(() => _isEssential = val),
                 ),
-                subtitle: Text(
-                  'Marks commitment as non-negotiable obligation',
-                  style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
-                ),
-                value: _isEssential,
-                activeThumbColor: AppColors.primary,
-                onChanged: (val) => setState(() => _isEssential = val),
               ),
               const SizedBox(height: 20),
 
@@ -365,7 +391,8 @@ class _AddRecurringScheduleDialogState extends State<AddRecurringScheduleDialog>
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 11),
           decoration: BoxDecoration(
-            color: isSelected ? color.withValues(alpha: 0.15) : Colors.transparent,
+            color:
+                isSelected ? color.withValues(alpha: 0.15) : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected ? color : AppColors.borderOf(context),

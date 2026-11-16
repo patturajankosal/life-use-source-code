@@ -60,9 +60,8 @@ class ApiClient {
       final host = candidateHosts[i];
       final targetUrl = url.replaceFirst(ApiConfig.activeHost, host);
       try {
-        final timeout = (i == 0)
-            ? const Duration(seconds: 4)
-            : const Duration(seconds: 8);
+        final timeout =
+            (i == 0) ? const Duration(seconds: 4) : const Duration(seconds: 8);
 
         final response = await _client
             .post(
@@ -84,13 +83,15 @@ class ApiClient {
 
     if (lastError is TimeoutException) {
       throw ApiException(
-        message: 'Connection timed out. Please check your network and ensure the backend is running.',
+        message:
+            'Connection timed out. Please check your network and ensure the backend is running.',
         errorCode: 'TIMEOUT',
         statusCode: 408,
       );
     }
     throw ApiException(
-      message: 'Cannot connect to LifeUse backend at ${ApiConfig.activeHost}. Please ensure the server is running.',
+      message:
+          'Cannot connect to LifeUse backend at ${ApiConfig.activeHost}. Please ensure the server is running.',
       errorCode: 'NETWORK_ERROR',
       statusCode: 0,
     );
@@ -111,9 +112,8 @@ class ApiClient {
       final host = candidateHosts[i];
       final targetUrl = url.replaceFirst(ApiConfig.activeHost, host);
       try {
-        final timeout = (i == 0)
-            ? const Duration(seconds: 4)
-            : const Duration(seconds: 8);
+        final timeout =
+            (i == 0) ? const Duration(seconds: 4) : const Duration(seconds: 8);
 
         final response = await _client
             .get(
@@ -134,13 +134,15 @@ class ApiClient {
 
     if (lastError is TimeoutException) {
       throw ApiException(
-        message: 'Connection timed out. Please check your network and ensure the backend is running.',
+        message:
+            'Connection timed out. Please check your network and ensure the backend is running.',
         errorCode: 'TIMEOUT',
         statusCode: 408,
       );
     }
     throw ApiException(
-      message: 'Cannot connect to LifeUse backend at ${ApiConfig.activeHost}. Please ensure the server is running.',
+      message:
+          'Cannot connect to LifeUse backend at ${ApiConfig.activeHost}. Please ensure the server is running.',
       errorCode: 'NETWORK_ERROR',
       statusCode: 0,
     );
@@ -164,9 +166,8 @@ class ApiClient {
       final host = candidateHosts[i];
       final targetUrl = url.replaceFirst(ApiConfig.activeHost, host);
       try {
-        final timeout = (i == 0)
-            ? const Duration(seconds: 4)
-            : const Duration(seconds: 8);
+        final timeout =
+            (i == 0) ? const Duration(seconds: 4) : const Duration(seconds: 8);
 
         final response = await _client
             .put(
@@ -187,13 +188,15 @@ class ApiClient {
 
     if (lastError is TimeoutException) {
       throw ApiException(
-        message: 'Connection timed out. Please check your network and ensure the backend is running.',
+        message:
+            'Connection timed out. Please check your network and ensure the backend is running.',
         errorCode: 'TIMEOUT',
         statusCode: 408,
       );
     }
     throw ApiException(
-      message: 'Cannot connect to LifeUse backend at ${ApiConfig.activeHost}. Please ensure the server is running.',
+      message:
+          'Cannot connect to LifeUse backend at ${ApiConfig.activeHost}. Please ensure the server is running.',
       errorCode: 'NETWORK_ERROR',
       statusCode: 0,
     );
@@ -214,9 +217,8 @@ class ApiClient {
       final host = candidateHosts[i];
       final targetUrl = url.replaceFirst(ApiConfig.activeHost, host);
       try {
-        final timeout = (i == 0)
-            ? const Duration(seconds: 4)
-            : const Duration(seconds: 8);
+        final timeout =
+            (i == 0) ? const Duration(seconds: 4) : const Duration(seconds: 8);
 
         final response = await _client
             .delete(
@@ -236,13 +238,15 @@ class ApiClient {
 
     if (lastError is TimeoutException) {
       throw ApiException(
-        message: 'Connection timed out. Please check your network and ensure the backend is running.',
+        message:
+            'Connection timed out. Please check your network and ensure the backend is running.',
         errorCode: 'TIMEOUT',
         statusCode: 408,
       );
     }
     throw ApiException(
-      message: 'Cannot connect to LifeUse backend at ${ApiConfig.activeHost}. Please ensure the server is running.',
+      message:
+          'Cannot connect to LifeUse backend at ${ApiConfig.activeHost}. Please ensure the server is running.',
       errorCode: 'NETWORK_ERROR',
       statusCode: 0,
     );
@@ -353,8 +357,8 @@ class ApiClient {
       errorMessage = decoded['message']?.toString() ??
           decoded['error']?.toString() ??
           errorMessage;
-      errorCode = decoded['errorCode']?.toString() ??
-          decoded['status']?.toString();
+      errorCode =
+          decoded['errorCode']?.toString() ?? decoded['status']?.toString();
     }
 
     throw ApiException(
